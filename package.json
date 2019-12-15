@@ -1,0 +1,82 @@
+{
+  "name": "OrdinaryPuzzles",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint 'src/' --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "yarn lint --fix",
+    "typecheck": "tsc",
+    "xcode": "open ios/OrdinaryPuzzles.xcworkspace",
+    "studio": "open -a /Applications/Android\\ Studio.app ./android/"
+  },
+  "dependencies": {
+    "@react-native-community/async-storage": "^1.6.3",
+    "lodash": "^4.17.15",
+    "mobx": "^5.15.0",
+    "mobx-logger": "^0.7.1",
+    "mobx-react": "^6.1.4",
+    "react": "16.9.0",
+    "react-native": "0.61.4",
+    "react-native-appearance": "^0.2.2",
+    "react-native-bootsplash": "^1.0.3",
+    "react-native-haptic": "oblador/react-native-haptic#package-cleanup",
+    "react-native-immersive": "^2.0.0",
+    "react-native-keep-awake": "corbt/react-native-keep-awake#146c2db",
+    "react-native-sound": "^0.11.0",
+    "tinycolor2": "^1.4.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-proposal-class-properties": "^7.7.0",
+    "@babel/plugin-proposal-decorators": "^7.7.0",
+    "@babel/runtime": "^7.7.2",
+    "@types/jest": "^24.0.21",
+    "@types/lodash": "^4.14.146",
+    "@types/react": "^16.9.11",
+    "@types/react-native": "^0.60.22",
+    "@types/react-test-renderer": "^16.9.1",
+    "@types/tinycolor2": "^1.4.2",
+    "babel-jest": "^24.9.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react-app": "^6.1.0",
+    "husky": "^3.1.0",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.5.0",
+    "metro-react-native-babel-preset": "^0.57.0",
+    "prettier": "^1.19.1",
+    "react-test-renderer": "16.9.0",
+    "typescript": "^3.7.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn typecheck && yarn lint && yarn test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.md": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}
