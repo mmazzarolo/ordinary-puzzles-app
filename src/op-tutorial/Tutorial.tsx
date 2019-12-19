@@ -96,7 +96,7 @@ export const Tutorial: FC = observer(function() {
       </View>
       {board.isInitialized && (
         <BottomNav animValue={fadeInterfaceAnim.value}>
-          <Button label="quit" onPress={handleQuitPress} />
+          <Button label="quit tutorial" onPress={handleQuitPress} />
         </BottomNav>
       )}
     </View>
