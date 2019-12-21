@@ -76,7 +76,7 @@ export const Message: FC = function() {
         </Text>
       </View>
       <BottomNav animValue={fadeBottomAnim.value}>
-        <Button onPress={handleButtonPress} label="quit" />
+        <Button onPress={handleButtonPress} label="menu" />
       </BottomNav>
     </View>
   );
