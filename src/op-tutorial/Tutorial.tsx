@@ -55,7 +55,7 @@ export const Tutorial: FC = observer(function() {
     ? metrics.screenHeight -
       descriptionLayout.height -
       bottomNavHeight -
-      metrics.screenMargin * 4 // Additional vertical padding
+      metrics.screenMargin * 8 // Additional vertical padding
     : undefined;
 
   // Callback handlers
