@@ -59,7 +59,7 @@ export const Tutorial: FC = observer(function() {
     : undefined;
 
   // Callback handlers
-  const handleQuitPress = () => {
+  const handleMenuPress = () => {
     if (!isUnmountingRef.current) {
       navigateToHome();
     }
@@ -96,7 +96,7 @@ export const Tutorial: FC = observer(function() {
       </View>
       {board.isInitialized && (
         <BottomNav animValue={fadeInterfaceAnim.value}>
-          <Button label="menu" onPress={handleQuitPress} />
+          <Button label="menu" onPress={handleMenuPress} />
         </BottomNav>
       )}
     </View>
