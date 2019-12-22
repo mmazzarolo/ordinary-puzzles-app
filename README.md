@@ -46,7 +46,7 @@ Ordinary Puzzles is a puzzle game inspired by [Juho Snellman](https://www.snellm
 I discovered Linjat a while ago on Hacker News. I liked the concept of its Picross-like puzzles, so after a quick chat with Juho I decided to port it to a mobile game.
 
 The font used across the entire app is [Averta](https://www.myfonts.com/fonts/intelligent-foundry/averta/), by [Kostas Bartsokas](http://www.kostasbartsokas.com/).  
-For licensing reason the Averta font files are not included in the source code.
+For licensing reason the Averta font files **are not** included in the source code.
 
 Ordinary Puzzles is built with [React-Native](https://facebook.github.io/react-native/), [TypeScript](https://www.typescriptlang.org/) and [MobX](https://mobx.js.org/README.html).
 
