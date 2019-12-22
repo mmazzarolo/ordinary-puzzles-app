@@ -52,4 +52,5 @@ Ordinary Puzzles is built with [React-Native](https://facebook.github.io/react-n
 
 ## Contributing
 
+See [CONTRIBUTING.md](./CONTRIBUTING.md).  
 Pull requests are welcome. File an issue for ideas, conversation or feedback.
