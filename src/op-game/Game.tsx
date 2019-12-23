@@ -13,7 +13,7 @@ import {
   headerHeight
 } from "op-common";
 import { metrics, animations } from "op-design";
-import { useAnimation, useOnMount } from "op-utils";
+import { useAnimation, useOnMount, useHardwareBackButton } from "op-utils";
 
 export const Game: FC = observer(function() {
   const { puzzle, router } = useCoreStores();
@@ -23,6 +23,7 @@ export const Game: FC = observer(function() {
   // Routing setup
   const navigateToHome = () => router.changeRoute("home");
   const navigateToSuccess = () => router.changeRoute("success");
+  useHardwareBackButton(navigateToHome);
 
   // Animations setup
   // https://github.com/facebook/react-native/issues/27146
