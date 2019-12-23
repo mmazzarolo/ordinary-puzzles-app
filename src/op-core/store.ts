@@ -4,7 +4,13 @@ import { rehydrateObject, persistObject, pickRandomPuzzle } from "op-utils";
 import uniq from "lodash/uniq";
 import puzzles from "./puzzles.json";
 
-export type Route = "home" | "game" | "intro" | "tutorial" | "success";
+export type Route =
+  | "home"
+  | "game"
+  | "intro"
+  | "tutorial"
+  | "success"
+  | "stats";
 export type PuzzleMode = "tutorial" | "small" | "medium" | "large";
 
 const sum = (a: number, b: number) => a + b;
@@ -32,23 +38,20 @@ class RouterStore {
   @action
   changeRoute(route: Route, puzzleMode?: PuzzleMode | "continue") {
     switch (route) {
-      case "home": {
-        break;
-      }
       case "intro": {
         if (puzzleMode !== "continue") {
           this.root.puzzle.setRandomPuzzle(puzzleMode);
         }
         break;
       }
-      case "game": {
-        break;
-      }
-      case "success": {
-        break;
-      }
       case "tutorial": {
         this.root.puzzle.setPuzzle("tutorial", 0);
+        break;
+      }
+      case "home":
+      case "game":
+      case "success":
+      case "stats": {
         break;
       }
       default: {

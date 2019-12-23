@@ -6,6 +6,7 @@ import { Intro } from "op-intro/Intro";
 import { Tutorial } from "op-tutorial/Tutorial";
 import { Message } from "op-message/Message";
 import { Success } from "op-success/Success";
+import { Stats } from "op-stats/Stats";
 import { useCoreStores } from "./store";
 
 export const Router: FC = observer(function() {
@@ -18,6 +19,8 @@ export const Router: FC = observer(function() {
     return <Game />;
   } else if (router.currentRoute === "success") {
     return <Success />;
+  } else if (router.currentRoute === "stats") {
+    return <Stats />;
   } else if (router.currentRoute === "tutorial") {
     if (puzzle.type === "message") {
       return <Message />;
