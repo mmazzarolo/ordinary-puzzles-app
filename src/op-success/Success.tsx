@@ -41,7 +41,7 @@ export const Success: FC = observer(function() {
   });
 
   // Callback handlers
-  const handleQuitPress = () => {
+  const handleMenuPress = () => {
     if (interactionsDisabledRef.current) return;
     interactionsDisabledRef.current = true;
     fadeRootOut().start(() => {
@@ -88,7 +88,7 @@ export const Success: FC = observer(function() {
         </Text>
       </View>
       <BottomNav animValue={fadeBottomNavAnim.value}>
-        <Button label="Quit" onPress={handleQuitPress} />
+        <Button label="Menu" onPress={handleMenuPress} />
         <Button label="New Puzzle" onPress={handleNewPuzzlePress} />
       </BottomNav>
     </Animated.View>

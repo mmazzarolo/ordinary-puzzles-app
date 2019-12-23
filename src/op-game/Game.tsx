@@ -47,7 +47,7 @@ export const Game: FC = observer(function() {
   });
 
   // Callback handlers
-  const handleQuitPress = () => {
+  const handleMenuPress = () => {
     if (interactionsDisabledRef.current) return;
     interactionsDisabledRef.current = true;
     fadeRootOut().start(navigateToHome);
@@ -94,7 +94,7 @@ export const Game: FC = observer(function() {
         )}
       </View>
       <BottomNav animValue={fadeInterfaceAnim.value}>
-        <Button label="Quit" onPress={handleQuitPress} />
+        <Button label="Menu" onPress={handleMenuPress} />
         <Button label="Reset" onPress={handleResetPress} />
       </BottomNav>
     </Animated.View>
