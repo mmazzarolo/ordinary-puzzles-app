@@ -147,8 +147,8 @@ android {
         applicationId "com.mmazzarolo.ordinarypuzzles"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
-        versionName "1.1"
+        versionCode 7
+        versionName "1.2"
     }
     splits {
         abi {
