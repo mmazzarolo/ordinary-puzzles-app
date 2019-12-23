@@ -18,6 +18,11 @@ const isOppositeDirectionOf = (dir1: string, dir2: string) => {
 
 const sortInt = (a: number, b: number) => a - b;
 
+interface SerializedCell {
+  row: number;
+  col: number;
+}
+
 export class Cell {
   root: RootStore;
 
@@ -141,6 +146,18 @@ export class Cell {
   setLine(line?: Line) {
     this.line = line;
   }
+
+  serialize(): SerializedCell {
+    return {
+      row: this.row,
+      col: this.col
+    };
+  }
+}
+
+interface SerializedLine {
+  origin: SerializedCell;
+  cells: SerializedCell[];
 }
 
 class Line {
@@ -297,6 +314,11 @@ class Line {
   }
 
   @action
+  rehydrate(cells: Cell[]) {
+    this.committedCells.replace(cells);
+  }
+
+  @action
   unlinkReference() {
     this.cells.forEach(cell => cell.setLine(undefined));
   }
@@ -343,6 +365,18 @@ class Line {
   equals(line?: Line) {
     return line && this.id === line.id;
   }
+
+  serialize(): SerializedLine {
+    return {
+      origin: this.origin.serialize(),
+      cells: this.committedCells.map(cell => cell.serialize())
+    };
+  }
+}
+
+interface SerializedBoard {
+  puzzleId: string;
+  lines: SerializedLine[];
 }
 
 class BoardStore {
@@ -357,7 +391,7 @@ class BoardStore {
   }
 
   @action
-  initialize(puzzleId: string, rows: string[]) {
+  initialize(puzzleId: string, rows: string[], status?: SerializedBoard) {
     const grid: Cell[][] = [];
     const lines: Line[] = [];
     rows.forEach((rowString: string, row: number) => {
@@ -375,6 +409,24 @@ class BoardStore {
     this.grid.replace(grid);
     this.lines.replace(lines);
     this.puzzleId = puzzleId;
+  }
+
+  @action
+  rehydrate(serializedBoard: SerializedBoard) {
+    if (serializedBoard.puzzleId !== this.puzzleId) {
+      console.error("BoardStore.rehydrate » invalid puzzle ID");
+      return;
+    }
+    this.lines.forEach(line => {
+      const serializedLine = serializedBoard.lines.find(
+        x => x.origin === line.origin
+      );
+      if (serializedLine) {
+        const cells = serializedLine.cells.map(x => this.at(x.row, x.col));
+        line.rehydrate(cells);
+        cells.forEach(x => x.setLine(line));
+      }
+    });
   }
 
   @action
@@ -490,6 +542,16 @@ class BoardStore {
   atId(id: string) {
     const [row, col] = id.split(":");
     return this.at(Number(row), Number(col));
+  }
+
+  serialize(): SerializedBoard {
+    if (!this.puzzleId) {
+      throw new Error("BoardStore.serialize » invalid puzzle ID");
+    }
+    return {
+      puzzleId: this.puzzleId,
+      lines: this.lines.map(line => line.serialize())
+    };
   }
 }
 
