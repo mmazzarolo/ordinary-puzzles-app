@@ -95,17 +95,22 @@ export const Home: FC = observer(function() {
     });
   }
 
+  // Score setup
   const scoreStyle: ViewStyle = {
     top: -metrics.screenMargin
+  };
+  const handleScorePress = () => {
+    if (isMenuDisabled) return;
+    setIsMenuDisabled(true);
+    rootFadeAnim
+      .setup({ duration: rootFadeOutAnimDuration, toValue: 0 })
+      .start(() => {
+        router.changeRoute("stats");
+      });
   };
 
   return (
     <Animated.View style={[styles.root, animations.fade(rootFadeAnim.value)]}>
-      <Score
-        animValue={menuAnim.value}
-        score={stats.score}
-        style={scoreStyle}
-      />
       <View style={styles.top}>
         <Logo titleAnimValue={titleAnim.value} dotAnimValue={dotAnim.value} />
       </View>
@@ -116,6 +121,12 @@ export const Home: FC = observer(function() {
           items={menuItems}
         />
       </View>
+      <Score
+        animValue={menuAnim.value}
+        onPress={isMenuDisabled ? undefined : handleScorePress}
+        score={stats.score}
+        style={scoreStyle}
+      />
     </Animated.View>
   );
 });

@@ -3,31 +3,32 @@ import {
   StyleSheet,
   TouchableOpacity,
   StyleProp,
+  TouchableOpacityProps,
   ViewStyle
 } from "react-native";
 import { hapticFeedback, scale, playSound } from "op-utils";
-import { Text } from "./Text";
+import { Text, TextFamily, TextWeight } from "./Text";
 
 export const defaultButtonTextSize = scale(32);
 
-interface ButtonProps {
-  disabled?: boolean;
+interface ButtonProps extends TouchableOpacityProps {
   highlighted?: boolean;
   label: string;
-  onPress: () => void;
-  style?: StyleProp<ViewStyle>;
   textColor?: string;
+  textFamily?: TextFamily;
   textSize?: number;
+  textWeight?: TextWeight;
 }
 
 export const Button: FC<ButtonProps> = function({
   children,
-  disabled = false,
   highlighted = true,
   label,
-  onPress,
   style = {},
-  textSize = defaultButtonTextSize
+  textFamily,
+  textSize = defaultButtonTextSize,
+  textWeight = "semibold",
+  ...otherProps
 }) {
   const handlePressIn = () => {
     hapticFeedback.generate("impactMedium");
@@ -36,13 +37,13 @@ export const Button: FC<ButtonProps> = function({
   return (
     <TouchableOpacity
       style={[styles.touchable, style]}
-      onPress={onPress}
       onPressIn={handlePressIn}
-      disabled={disabled}
+      {...otherProps}
     >
       <Text
-        weight="semibold"
         secondary={!highlighted}
+        family={textFamily}
+        weight={textWeight}
         style={[
           styles.label,
           highlighted && styles.labelHighlighted,
