@@ -97,7 +97,8 @@ export const Home: FC = observer(function() {
 
   // Score setup
   const scoreStyle: ViewStyle = {
-    top: -metrics.screenMargin
+    top: metrics.screenMargin,
+    right: metrics.screenMargin
   };
   const handleScorePress = () => {
     if (isMenuDisabled) return;
@@ -134,8 +135,8 @@ export const Home: FC = observer(function() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    marginVertical: metrics.screenMargin * 2,
-    marginHorizontal: metrics.screenMargin
+    paddingVertical: metrics.screenMargin * 2,
+    paddingHorizontal: metrics.screenMargin
   },
   top: {
     flex: 1,
