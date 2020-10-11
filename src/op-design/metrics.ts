@@ -4,5 +4,5 @@ import { scale } from "op-utils";
 export const metrics = {
   screenWidth: Dimensions.get("screen").width,
   screenHeight: Dimensions.get("screen").height,
-  screenMargin: scale(16)
+  screenMargin: scale(16),
 };

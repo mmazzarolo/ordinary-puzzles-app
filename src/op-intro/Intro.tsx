@@ -6,9 +6,9 @@ import { useAnimation, scaleTextToFit, delay, useOnMount } from "op-utils";
 import { useCoreStores } from "op-core";
 
 const asyncAnimationStart = (anim: Animated.CompositeAnimation) =>
-  new Promise(resolve => anim.start(resolve));
+  new Promise((resolve) => anim.start(resolve));
 
-export const Intro: FC = function() {
+export const Intro: FC = function () {
   const { puzzle, router } = useCoreStores();
   const skippingEnabledRef = useRef(true);
   const hasSkippedRef = useRef(false);
@@ -47,9 +47,9 @@ export const Intro: FC = function() {
   const digitList = puzzle.prefix.split("");
   const letterList = puzzle.name.split("");
   const chars = digitList
-    .map(digit => ({ type: "digit", value: digit }))
+    .map((digit) => ({ type: "digit", value: digit }))
     .concat({ type: "space", value: " " })
-    .concat(letterList.map(letter => ({ type: "letter", value: letter })));
+    .concat(letterList.map((letter) => ({ type: "letter", value: letter })));
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     marginHorizontal: metrics.screenMargin,
     height: "100%",
     alignItems: "center",
-    flexDirection: "row"
+    flexDirection: "row",
   },
-  letter: {}
+  letter: {},
 });

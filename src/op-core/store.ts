@@ -31,7 +31,7 @@ class RouterStore {
   get hasLoadedHomeOnce() {
     return (
       this.routesHistory.length > 1 &&
-      this.routesHistory.filter(x => x === "home").length > 1
+      this.routesHistory.filter((x) => x === "home").length > 1
     );
   }
 
@@ -95,7 +95,7 @@ class PuzzleStore {
       tutorial: "xs",
       small: "sm",
       medium: "md",
-      large: "lg"
+      large: "lg",
     };
     return this.mode ? modePrefix[this.mode] : "ko";
   }
@@ -157,7 +157,7 @@ class PuzzleStore {
     const randomPuzzleIndex = pickRandomPuzzle({
       allPuzzlesLength: puzzles[mode].length,
       playedHistory: this.root.stats.playedPuzzles[mode],
-      completedHistory: this.root.stats.completedPuzzles[mode]
+      completedHistory: this.root.stats.completedPuzzles[mode],
     });
     this.setPuzzle(mode, randomPuzzleIndex);
   }
@@ -183,7 +183,7 @@ const emptyPuzzleHistory: Record<PuzzleMode, number[]> = {
   tutorial: [],
   small: [],
   medium: [],
-  large: []
+  large: [],
 };
 
 class StatsStore {
@@ -218,9 +218,9 @@ class StatsStore {
   @computed
   get score() {
     const _score = (Object.keys(this.completedPuzzles) as PuzzleMode[])
-      .map(mode => {
+      .map((mode) => {
         return this.completedPuzzles[mode]
-          .map(index => {
+          .map((index) => {
             const puzzleScore = puzzles[mode]?.[index]?.score || 0;
             return puzzleScore;
           })
@@ -241,7 +241,7 @@ class StatsStore {
     if (mode && index !== undefined) {
       this.completedPuzzles[mode] = uniq(
         this.completedPuzzles[mode] || []
-      ).filter(x => x !== index);
+      ).filter((x) => x !== index);
       this.completedPuzzles[mode].push(index);
       persistObject("completedPuzzles", toJS(this.completedPuzzles));
     }
@@ -251,7 +251,7 @@ class StatsStore {
   updatePlayedPuzzles(mode?: PuzzleMode, index?: number) {
     if (mode && index !== undefined) {
       this.playedPuzzles[mode] = uniq(this.playedPuzzles[mode] || []).filter(
-        x => x !== index
+        (x) => x !== index
       );
       this.playedPuzzles[mode].push(index);
       persistObject("playedPuzzles", toJS(this.playedPuzzles));
@@ -281,7 +281,7 @@ export const storesContext = createContext({
   initializeStore: rootStore.initializeStore,
   puzzle: rootStore.puzzle,
   router: rootStore.router,
-  stats: rootStore.stats
+  stats: rootStore.stats,
 });
 
 export const useCoreStores = () => useContext(storesContext);

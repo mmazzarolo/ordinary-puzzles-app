@@ -8,7 +8,10 @@ interface BottomNavProps {
   animValue: Animated.Value;
 }
 
-export const BottomNav: FC<BottomNavProps> = function({ animValue, children }) {
+export const BottomNav: FC<BottomNavProps> = function ({
+  animValue,
+  children,
+}) {
   return (
     <Animated.View style={[styles.root, animations.fadeSlideBottom(animValue)]}>
       {children}
@@ -21,8 +24,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: scale(10),
-    marginBottom: scale(14)
-  }
+    marginBottom: scale(14),
+  },
 });
 
 export const bottomNavHeight =

@@ -10,15 +10,15 @@ interface AnimatedLetterProps extends TextProps {
   secondary?: boolean;
 }
 
-export const AnimatedLetter: FC<AnimatedLetterProps> = function({
+export const AnimatedLetter: FC<AnimatedLetterProps> = function ({
   animValue,
   delay,
   style,
   value,
-  secondary
+  secondary,
 }) {
   const charAnimatedStyle = animations.fadeSlideBottom(animValue, {
-    interpolateStart: delay
+    interpolateStart: delay,
   });
   return (
     <Text

@@ -38,7 +38,7 @@ const adjustBorderForOrientation = (cell: Cell, style: ViewStyle) => {
   }
 };
 
-export const Tile: FC<Props> = observer(function(props) {
+export const Tile: FC<Props> = observer(function (props) {
   const colors = useColors();
   const { cell, size, successAnimValue } = props;
 
@@ -70,7 +70,7 @@ export const Tile: FC<Props> = observer(function(props) {
   // @ts-ignore
   tileStyle.borderColor = successAnimValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [colors.primary[7], colors.primary[9]]
+    outputRange: [colors.primary[7], colors.primary[9]],
   });
 
   // Tile background color
@@ -149,18 +149,18 @@ const styles = StyleSheet.create({
   root: {
     position: "relative",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   text: {
     position: "absolute",
     textAlign: "center",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   content: {
     position: "absolute",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   hover: {
     position: "absolute",
@@ -168,6 +168,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
-  }
+    bottom: 0,
+  },
 });

@@ -18,11 +18,11 @@ interface BoardProps {
   onClearedAnimStart?: () => void;
 }
 
-export const Board: FC<BoardProps> = observer(function({
+export const Board: FC<BoardProps> = observer(function ({
   availableHorizontalSpace,
   availableVerticalSpace,
   onClearedAnimEnd = () => undefined,
-  onClearedAnimStart = () => undefined
+  onClearedAnimStart = () => undefined,
 }) {
   const { board, interactions } = useBoardStores();
   const { puzzle } = useCoreStores();
@@ -40,10 +40,10 @@ export const Board: FC<BoardProps> = observer(function({
     Animated.sequence([
       successAnim.setup({
         duration: successAnimDuration,
-        useNativeDriver: false
+        useNativeDriver: false,
       }),
       Animated.delay(successAnimDelay),
-      fadeAnim.setup({ duration: fadeOutAnimDuration, toValue: 0 })
+      fadeAnim.setup({ duration: fadeOutAnimDuration, toValue: 0 }),
     ]).start(onClearedAnimEnd);
   };
 
@@ -74,7 +74,7 @@ export const Board: FC<BoardProps> = observer(function({
     );
     const disposeClearedReaction = reaction(
       () => board.cleared,
-      didSucceed => {
+      (didSucceed) => {
         if (didSucceed) animateSuccess();
       }
     );
@@ -105,23 +105,23 @@ export const Board: FC<BoardProps> = observer(function({
     backgroundColor: colors.primary[9],
     opacity: fadeAnim.value.interpolate({
       inputRange: [0, 1],
-      outputRange: [1, 0]
-    })
+      outputRange: [1, 0],
+    }),
   };
 
   return (
     <View
       style={styles.root}
-      onLayout={e => interactions.enableInteraction(e)}
-      onTouchStart={e => interactions.onGridTouchStart(e)}
-      onTouchMove={e => interactions.onGridTouchMove(e)}
-      onTouchEnd={e => interactions.onGridTouchEnd(e)}
+      onLayout={(e) => interactions.enableInteraction(e)}
+      onTouchStart={(e) => interactions.onGridTouchStart(e)}
+      onTouchMove={(e) => interactions.onGridTouchMove(e)}
+      onTouchEnd={(e) => interactions.onGridTouchEnd(e)}
       pointerEvents={board.cleared ? "none" : undefined}
     >
       <Animated.View style={!isAndroid && animations.fade(fadeAnim.value)}>
         {board.grid.map((cellsRow, rowIndex) => (
           <View style={[styles.row]} key={rowIndex} pointerEvents="none">
-            {cellsRow.map(cell => (
+            {cellsRow.map((cell) => (
               <Tile
                 key={cell.id}
                 cell={cell}
@@ -145,13 +145,13 @@ export const Board: FC<BoardProps> = observer(function({
 const styles = StyleSheet.create({
   root: {},
   row: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   androidOpacity: {
     position: "absolute",
     top: -5,
     left: -5,
     right: -5,
-    bottom: -5
-  }
+    bottom: -5,
+  },
 });

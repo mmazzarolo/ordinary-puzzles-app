@@ -15,7 +15,7 @@ export const pickRandomPuzzle = ({
   allPuzzlesLength,
   playedHistory = [],
   completedHistory = [],
-  recentlyPlayedFactor = Math.floor(allPuzzlesLength / 2)
+  recentlyPlayedFactor = Math.floor(allPuzzlesLength / 2),
 }: Params) => {
   const hasPlayedAllPuzzles = playedHistory.length >= allPuzzlesLength;
   // If there's at least a puzzle that has not been played yet, pick one from

@@ -10,12 +10,12 @@ import {
   bottomNavHeight,
   Button,
   Header,
-  headerHeight
+  headerHeight,
 } from "op-common";
 import { metrics, animations } from "op-design";
 import { useAnimation, useOnMount, useHardwareBackButton } from "op-utils";
 
-export const Game: FC = observer(function() {
+export const Game: FC = observer(function () {
   const { puzzle, router } = useCoreStores();
   const { board } = useBoardStores();
   const interactionsDisabledRef = useRef(false);
@@ -38,7 +38,7 @@ export const Game: FC = observer(function() {
   const fadeInterfaceOut = () =>
     fadeInterfaceAnim.setup({
       duration: fadeInterfaceOutAnimDuration,
-      toValue: 0
+      toValue: 0,
     });
   const fadeRootOut = () =>
     fadeRootAnim.setup({ duration: fadeRootOutDuration });
@@ -105,11 +105,11 @@ export const Game: FC = observer(function() {
 const styles = StyleSheet.create({
   root: {
     height: "100%",
-    marginHorizontal: metrics.screenMargin
+    marginHorizontal: metrics.screenMargin,
   },
   boardWrapper: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });

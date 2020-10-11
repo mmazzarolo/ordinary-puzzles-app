@@ -12,14 +12,14 @@ interface HeaderProps {
   fontSize?: number;
 }
 
-export const Header: FC<HeaderProps> = observer(function({
+export const Header: FC<HeaderProps> = observer(function ({
   fadeAnimValue,
   name,
   prefix,
-  fontSize = scale(34)
+  fontSize = scale(34),
 }) {
   const textStyle = {
-    fontSize
+    fontSize,
   };
   return (
     <Animated.View
@@ -42,14 +42,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginTop: metrics.screenMargin,
     marginBottom: metrics.screenMargin / 2,
-    zIndex: 200
+    zIndex: 200,
   },
   identifier: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   text: {
-    fontSize: scale(34)
-  }
+    fontSize: scale(34),
+  },
 });
 
 export const headerHeight =

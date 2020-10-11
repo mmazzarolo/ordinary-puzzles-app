@@ -12,18 +12,18 @@ interface ScoreProps {
   style?: ViewStyle;
 }
 
-export const Score: FC<ScoreProps> = function({
+export const Score: FC<ScoreProps> = function ({
   animValue,
   onPress,
   score,
-  style
+  style,
 }) {
   if (!score) return null;
   const buttonHitSlop = {
     top: scale(20),
     bottom: scale(20),
     left: scale(20),
-    right: scale(20)
+    right: scale(20),
   };
   return (
     <Animated.View style={[styles.root, animations.fade(animValue), style]}>
@@ -48,17 +48,17 @@ export const Score: FC<ScoreProps> = function({
 const styles = StyleSheet.create({
   root: {
     position: "absolute",
-    alignSelf: "flex-end"
+    alignSelf: "flex-end",
   },
   content: {
-    alignItems: "center"
+    alignItems: "center",
   },
   score: {
-    fontSize: scale(20)
+    fontSize: scale(20),
   },
   star: {
-    fontSize: scale(16)
-  }
+    fontSize: scale(16),
+  },
 });
 
 // <TouchableOpacity

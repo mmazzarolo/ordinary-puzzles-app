@@ -1,7 +1,7 @@
 import {
   LayoutRectangle,
   LayoutChangeEvent,
-  GestureResponderEvent
+  GestureResponderEvent,
 } from "react-native";
 import { createContext, useContext } from "react";
 import { observable, action, computed, autorun } from "mobx";
@@ -181,10 +181,10 @@ class Line {
     if (this.orientation === "initial") {
       return [this.cells[0], this.cells[0]];
     } else if (this.orientation === "horizontal") {
-      const cellsByCols = sortBy(this.cells.slice(), cell => cell.col);
+      const cellsByCols = sortBy(this.cells.slice(), (cell) => cell.col);
       return [cellsByCols[0], cellsByCols[cellsByCols.length - 1]];
     } else {
-      const cellsByRows = sortBy(this.cells.slice(), cell => cell.row);
+      const cellsByRows = sortBy(this.cells.slice(), (cell) => cell.row);
       return [cellsByRows[0], cellsByRows[cellsByRows.length - 1]];
     }
   }
@@ -201,22 +201,22 @@ class Line {
 
   @computed
   get leftCommittedCells() {
-    return this.committedCells.filter(cell => cell.onLeftOf(this.origin));
+    return this.committedCells.filter((cell) => cell.onLeftOf(this.origin));
   }
 
   @computed
   get rightCommittedCells() {
-    return this.committedCells.filter(cell => cell.onRightOf(this.origin));
+    return this.committedCells.filter((cell) => cell.onRightOf(this.origin));
   }
 
   @computed
   get topCommittedCells() {
-    return this.committedCells.filter(cell => cell.onTopOf(this.origin));
+    return this.committedCells.filter((cell) => cell.onTopOf(this.origin));
   }
 
   @computed
   get bottomCommittedCells() {
-    return this.committedCells.filter(cell => cell.onBottomOf(this.origin));
+    return this.committedCells.filter((cell) => cell.onBottomOf(this.origin));
   }
 
   @computed
@@ -298,12 +298,12 @@ class Line {
 
   @action
   unlinkReference() {
-    this.cells.forEach(cell => cell.setLine(undefined));
+    this.cells.forEach((cell) => cell.setLine(undefined));
   }
 
   @action
   linkReference() {
-    this.cells.forEach(cell => cell.setLine(this));
+    this.cells.forEach((cell) => cell.setLine(this));
   }
 
   @action
@@ -317,7 +317,9 @@ class Line {
     if (!this.stale) {
       this.stale = true;
     }
-    this.pendingCells.replace(cells.filter(cell => !cell.equals(this.origin)));
+    this.pendingCells.replace(
+      cells.filter((cell) => !cell.equals(this.origin))
+    );
     this.linkReference();
   }
 
@@ -379,7 +381,7 @@ class BoardStore {
 
   @action
   reset() {
-    this.lines.forEach(line => {
+    this.lines.forEach((line) => {
       line.reset();
     });
   }
@@ -408,11 +410,11 @@ class BoardStore {
 
   @computed
   get cleared() {
-    if (this.lines.find(line => !line.completed)) {
+    if (this.lines.find((line) => !line.completed)) {
       return false;
     }
-    const hasEmptyDot = this.grid.some(row => {
-      return row.some(cell => {
+    const hasEmptyDot = this.grid.some((row) => {
+      return row.some((cell) => {
         if (cell.value === ".") {
           return !cell.valid || !cell.completed;
         }
@@ -433,7 +435,9 @@ class BoardStore {
     };
     if (from.onSameRowOf(to)) {
       const row = from.row;
-      const [colStart, colEnd] = [from, to].map(cell => cell.col).sort(sortInt);
+      const [colStart, colEnd] = [from, to]
+        .map((cell) => cell.col)
+        .sort(sortInt);
       for (let col = colStart; col <= colEnd; col++) {
         cellsInBetween.push(this.at(row, col));
       }
@@ -443,7 +447,9 @@ class BoardStore {
           : takeRightWhile(cellsInBetween, shouldDrop);
     } else if (from.onSameColumnOf(to)) {
       const col = from.col;
-      const [rowStart, rowEnd] = [from, to].map(cell => cell.row).sort(sortInt);
+      const [rowStart, rowEnd] = [from, to]
+        .map((cell) => cell.row)
+        .sort(sortInt);
       for (let row = rowStart; row <= rowEnd; row++) {
         cellsInBetween.push(this.at(row, col));
       }
@@ -461,7 +467,9 @@ class BoardStore {
     };
     if (from.onSameRowOf(to)) {
       const row = from.row;
-      const [colStart, colEnd] = [from, to].map(cell => cell.col).sort(sortInt);
+      const [colStart, colEnd] = [from, to]
+        .map((cell) => cell.col)
+        .sort(sortInt);
       const cellsInBetween = [];
       for (let col = colStart; col <= colEnd; col++) {
         cellsInBetween.push(this.at(row, col));
@@ -471,7 +479,9 @@ class BoardStore {
         : takeRightWhile(cellsInBetween, shouldDrop);
     } else if (from.onSameColumnOf(to)) {
       const col = from.col;
-      const [rowStart, rowEnd] = [from, to].map(cell => cell.row).sort(sortInt);
+      const [rowStart, rowEnd] = [from, to]
+        .map((cell) => cell.row)
+        .sort(sortInt);
       const cellsInBetween = [];
       for (let row = rowStart; row <= rowEnd; row++) {
         cellsInBetween.push(this.at(row, col));
@@ -682,7 +692,7 @@ export const rootStore = new RootStore();
 
 export const storesContext = createContext({
   board: rootStore.board,
-  interactions: rootStore.interactions
+  interactions: rootStore.interactions,
 });
 
 export const useBoardStores = () => useContext(storesContext);

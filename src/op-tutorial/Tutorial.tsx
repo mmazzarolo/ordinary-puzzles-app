@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
   LayoutChangeEvent,
-  LayoutRectangle
+  LayoutRectangle,
 } from "react-native";
 import { observer } from "mobx-react";
 import KeepAwake from "react-native-keep-awake";
@@ -15,7 +15,7 @@ import { BottomNav, Button, bottomNavHeight } from "op-common";
 import { useAnimation, useOnMount, useHardwareBackButton } from "op-utils";
 import { Description } from "./Description";
 
-export const Tutorial: FC = observer(function() {
+export const Tutorial: FC = observer(function () {
   const { board } = useBoardStores();
   const { puzzle, router } = useCoreStores();
 
@@ -42,7 +42,7 @@ export const Tutorial: FC = observer(function() {
   // and make sure we can fit the board
   const [
     descriptionLayout,
-    setDescriptionLayout
+    setDescriptionLayout,
   ] = useState<LayoutRectangle | null>(null);
   const handleDescriptionLayout = (event: LayoutChangeEvent) => {
     if (descriptionLayout?.height !== event.nativeEvent.layout.height) {
@@ -106,11 +106,11 @@ export const Tutorial: FC = observer(function() {
 const styles = StyleSheet.create({
   root: {
     height: "100%",
-    marginHorizontal: metrics.screenMargin
+    marginHorizontal: metrics.screenMargin,
   },
   boardWrapper: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });

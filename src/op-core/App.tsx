@@ -12,7 +12,7 @@ import { Main } from "./Main";
 import { useCoreStores } from "./store";
 
 configure({
-  enforceActions: "always"
+  enforceActions: "always",
 });
 
 if (enableMobxLogging) {
@@ -28,7 +28,7 @@ if (Platform.OS === "android") {
   }
 }
 
-export const App: FC = function() {
+export const App: FC = function () {
   const { initializeStore } = useCoreStores();
   const initializeApp = async () => {
     if (simulateFirstLoad) {
