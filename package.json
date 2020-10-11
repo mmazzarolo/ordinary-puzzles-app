@@ -17,9 +17,9 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
     "lodash": "^4.17.20",
-    "mobx": "^5.15.0",
+    "mobx": "^6.0.1",
     "mobx-logger": "^0.7.1",
-    "mobx-react": "^6.1.4",
+    "mobx-react": "^7.0.0",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-bootsplash": "^1.0.3",
@@ -32,7 +32,6 @@
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.8.4",
-    "@babel/plugin-proposal-decorators": "^7.8.4",
     "@babel/runtime": "^7.8.4",
     "@types/jest": "^26.0.14",
     "@types/lodash": "^4.14.162",
@@ -67,9 +66,6 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix"
-    ],
-    "*.json": [
-      "prettier --write"
     ],
     "*.md": [
       "prettier --write"
