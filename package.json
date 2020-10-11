@@ -22,7 +22,6 @@
     "mobx-react": "^6.1.4",
     "react": "16.13.1",
     "react-native": "0.63.3",
-    "react-native-appearance": "^0.2.2",
     "react-native-bootsplash": "^1.0.3",
     "react-native-haptic": "oblador/react-native-haptic#package-cleanup",
     "react-native-immersive": "^2.0.0",
@@ -37,7 +36,7 @@
     "@babel/runtime": "^7.8.4",
     "@types/jest": "^26.0.14",
     "@types/lodash": "^4.14.162",
-    "@types/react": "^16.9.52",
+    "@types/react": "^16.9.34",
     "@types/react-native": "^0.63.25",
     "@types/react-test-renderer": "^16.9.3",
     "@types/tinycolor2": "^1.4.2",
@@ -67,16 +66,13 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ],
     "*.json": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "*.md": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   }
 }

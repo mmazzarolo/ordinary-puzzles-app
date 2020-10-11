@@ -6,7 +6,6 @@ import { Immersive } from "react-native-immersive";
 import { configure } from "mobx";
 import { enableLogging } from "mobx-logger";
 import { useOnMount, clearStorage, initializeAudio } from "op-utils";
-import { AppearanceProvider } from "react-native-appearance";
 import { simulateFirstLoad, enableMobxLogging } from "op-config";
 import { Main } from "./Main";
 import { useCoreStores } from "./store";
@@ -44,9 +43,7 @@ export const App: FC = function () {
   return (
     <>
       <StatusBar hidden />
-      <AppearanceProvider>
-        <Main />
-      </AppearanceProvider>
+      <Main />
     </>
   );
 };

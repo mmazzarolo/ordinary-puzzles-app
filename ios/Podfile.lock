@@ -236,8 +236,6 @@ PODS:
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
   - React-jsinspector (0.63.3)
-  - react-native-appearance (0.2.2):
-    - React
   - react-native-haptic (1.0.1):
     - React
   - react-native-keep-awake (4.0.0):
@@ -302,10 +300,10 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
-  - RNBootSplash (1.0.3):
+  - RNBootSplash (1.2.1):
     - React
-  - RNCAsyncStorage (1.6.3):
-    - React
+  - RNCAsyncStorage (1.12.1):
+    - React-Core
   - RNSound (0.11.0):
     - React
     - RNSound/Core (= 0.11.0)
@@ -352,7 +350,6 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
-  - react-native-appearance (from `../node_modules/react-native-appearance`)
   - react-native-haptic (from `../node_modules/react-native-haptic`)
   - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -416,8 +413,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
-  react-native-appearance:
-    :path: "../node_modules/react-native-appearance"
   react-native-haptic:
     :path: "../node_modules/react-native-haptic"
   react-native-keep-awake:
@@ -478,9 +473,8 @@ SPEC CHECKSUMS:
   React-jsi: df07aa95b39c5be3e41199921509bfa929ed2b9d
   React-jsiexecutor: b56c03e61c0dd5f5801255f2160a815f4a53d451
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
-  react-native-appearance: a5b85bdfcfba7aec3a2a35b52f99f2ff0ea89517
-  react-native-haptic: d90a0a661333a22cb2b434c7094a65f27aed773d
-  react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
+  react-native-haptic: b83dbc1933ebfc2d474914eae483b324a0d27aa5
+  react-native-keep-awake: eba3137546b10003361b37c761f6c429b59814ae
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2
   React-RCTBlob: 0b284339cbe4b15705a05e2313a51c6d8b51fa40
@@ -491,9 +485,9 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
-  RNBootSplash: 161de9d2b5dc2af37c2777063b8e6d844ab2a6ff
-  RNCAsyncStorage: 3c304d1adfaea02ec732ac218801cb13897aa8c0
-  RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
+  RNBootSplash: 676e80639613a2168a718a456710e9584ac4d5b1
+  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
+  RNSound: c980916b596cc15c8dcd2f6ecd3b13c4881dbe20
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

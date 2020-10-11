@@ -2,9 +2,7 @@ import React, { FC } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
-  StyleProp,
   TouchableOpacityProps,
-  ViewStyle,
 } from "react-native";
 import { hapticFeedback, scale, playSound } from "op-utils";
 import { Text, TextFamily, TextWeight } from "./Text";

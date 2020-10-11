@@ -1,5 +1,5 @@
+import { Appearance, useColorScheme } from "react-native";
 import tinycolor from "tinycolor2";
-import { Appearance, useColorScheme } from "react-native-appearance";
 
 const primaryColor = "#171520";
 const splashColor = "#84818D";

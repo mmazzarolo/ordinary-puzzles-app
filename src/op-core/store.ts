@@ -112,6 +112,7 @@ class PuzzleStore {
 
   @computed
   get type() {
+    // @ts-ignore
     return this.current?.type || "puzzle";
   }
 
@@ -132,11 +133,13 @@ class PuzzleStore {
 
   @computed
   get tutorialTitle() {
+    // @ts-ignore
     return this.current?.title || "";
   }
 
   @computed
   get tutorialMessage() {
+    // @ts-ignore
     return this.current?.message || "";
   }
 
