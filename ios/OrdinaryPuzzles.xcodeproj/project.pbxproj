@@ -8,21 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* OrdinaryPuzzlesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OrdinaryPuzzlesTests.m */; };
+		03EC262B658CF7CF7908B21E /* libPods-OrdinaryPuzzlesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4557D5C076DC5F5DA071F7 /* libPods-OrdinaryPuzzlesTests.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		280C9342E70A3A9CD55447DD /* libPods-OrdinaryPuzzles-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CED9FAF36F2FA7526DA1C927 /* libPods-OrdinaryPuzzles-tvOSTests.a */; };
+		141F8875D0B4CF8CCD0DB731 /* libPods-OrdinaryPuzzles-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3834F936ADED135ECA81FABE /* libPods-OrdinaryPuzzles-tvOSTests.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* OrdinaryPuzzlesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OrdinaryPuzzlesTests.m */; };
+		3ABE91BBC7684462EB35985B /* libPods-OrdinaryPuzzles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF613D4E546FE8A9B12664C /* libPods-OrdinaryPuzzles.a */; };
 		43E49040E6164FC0ABAA1ACF /* Averta-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE2FE4A3510C4E1F8BE75EF3 /* Averta-Regular.ttf */; };
-		4E925DC50388E3D03E0E64D8 /* libPods-OrdinaryPuzzles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FDA6D3D2609A5CF64CA69F /* libPods-OrdinaryPuzzles.a */; };
 		5150BF0B239BAA6000A5F9B4 /* buttonpress.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5150BF0A239BAA6000A5F9B4 /* buttonpress.wav */; };
+		72E80D52D40AE65DD944254E /* libPods-OrdinaryPuzzles-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E01BCBFDF023DEBB88DBB4B8 /* libPods-OrdinaryPuzzles-tvOS.a */; };
 		7D5E196635A04FCEB1DF7687 /* Averta-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4497DB6275B42518FA477B0 /* Averta-Semibold.ttf */; };
-		81679FD69C247D65A2F38E40 /* libPods-OrdinaryPuzzlesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C9EB0ADA3867C084FE16F80 /* libPods-OrdinaryPuzzlesTests.a */; };
-		AFE20947E8BA7D661349E946 /* libPods-OrdinaryPuzzles-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899856EF2F1E88A560EAB9E5 /* libPods-OrdinaryPuzzles-tvOS.a */; };
 		EF8E5AF3B1A247D0BE9960BB /* Averta-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A8A7854599794978A3185201 /* Averta-Bold.ttf */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +48,7 @@
 		00E356EE1AD99517003FC87E /* OrdinaryPuzzlesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrdinaryPuzzlesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* OrdinaryPuzzlesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrdinaryPuzzlesTests.m; sourceTree = "<group>"; };
-		0142545A6DB0AFFA675B7EEF /* Pods-OrdinaryPuzzles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles.debug.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles/Pods-OrdinaryPuzzles.debug.xcconfig"; sourceTree = "<group>"; };
+		123ACF053FE05A9E617A8610 /* Pods-OrdinaryPuzzles-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles-tvOS/Pods-OrdinaryPuzzles-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* OrdinaryPuzzles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OrdinaryPuzzles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OrdinaryPuzzles/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = OrdinaryPuzzles/AppDelegate.m; sourceTree = "<group>"; };
@@ -56,25 +56,25 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = OrdinaryPuzzles/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OrdinaryPuzzles/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OrdinaryPuzzles/main.m; sourceTree = "<group>"; };
+		218F9A40F41732F4C32785C1 /* Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles-tvOSTests/Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* OrdinaryPuzzles-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OrdinaryPuzzles-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* OrdinaryPuzzles-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OrdinaryPuzzles-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B9B73E228B0FF20EDC1E1CF /* Pods-OrdinaryPuzzles-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles-tvOS/Pods-OrdinaryPuzzles-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		4DEA970A6D9EB7496378CD2D /* Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles-tvOSTests/Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		3834F936ADED135ECA81FABE /* libPods-OrdinaryPuzzles-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrdinaryPuzzles-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5150BF0A239BAA6000A5F9B4 /* buttonpress.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = buttonpress.wav; path = ../assets/audio/buttonpress.wav; sourceTree = "<group>"; };
-		5EC3211CD2E7039535F348A6 /* Pods-OrdinaryPuzzlesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzlesTests.release.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzlesTests/Pods-OrdinaryPuzzlesTests.release.xcconfig"; sourceTree = "<group>"; };
-		634E1C27A3DBB413C9E6CC50 /* Pods-OrdinaryPuzzles-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles-tvOS.release.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles-tvOS/Pods-OrdinaryPuzzles-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		68B374F2FDCDA6BB92CBECEA /* Pods-OrdinaryPuzzlesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzlesTests.debug.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzlesTests/Pods-OrdinaryPuzzlesTests.debug.xcconfig"; sourceTree = "<group>"; };
-		899856EF2F1E88A560EAB9E5 /* libPods-OrdinaryPuzzles-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrdinaryPuzzles-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8C9EB0ADA3867C084FE16F80 /* libPods-OrdinaryPuzzlesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrdinaryPuzzlesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		99FDA6D3D2609A5CF64CA69F /* libPods-OrdinaryPuzzles.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrdinaryPuzzles.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C4557D5C076DC5F5DA071F7 /* libPods-OrdinaryPuzzlesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrdinaryPuzzlesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8EF613D4E546FE8A9B12664C /* libPods-OrdinaryPuzzles.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrdinaryPuzzles.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8A7854599794978A3185201 /* Averta-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Averta-Bold.ttf"; path = "../assets/fonts/Averta-Bold.ttf"; sourceTree = "<group>"; };
-		B591D25B2C6857053198CB6B /* Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles-tvOSTests/Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B15AAC86F458465CD4F92CCB /* Pods-OrdinaryPuzzlesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzlesTests.debug.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzlesTests/Pods-OrdinaryPuzzlesTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B52B5EF102811614098A24AD /* Pods-OrdinaryPuzzles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles.debug.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles/Pods-OrdinaryPuzzles.debug.xcconfig"; sourceTree = "<group>"; };
 		BE2FE4A3510C4E1F8BE75EF3 /* Averta-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Averta-Regular.ttf"; path = "../assets/fonts/Averta-Regular.ttf"; sourceTree = "<group>"; };
 		C4497DB6275B42518FA477B0 /* Averta-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Averta-Semibold.ttf"; path = "../assets/fonts/Averta-Semibold.ttf"; sourceTree = "<group>"; };
-		CED9FAF36F2FA7526DA1C927 /* libPods-OrdinaryPuzzles-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrdinaryPuzzles-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD7C2B963C48861CDF801BC0 /* Pods-OrdinaryPuzzlesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzlesTests.release.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzlesTests/Pods-OrdinaryPuzzlesTests.release.xcconfig"; sourceTree = "<group>"; };
+		DE53C533EA9F2AD86ABEAACB /* Pods-OrdinaryPuzzles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles.release.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles/Pods-OrdinaryPuzzles.release.xcconfig"; sourceTree = "<group>"; };
+		E01BCBFDF023DEBB88DBB4B8 /* libPods-OrdinaryPuzzles-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OrdinaryPuzzles-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA7CF57A81FE3CE0C37A4EB8 /* Pods-OrdinaryPuzzles-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles-tvOS.release.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles-tvOS/Pods-OrdinaryPuzzles-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		EC514E7125FD315A1D376325 /* Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles-tvOSTests/Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		F9B4C3659CDDF0AA1AB898ED /* Pods-OrdinaryPuzzles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrdinaryPuzzles.release.xcconfig"; path = "Target Support Files/Pods-OrdinaryPuzzles/Pods-OrdinaryPuzzles.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81679FD69C247D65A2F38E40 /* libPods-OrdinaryPuzzlesTests.a in Frameworks */,
+				03EC262B658CF7CF7908B21E /* libPods-OrdinaryPuzzlesTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E925DC50388E3D03E0E64D8 /* libPods-OrdinaryPuzzles.a in Frameworks */,
+				3ABE91BBC7684462EB35985B /* libPods-OrdinaryPuzzles.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AFE20947E8BA7D661349E946 /* libPods-OrdinaryPuzzles-tvOS.a in Frameworks */,
+				72E80D52D40AE65DD944254E /* libPods-OrdinaryPuzzles-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,7 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				280C9342E70A3A9CD55447DD /* libPods-OrdinaryPuzzles-tvOSTests.a in Frameworks */,
+				141F8875D0B4CF8CCD0DB731 /* libPods-OrdinaryPuzzles-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,10 +159,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				99FDA6D3D2609A5CF64CA69F /* libPods-OrdinaryPuzzles.a */,
-				899856EF2F1E88A560EAB9E5 /* libPods-OrdinaryPuzzles-tvOS.a */,
-				CED9FAF36F2FA7526DA1C927 /* libPods-OrdinaryPuzzles-tvOSTests.a */,
-				8C9EB0ADA3867C084FE16F80 /* libPods-OrdinaryPuzzlesTests.a */,
+				8EF613D4E546FE8A9B12664C /* libPods-OrdinaryPuzzles.a */,
+				E01BCBFDF023DEBB88DBB4B8 /* libPods-OrdinaryPuzzles-tvOS.a */,
+				3834F936ADED135ECA81FABE /* libPods-OrdinaryPuzzles-tvOSTests.a */,
+				7C4557D5C076DC5F5DA071F7 /* libPods-OrdinaryPuzzlesTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -205,14 +205,14 @@
 		FEC017CEC7C32A74F5A34348 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0142545A6DB0AFFA675B7EEF /* Pods-OrdinaryPuzzles.debug.xcconfig */,
-				F9B4C3659CDDF0AA1AB898ED /* Pods-OrdinaryPuzzles.release.xcconfig */,
-				4B9B73E228B0FF20EDC1E1CF /* Pods-OrdinaryPuzzles-tvOS.debug.xcconfig */,
-				634E1C27A3DBB413C9E6CC50 /* Pods-OrdinaryPuzzles-tvOS.release.xcconfig */,
-				B591D25B2C6857053198CB6B /* Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig */,
-				4DEA970A6D9EB7496378CD2D /* Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig */,
-				68B374F2FDCDA6BB92CBECEA /* Pods-OrdinaryPuzzlesTests.debug.xcconfig */,
-				5EC3211CD2E7039535F348A6 /* Pods-OrdinaryPuzzlesTests.release.xcconfig */,
+				B52B5EF102811614098A24AD /* Pods-OrdinaryPuzzles.debug.xcconfig */,
+				DE53C533EA9F2AD86ABEAACB /* Pods-OrdinaryPuzzles.release.xcconfig */,
+				123ACF053FE05A9E617A8610 /* Pods-OrdinaryPuzzles-tvOS.debug.xcconfig */,
+				EA7CF57A81FE3CE0C37A4EB8 /* Pods-OrdinaryPuzzles-tvOS.release.xcconfig */,
+				218F9A40F41732F4C32785C1 /* Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig */,
+				EC514E7125FD315A1D376325 /* Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig */,
+				B15AAC86F458465CD4F92CCB /* Pods-OrdinaryPuzzlesTests.debug.xcconfig */,
+				DD7C2B963C48861CDF801BC0 /* Pods-OrdinaryPuzzlesTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -224,7 +224,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OrdinaryPuzzlesTests" */;
 			buildPhases = (
-				C8D73B4A4B17593C10416E79 /* [CP] Check Pods Manifest.lock */,
+				615B8E08C8DC492D3893E86A /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -243,12 +243,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OrdinaryPuzzles" */;
 			buildPhases = (
-				51A7109A541EE7B801E7E272 /* [CP] Check Pods Manifest.lock */,
+				7116F2E3B833A41B2B79D578 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				F5EB3EE4F017C206B0F7907F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -263,7 +264,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OrdinaryPuzzles-tvOS" */;
 			buildPhases = (
-				29FAF8D16186781AF4A309EE /* [CP] Check Pods Manifest.lock */,
+				D54A261D4248EB765B842CAA /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -283,7 +284,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OrdinaryPuzzles-tvOSTests" */;
 			buildPhases = (
-				C3359B55A1610831E8B949AD /* [CP] Check Pods Manifest.lock */,
+				41606E067E0E2DFA38D07BC7 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -305,7 +306,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 940;
-				ORGANIZATIONNAME = Facebook;
+				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -401,28 +402,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		29FAF8D16186781AF4A309EE /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OrdinaryPuzzles-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -437,29 +416,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		51A7109A541EE7B801E7E272 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OrdinaryPuzzles-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C3359B55A1610831E8B949AD /* [CP] Check Pods Manifest.lock */ = {
+		41606E067E0E2DFA38D07BC7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -481,7 +438,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C8D73B4A4B17593C10416E79 /* [CP] Check Pods Manifest.lock */ = {
+		615B8E08C8DC492D3893E86A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -501,6 +458,68 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7116F2E3B833A41B2B79D578 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OrdinaryPuzzles-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D54A261D4248EB765B842CAA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OrdinaryPuzzles-tvOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F5EB3EE4F017C206B0F7907F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OrdinaryPuzzles/Pods-OrdinaryPuzzles-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OrdinaryPuzzles/Pods-OrdinaryPuzzles-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -608,7 +627,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 68B374F2FDCDA6BB92CBECEA /* Pods-OrdinaryPuzzlesTests.debug.xcconfig */;
+			baseConfigurationReference = B15AAC86F458465CD4F92CCB /* Pods-OrdinaryPuzzlesTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = G65HTDBUSN;
@@ -632,7 +651,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5EC3211CD2E7039535F348A6 /* Pods-OrdinaryPuzzlesTests.release.xcconfig */;
+			baseConfigurationReference = DD7C2B963C48861CDF801BC0 /* Pods-OrdinaryPuzzlesTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -653,7 +672,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0142545A6DB0AFFA675B7EEF /* Pods-OrdinaryPuzzles.debug.xcconfig */;
+			baseConfigurationReference = B52B5EF102811614098A24AD /* Pods-OrdinaryPuzzles.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 13;
@@ -676,7 +695,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F9B4C3659CDDF0AA1AB898ED /* Pods-OrdinaryPuzzles.release.xcconfig */;
+			baseConfigurationReference = DE53C533EA9F2AD86ABEAACB /* Pods-OrdinaryPuzzles.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 13;
@@ -698,7 +717,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4B9B73E228B0FF20EDC1E1CF /* Pods-OrdinaryPuzzles-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 123ACF053FE05A9E617A8610 /* Pods-OrdinaryPuzzles-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -726,7 +745,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 634E1C27A3DBB413C9E6CC50 /* Pods-OrdinaryPuzzles-tvOS.release.xcconfig */;
+			baseConfigurationReference = EA7CF57A81FE3CE0C37A4EB8 /* Pods-OrdinaryPuzzles-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -754,7 +773,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B591D25B2C6857053198CB6B /* Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = 218F9A40F41732F4C32785C1 /* Pods-OrdinaryPuzzles-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -781,7 +800,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4DEA970A6D9EB7496378CD2D /* Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = EC514E7125FD315A1D376325 /* Pods-OrdinaryPuzzles-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
