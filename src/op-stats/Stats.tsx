@@ -8,10 +8,10 @@ import {
   useAnimation,
   useOnMount,
   scale,
-  useHardwareBackButton
+  useHardwareBackButton,
 } from "op-utils";
 
-export const Stats: FC = observer(function() {
+export const Stats: FC = observer(function () {
   const { stats, router } = useCoreStores();
   const interactionsDisabledRef = useRef(false);
 
@@ -72,22 +72,22 @@ export const Stats: FC = observer(function() {
 const styles = StyleSheet.create({
   root: {
     height: "100%",
-    marginHorizontal: metrics.screenMargin
+    marginHorizontal: metrics.screenMargin,
   },
   middle: {
     flex: 1,
     marginTop: bottomNavHeight,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   title: {
-    fontSize: scale(48)
+    fontSize: scale(48),
   },
   score: {
     fontSize: scale(36),
-    marginTop: scale(36)
+    marginTop: scale(36),
   },
   progress: {
     fontSize: scale(36),
-    marginTop: scale(14)
-  }
+    marginTop: scale(14),
+  },
 });

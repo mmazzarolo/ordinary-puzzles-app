@@ -5,7 +5,7 @@ import { Splash } from "op-splash";
 import { skipSplashScreen } from "op-config";
 import { Router } from "./Router";
 
-export const Main: FC = function() {
+export const Main: FC = function () {
   const colors = useColors();
   const [isShowingSplash, setIsShowingSplash] = useState(!skipSplashScreen);
   const hideSplash = () => {
@@ -24,6 +24,6 @@ export const Main: FC = function() {
 const styles = StyleSheet.create({
   root: {
     height: "100%",
-    width: "100%"
-  }
+    width: "100%",
+  },
 });

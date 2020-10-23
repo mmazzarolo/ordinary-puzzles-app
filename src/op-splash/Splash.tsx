@@ -6,13 +6,13 @@ import { animations, metrics, colors } from "op-design";
 import { credits } from "op-config";
 
 const asyncAnimationStart = (anim: Animated.CompositeAnimation) =>
-  new Promise(resolve => anim.start(resolve));
+  new Promise((resolve) => anim.start(resolve));
 
 interface SplashProps {
   onHide: () => void;
 }
 
-export const Splash: FC<SplashProps> = function({ onHide }) {
+export const Splash: FC<SplashProps> = function ({ onHide }) {
   const skippingEnabledRef = useRef(true);
   const hasSkippedRef = useRef(false);
 
@@ -27,7 +27,7 @@ export const Splash: FC<SplashProps> = function({ onHide }) {
   const splashDuration = 2000;
   const showAnim = Animated.stagger(
     fadeCreditsStaggerDuration,
-    fadeCreditsAnims.map(anim =>
+    fadeCreditsAnims.map((anim) =>
       anim.setup({ duration: fadeCreditsAnimDuration })
     )
   );
@@ -35,14 +35,14 @@ export const Splash: FC<SplashProps> = function({ onHide }) {
   const hideAnim = Animated.sequence([
     Animated.stagger(
       fadeCreditsStaggerDuration,
-      fadeCreditsAnims.map(anim =>
+      fadeCreditsAnims.map((anim) =>
         anim.setup({ duration: fadeCreditsAnimDuration, toValue: 0 })
       )
     ),
     backgroundColorAnim.setup({
       duration: backgroundColorAnimDuration,
-      useNativeDriver: false
-    })
+      useNativeDriver: false,
+    }),
   ]);
 
   const animate = async () => {
@@ -62,8 +62,8 @@ export const Splash: FC<SplashProps> = function({ onHide }) {
   const rootAnimStyle = {
     backgroundColor: backgroundColorAnim.value.interpolate({
       inputRange: [0, 1],
-      outputRange: [colors.splash, colors.primary[9]]
-    })
+      outputRange: [colors.splash, colors.primary[9]],
+    }),
   };
 
   // If the user touches the screen, end the animation early
@@ -82,7 +82,7 @@ export const Splash: FC<SplashProps> = function({ onHide }) {
             weight="bold"
             style={[
               styles.credit,
-              animations.fadeSlideBottom(fadeCreditsAnims[index].value)
+              animations.fadeSlideBottom(fadeCreditsAnims[index].value),
             ]}
           >
             {credit}
@@ -99,11 +99,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    backgroundColor: colors.splash
+    backgroundColor: colors.splash,
   },
   credit: {
     color: "white",
     fontSize: scale(28),
-    marginVertical: scale(12)
-  }
+    marginVertical: scale(12),
+  },
 });

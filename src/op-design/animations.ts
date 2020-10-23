@@ -13,17 +13,17 @@ const createInterpolationRanges = (
   if (config && config.interpolateStart) {
     return {
       inputRange: [0, config.interpolateStart, 1],
-      outputRange: [from, from, to]
+      outputRange: [from, from, to],
     };
   }
   return {
     inputRange: [0, 1],
-    outputRange: [from, to]
+    outputRange: [from, to],
   };
 };
 
 const fade = (animValue: Animated.Value, config: Config = {}) => ({
-  opacity: animValue.interpolate(createInterpolationRanges(0, 1, config))
+  opacity: animValue.interpolate(createInterpolationRanges(0, 1, config)),
 });
 
 const slideValue = scale(20);
@@ -41,24 +41,24 @@ const slide = (
           1,
           config
         )
-      )
-    }
-  ]
+      ),
+    },
+  ],
 });
 
 const fadeSlideTop = (animValue: Animated.Value, config: Config = {}) => ({
   ...fade(animValue, config),
-  ...slide(animValue, "top", config)
+  ...slide(animValue, "top", config),
 });
 
 const fadeSlideBottom = (animValue: Animated.Value, config: Config = {}) => ({
   ...fade(animValue, config),
-  ...slide(animValue, "bottom", config)
+  ...slide(animValue, "bottom", config),
 });
 
 export const animations = {
   fade,
   slide,
   fadeSlideBottom,
-  fadeSlideTop
+  fadeSlideTop,
 };

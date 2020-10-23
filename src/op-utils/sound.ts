@@ -7,8 +7,8 @@ const soundEffects = {
   buttonPress: {
     path: "buttonpress.wav",
     sound: null as any,
-    volume: Platform.select({ ios: 0.4, android: 0.5 })
-  }
+    volume: Platform.select({ ios: 0.4, android: 0.5 }),
+  },
 };
 
 // Makes sure we can play audio effects without breaking other backgound app's
@@ -22,7 +22,7 @@ const preloadSound = async (id: SoundEffectId) => {
     const sound: any = new ReactNativeSound(
       soundEffect.path,
       ReactNativeSound.MAIN_BUNDLE,
-      error => {
+      (error) => {
         if (error) {
           console.error(`Failed to preload ${soundEffect.path}`, error);
           return reject(error);
@@ -40,7 +40,7 @@ export const initializeAudio = async () => {
   // Preload sound effects
   try {
     const soundEffectIds = Object.keys(soundEffects) as SoundEffectId[];
-    Promise.all(soundEffectIds.map(id => preloadSound(id)));
+    Promise.all(soundEffectIds.map((id) => preloadSound(id)));
   } catch (error) {
     console.error("Failed to preload sound", error);
   }

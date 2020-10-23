@@ -16,7 +16,7 @@
       "tests": ["tests/*"]
     },
     "resolveJsonModule": true,
-    "experimentalDecorators": true
+    "useDefineForClassFields": true
   },
   "exclude": [
     "node_modules",

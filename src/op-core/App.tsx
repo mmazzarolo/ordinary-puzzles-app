@@ -6,13 +6,12 @@ import { Immersive } from "react-native-immersive";
 import { configure } from "mobx";
 import { enableLogging } from "mobx-logger";
 import { useOnMount, clearStorage, initializeAudio } from "op-utils";
-import { AppearanceProvider } from "react-native-appearance";
 import { simulateFirstLoad, enableMobxLogging } from "op-config";
 import { Main } from "./Main";
 import { useCoreStores } from "./store";
 
 configure({
-  enforceActions: "always"
+  enforceActions: "always",
 });
 
 if (enableMobxLogging) {
@@ -28,7 +27,7 @@ if (Platform.OS === "android") {
   }
 }
 
-export const App: FC = function() {
+export const App: FC = function () {
   const { initializeStore } = useCoreStores();
   const initializeApp = async () => {
     if (simulateFirstLoad) {
@@ -44,9 +43,7 @@ export const App: FC = function() {
   return (
     <>
       <StatusBar hidden />
-      <AppearanceProvider>
-        <Main />
-      </AppearanceProvider>
+      <Main />
     </>
   );
 };

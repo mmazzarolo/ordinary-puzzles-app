@@ -9,16 +9,16 @@ import { useAvertaFont } from "op-config";
 const primaryFont = {
   regular: {
     fontFamily: useAvertaFont ? "Averta-Regular" : undefined,
-    fontWeight: "400"
+    fontWeight: "400",
   },
   semibold: {
     fontFamily: useAvertaFont ? "Averta-Semibold" : undefined,
-    fontWeight: "500"
+    fontWeight: "500",
   },
   bold: {
     fontFamily: useAvertaFont ? "Averta-Bold" : undefined,
-    fontWeight: "600"
-  }
+    fontWeight: "600",
+  },
 };
 
 // Font used for numbers (just for semibold).
@@ -26,13 +26,13 @@ const primaryFont = {
 const secondaryFont = {
   semibold: {
     fontFamily: Platform.OS === "android" ? "Inter-SemiBold" : undefined,
-    fontWeight: "600"
+    fontWeight: "600",
   },
   bold: {},
-  regular: {}
+  regular: {},
 };
 
 export const fonts = {
   primary: primaryFont,
-  secondary: secondaryFont
+  secondary: secondaryFont,
 };

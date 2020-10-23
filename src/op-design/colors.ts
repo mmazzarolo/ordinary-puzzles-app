@@ -1,5 +1,5 @@
+import { Appearance, useColorScheme } from "react-native";
 import tinycolor from "tinycolor2";
-import { Appearance, useColorScheme } from "react-native-appearance";
 
 const primaryColor = "#171520";
 const splashColor = "#84818D";
@@ -14,13 +14,13 @@ const darkColors = palette.slice().reverse();
 
 export const colors = {
   primary: Appearance.getColorScheme() === "dark" ? darkColors : lightColors,
-  splash: splashColor
+  splash: splashColor,
 };
 
-export const useColors = function() {
+export const useColors = function () {
   const colorScheme = useColorScheme();
   return {
     primary: colorScheme === "dark" ? darkColors : lightColors,
-    splash: splashColor
+    splash: splashColor,
   };
 };

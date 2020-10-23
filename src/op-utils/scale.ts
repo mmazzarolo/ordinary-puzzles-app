@@ -20,7 +20,7 @@ export const scale = (size: number) => {
 export const scaleTextToFit = (text: string) => {
   const weight = text
     .split("")
-    .map(char => {
+    .map((char) => {
       if (["i", "l", "j", "f", "r", "t"].indexOf(char) >= 0) {
         return 0.7;
       } else if (["m", "w"].indexOf(char) >= 0) {

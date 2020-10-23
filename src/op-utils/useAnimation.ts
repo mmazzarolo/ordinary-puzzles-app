@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Animated, Easing } from "react-native";
 
-export const useAnimation = function(initialValue: number = 0) {
+export const useAnimation = function (initialValue: number = 0) {
   const endValue = initialValue === 0 ? 1 : 0;
   const animationValueRef = useRef(new Animated.Value(initialValue));
 
@@ -10,11 +10,11 @@ export const useAnimation = function(initialValue: number = 0) {
       toValue: endValue,
       useNativeDriver: true,
       easing: Easing.inOut(Easing.quad),
-      ...config
+      ...config,
     });
 
   return {
     value: animationValueRef.current,
-    setup: setup
+    setup: setup,
   };
 };

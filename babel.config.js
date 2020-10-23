@@ -6,14 +6,13 @@ module.exports = {
       {
         root: ["./src"],
         extensions: [".ios.js", ".android.js", ".js", ".ts", ".tsx", ".json"],
-        alias: { "test/*": "./test/" }
-      }
+        alias: { "test/*": "./test/" },
+      },
     ],
-    ["@babel/plugin-proposal-decorators", { legacy: true }]
   ],
   env: {
     production: {
-      plugins: ["transform-remove-console"]
-    }
-  }
+      plugins: ["transform-remove-console"],
+    },
+  },
 };

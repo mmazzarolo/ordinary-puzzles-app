@@ -5,12 +5,12 @@ import {
   useAnimation,
   useOnMount,
   scale,
-  useHardwareBackButton
+  useHardwareBackButton,
 } from "op-utils";
 import { animations } from "op-design";
 import { useCoreStores } from "op-core";
 
-export const Message: FC = function() {
+export const Message: FC = function () {
   const { router, puzzle, stats } = useCoreStores();
 
   // Routing setup
@@ -31,14 +31,14 @@ export const Message: FC = function() {
     Animated.stagger(fadeInStaggerDuration, [
       fadeTitleAnim.setup({ duration: fadeInTitleAnimDuration }),
       fadeMessageAnim.setup({ duration: fadeInMessageAnimDuration }),
-      fadeBottomAnim.setup({ duration: fadeInBottomAnimDuration })
+      fadeBottomAnim.setup({ duration: fadeInBottomAnimDuration }),
     ]);
 
   const fadeOut = () =>
     Animated.parallel([
       fadeTitleAnim.setup({ duration: fadeOutAnimDuration, toValue: 0 }),
       fadeMessageAnim.setup({ duration: fadeOutAnimDuration, toValue: 0 }),
-      fadeBottomAnim.setup({ duration: fadeOutAnimDuration, toValue: 0 })
+      fadeBottomAnim.setup({ duration: fadeOutAnimDuration, toValue: 0 }),
     ]);
 
   useOnMount(() => {
@@ -60,7 +60,7 @@ export const Message: FC = function() {
           weight="bold"
           style={[
             styles.title,
-            animations.fadeSlideBottom(fadeTitleAnim.value)
+            animations.fadeSlideBottom(fadeTitleAnim.value),
           ]}
         >
           {puzzle.tutorialTitle}
@@ -69,7 +69,7 @@ export const Message: FC = function() {
           weight="regular"
           style={[
             styles.message,
-            animations.fadeSlideBottom(fadeMessageAnim.value)
+            animations.fadeSlideBottom(fadeMessageAnim.value),
           ]}
         >
           {puzzle.tutorialMessage}
@@ -85,17 +85,17 @@ export const Message: FC = function() {
 const styles = StyleSheet.create({
   root: {
     margin: scale(20),
-    flex: 1
+    flex: 1,
   },
   top: {
     flexDirection: "column",
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   title: {
-    fontSize: scale(42)
+    fontSize: scale(42),
   },
   message: {
-    fontSize: scale(26)
-  }
+    fontSize: scale(26),
+  },
 });

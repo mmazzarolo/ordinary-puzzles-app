@@ -9,7 +9,7 @@ import { Success } from "op-success/Success";
 import { Stats } from "op-stats/Stats";
 import { useCoreStores } from "./store";
 
-export const Router: FC = observer(function() {
+export const Router: FC = observer(function () {
   const { puzzle, router } = useCoreStores();
   if (router.currentRoute === "home") {
     return <Home />;
