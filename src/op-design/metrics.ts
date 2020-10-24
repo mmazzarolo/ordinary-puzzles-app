@@ -1,8 +1,14 @@
-import { Dimensions } from "react-native";
+import { Dimensions, Platform } from "react-native";
 import { scale } from "op-utils";
 
 export const metrics = {
-  screenWidth: Dimensions.get("screen").width,
-  screenHeight: Dimensions.get("screen").height,
+  screenWidth: Platform.select({
+    native: Dimensions.get("screen").width,
+    default: Dimensions.get("window").width,
+  }),
+  screenHeight: Platform.select({
+    native: Dimensions.get("screen").height,
+    default: Dimensions.get("window").height,
+  }),
   screenMargin: scale(16),
 };

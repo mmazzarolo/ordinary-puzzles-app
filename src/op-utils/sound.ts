@@ -1,4 +1,4 @@
-import ReactNativeSound from "react-native-sound";
+import ReactNativeSound from "op-native/react-native-sound";
 import { Platform } from "react-native";
 
 type SoundEffectId = keyof typeof soundEffects;

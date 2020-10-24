@@ -1,8 +1,7 @@
 import React, { FC } from "react";
 import { StatusBar, Platform, UIManager } from "react-native";
-import RNBootSplash from "react-native-bootsplash";
-// @ts-ignore
-import { Immersive } from "react-native-immersive";
+import RNBootSplash from "op-native/react-native-bootsplash";
+import { Immersive } from "op-native/react-native-immersive";
 import { configure } from "mobx";
 import { enableLogging } from "mobx-logger";
 import { useOnMount, clearStorage, initializeAudio } from "op-utils";
@@ -35,7 +34,9 @@ export const App: FC = function () {
     }
     await initializeStore();
     initializeAudio();
-    RNBootSplash.hide();
+    if (Platform.OS === "android" || Platform.OS === "ios") {
+      RNBootSplash.hide();
+    }
   };
   useOnMount(() => {
     initializeApp();

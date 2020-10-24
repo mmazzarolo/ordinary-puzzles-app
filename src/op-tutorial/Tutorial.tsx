@@ -6,7 +6,7 @@ import {
   LayoutRectangle,
 } from "react-native";
 import { observer } from "mobx-react";
-import KeepAwake from "react-native-keep-awake";
+import KeepAwake from "op-native/react-native-keep-awake";
 import { Board } from "op-board";
 import { useBoardStores } from "op-board";
 import { useCoreStores } from "op-core";

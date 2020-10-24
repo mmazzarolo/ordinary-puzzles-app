@@ -6,6 +6,7 @@ import {
 import { createContext, useContext } from "react";
 import { observable, action, computed, autorun, makeObservable } from "mobx";
 import { takeWhile, takeRightWhile, sortBy, intersectionBy } from "lodash";
+import { nativifyGestureResponderEvent } from "op-utils";
 
 const isOppositeDirectionOf = (dir1: string, dir2: string) => {
   return (
@@ -598,6 +599,7 @@ class InteractionsStore {
   }
 
   onGridTouchStart(event: GestureResponderEvent) {
+    nativifyGestureResponderEvent(event);
     if (this.isOutsideGrid(event)) {
       this.onGridTouchExit();
       return;
@@ -608,6 +610,7 @@ class InteractionsStore {
   }
 
   onGridTouchMove(event: GestureResponderEvent) {
+    nativifyGestureResponderEvent(event);
     if (!this.isDragging) return;
     if (this.isOutsideGrid(event)) {
       this.onGridTouchExit();
@@ -625,6 +628,7 @@ class InteractionsStore {
   }
 
   onGridTouchEnd(event: GestureResponderEvent) {
+    nativifyGestureResponderEvent(event);
     if (!this.isDragging) return;
     if (this.isOutsideGrid(event)) {
       this.onGridTouchExit();

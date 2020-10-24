@@ -112,11 +112,17 @@ export const Board: FC<BoardProps> = observer(function ({
   return (
     <View
       style={styles.root}
+      pointerEvents={board.cleared ? "none" : undefined}
       onLayout={(e) => interactions.enableInteraction(e)}
       onTouchStart={(e) => interactions.onGridTouchStart(e)}
       onTouchMove={(e) => interactions.onGridTouchMove(e)}
       onTouchEnd={(e) => interactions.onGridTouchEnd(e)}
-      pointerEvents={board.cleared ? "none" : undefined}
+      // @ts-ignore
+      onMouseDown={(e) => interactions.onGridTouchStart(e)}
+      // @ts-ignore
+      onMouseMove={(e) => interactions.onGridTouchMove(e)}
+      // @ts-ignore
+      onMouseUp={(e) => interactions.onGridTouchEnd(e)}
     >
       <Animated.View style={!isAndroid && animations.fade(fadeAnim.value)}>
         {board.grid.map((cellsRow, rowIndex) => (

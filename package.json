@@ -5,6 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "web": "react-app-rewired start",
     "start": "react-native start",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -21,12 +22,14 @@
     "mobx-logger": "^0.7.1",
     "mobx-react": "^7.0.0",
     "react": "16.13.1",
+    "react-dom": "^17.0.1",
     "react-native": "0.63.3",
     "react-native-bootsplash": "^1.0.3",
     "react-native-haptic": "oblador/react-native-haptic#package-cleanup",
     "react-native-immersive": "^2.0.0",
     "react-native-keep-awake": "corbt/react-native-keep-awake#146c2db",
     "react-native-sound": "^0.11.0",
+    "react-native-web": "^0.14.4",
     "tinycolor2": "^1.4.2"
   },
   "devDependencies": {
@@ -42,6 +45,7 @@
     "babel-jest": "^24.9.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "customize-cra": "^1.0.0",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -51,6 +55,8 @@
     "lint-staged": "^10.4.0",
     "metro-react-native-babel-preset": "^0.59.0",
     "prettier": "^2.1.2",
+    "react-app-rewired": "^2.1.6",
+    "react-scripts": "^4.0.0",
     "react-test-renderer": "16.13.1",
     "typescript": "^4.0.3"
   },
@@ -69,6 +75,18 @@
     ],
     "*.md": [
       "prettier --write"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   }
 }

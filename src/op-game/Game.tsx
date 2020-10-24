@@ -1,7 +1,7 @@
 import React, { FC, useRef } from "react";
 import { View, StyleSheet, Animated, Platform } from "react-native";
 import { observer } from "mobx-react";
-import KeepAwake from "react-native-keep-awake";
+import KeepAwake from "op-native/react-native-keep-awake";
 import { Board } from "op-board";
 import { useCoreStores } from "op-core";
 import { useBoardStores } from "op-board";

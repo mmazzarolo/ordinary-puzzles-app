@@ -1,5 +1,6 @@
 export * from "./delay";
 export * from "./hapticFeedback";
+export * from "./nativifyGestureResponderEvent";
 export * from "./pickPuzzle";
 export * from "./scale";
 export * from "./sound";

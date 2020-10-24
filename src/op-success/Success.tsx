@@ -1,7 +1,7 @@
 import React, { FC, useRef } from "react";
 import { View, StyleSheet, Animated, Platform, ViewStyle } from "react-native";
 import { observer } from "mobx-react";
-import KeepAwake from "react-native-keep-awake";
+import KeepAwake from "op-native/react-native-keep-awake";
 import { useCoreStores } from "op-core";
 import { BottomNav, Button, Header, Score, Text } from "op-common";
 import { metrics, animations } from "op-design";

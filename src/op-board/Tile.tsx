@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
+    userSelect: "none", // react-native-web
   },
   content: {
     position: "absolute",
