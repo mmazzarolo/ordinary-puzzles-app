@@ -1,5 +1,12 @@
 import React, { FC, useRef } from "react";
-import { View, StyleSheet, Animated, Platform } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Animated,
+  Platform,
+  Dimensions,
+  useWindowDimensions,
+} from "react-native";
 import { observer } from "mobx-react";
 import KeepAwake from "op-native/react-native-keep-awake";
 import { Board } from "op-board";
@@ -14,11 +21,23 @@ import {
 } from "op-common";
 import { metrics, animations } from "op-design";
 import { useAnimation, useOnMount, useHardwareBackButton } from "op-utils";
+import { clamp } from "lodash";
 
 export const Game: FC = observer(function () {
   const { puzzle, router } = useCoreStores();
   const { board } = useBoardStores();
   const interactionsDisabledRef = useRef(false);
+
+  // Screen width/height setup
+  const windowDimensions = useWindowDimensions();
+  const screenWidth = Platform.select({
+    native: Dimensions.get("screen").width,
+    default: clamp(windowDimensions.width, metrics.webBoardMaxLayoutWidth),
+  });
+  const screenHeight = Platform.select({
+    native: Dimensions.get("screen").height,
+    default: windowDimensions.height,
+  });
 
   // Routing setup
   const navigateToHome = () => router.changeRoute("home");
@@ -67,10 +86,9 @@ export const Game: FC = observer(function () {
   };
 
   // Calculate the available space for the board
-  const availableHorizontalSpace =
-    metrics.screenWidth - metrics.screenMargin * 2;
+  const availableHorizontalSpace = screenWidth - metrics.screenMargin * 2;
   const availableVerticalSpace =
-    metrics.screenHeight -
+    screenHeight -
     metrics.screenMargin * 2 -
     bottomNavHeight -
     headerHeight -

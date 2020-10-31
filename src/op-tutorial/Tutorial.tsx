@@ -4,6 +4,9 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   LayoutRectangle,
+  Platform,
+  Dimensions,
+  useWindowDimensions,
 } from "react-native";
 import { observer } from "mobx-react";
 import KeepAwake from "op-native/react-native-keep-awake";
@@ -14,10 +17,22 @@ import { metrics } from "op-design";
 import { BottomNav, Button, bottomNavHeight } from "op-common";
 import { useAnimation, useOnMount, useHardwareBackButton } from "op-utils";
 import { Description } from "./Description";
+import { clamp } from "lodash";
 
 export const Tutorial: FC = observer(function () {
   const { board } = useBoardStores();
   const { puzzle, router } = useCoreStores();
+
+  // Screen width/height setup
+  const windowDimensions = useWindowDimensions();
+  const screenWidth = Platform.select({
+    native: Dimensions.get("screen").width,
+    default: clamp(windowDimensions.width, metrics.webBoardMaxLayoutWidth),
+  });
+  const screenHeight = Platform.select({
+    native: Dimensions.get("screen").height,
+    default: windowDimensions.height,
+  });
 
   // Routing setup
   const navigateToHome = () => router.changeRoute("home");
@@ -49,10 +64,9 @@ export const Tutorial: FC = observer(function () {
       setDescriptionLayout(event.nativeEvent.layout);
     }
   };
-  const availableHorizontalSpace =
-    metrics.screenWidth - metrics.screenMargin * 2;
+  const availableHorizontalSpace = screenWidth - metrics.screenMargin * 2;
   const availableVerticalSpace = descriptionLayout
-    ? metrics.screenHeight -
+    ? screenHeight -
       descriptionLayout.height -
       bottomNavHeight -
       metrics.screenMargin * 8 // Additional vertical padding

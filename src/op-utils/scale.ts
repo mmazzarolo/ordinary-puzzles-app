@@ -13,11 +13,11 @@ const isTablet = () => {
 };
 
 export const scale = (size: number) => {
-  const GUIDELINE_BASE_WIDTH = Platform.select({
-    native: isTablet() ? 520 : 350,
-    default: 1024,
-  });
-  return (Dimensions.get("window").width / GUIDELINE_BASE_WIDTH) * size;
+  if (Platform.OS === "android" || Platform.OS === "ios") {
+    const GUIDELINE_BASE_WIDTH = isTablet() ? 520 : 350;
+    return (Dimensions.get("window").width / GUIDELINE_BASE_WIDTH) * size;
+  }
+  return size;
 };
 
 export const scaleTextToFit = (text: string) => {
