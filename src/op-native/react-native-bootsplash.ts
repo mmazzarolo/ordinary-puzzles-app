@@ -1,3 +1,5 @@
-export default {
+const mock = {
   hide: () => {},
 };
+
+export default mock;

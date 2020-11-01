@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from "react";
+import React, { FC, useState } from "react";
 import { StyleSheet, SafeAreaView } from "react-native";
 import { useColors } from "op-design";
 import { Splash } from "op-splash";
