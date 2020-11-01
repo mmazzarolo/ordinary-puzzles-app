@@ -2,6 +2,7 @@
   "name": "OrdinaryPuzzles",
   "version": "0.0.1",
   "private": true,
+  "homepage": "/play",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
