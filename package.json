@@ -6,6 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "web": "react-app-rewired start",
+    "web:build": "react-app-rewired build",
     "start": "react-native start",
     "test": "jest",
     "test:watch": "jest --watch",
