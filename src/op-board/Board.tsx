@@ -8,6 +8,7 @@ import { useCoreStores } from "op-core";
 import { autoSolve } from "op-config";
 import { useBoardStores } from "./store";
 import { Tile } from "./Tile";
+import { PointerAwareView } from "./PointerAwareView";
 
 const isAndroid = Platform.OS === "android";
 
@@ -110,19 +111,13 @@ export const Board: FC<BoardProps> = observer(function ({
   };
 
   return (
-    <View
-      style={styles.root}
-      pointerEvents={board.cleared ? "none" : undefined}
+    <PointerAwareView
+      onPointerDown={(coords) => interactions.onGridPointerDown(coords)}
+      onPointerMove={(coords) => interactions.onGridPointerMove(coords)}
+      onPointerUp={(coords) => interactions.onGridPointerUp(coords)}
       onLayout={(e) => interactions.enableInteraction(e)}
-      onTouchStart={(e) => interactions.onGridTouchStart(e)}
-      onTouchMove={(e) => interactions.onGridTouchMove(e)}
-      onTouchEnd={(e) => interactions.onGridTouchEnd(e)}
-      // @ts-ignore
-      onMouseDown={(e) => interactions.onGridTouchStart(e)}
-      // @ts-ignore
-      onMouseMove={(e) => interactions.onGridTouchMove(e)}
-      // @ts-ignore
-      onMouseUp={(e) => interactions.onGridTouchEnd(e)}
+      pointerEvents={board.cleared ? "none" : undefined}
+      style={styles.root}
     >
       <Animated.View style={!isAndroid && animations.fade(fadeAnim.value)}>
         {board.grid.map((cellsRow, rowIndex) => (
@@ -144,7 +139,7 @@ export const Board: FC<BoardProps> = observer(function ({
           pointerEvents="none"
         />
       )}
-    </View>
+    </PointerAwareView>
   );
 });
 

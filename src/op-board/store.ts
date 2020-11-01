@@ -1,12 +1,7 @@
-import {
-  LayoutRectangle,
-  LayoutChangeEvent,
-  GestureResponderEvent,
-} from "react-native";
+import { LayoutRectangle, LayoutChangeEvent } from "react-native";
 import { createContext, useContext } from "react";
 import { observable, action, computed, autorun, makeObservable } from "mobx";
 import { takeWhile, takeRightWhile, sortBy, intersectionBy } from "lodash";
-import { nativifyGestureResponderEvent } from "op-utils";
 
 const isOppositeDirectionOf = (dir1: string, dir2: string) => {
   return (
@@ -557,6 +552,7 @@ class InteractionsStore {
 
   enableInteraction(layoutChangeEvent: LayoutChangeEvent) {
     this.gridLayout = layoutChangeEvent.nativeEvent.layout;
+
     this.currentHandler = undefined;
     this.draggedLine = undefined;
     this.hoveredCell = undefined;
@@ -578,45 +574,45 @@ class InteractionsStore {
   /* ===================
    * REACT NATIVE EVENTS
    * =================== */
-  findCell(event: GestureResponderEvent) {
+  findCell(coords: [number, number]) {
+    const [x, y] = coords;
     if (!this.gridLayout) return;
     const cellWidth = this.gridLayout.width / this.root.board.colsCount;
     const cellHeight = this.gridLayout.height / this.root.board.rowsCount;
-    const row = Math.floor(event.nativeEvent.locationY / cellHeight);
-    const col = Math.floor(event.nativeEvent.locationX / cellWidth);
+    const row = Math.floor(y / cellHeight);
+    const col = Math.floor(x / cellWidth);
     const cell = this.root.board.at(row, col);
     return cell;
   }
 
-  isOutsideGrid(event: GestureResponderEvent) {
+  isOutsideGrid(coords: [number, number]) {
+    const [x, y] = coords;
     if (!this.gridLayout) return true;
     return (
-      event.nativeEvent.locationY <= 0 ||
-      event.nativeEvent.locationY >= this.gridLayout.height ||
-      event.nativeEvent.locationX <= 0 ||
-      event.nativeEvent.locationX >= this.gridLayout.width
+      y <= 0 ||
+      y >= this.gridLayout.height ||
+      x <= 0 ||
+      x >= this.gridLayout.width
     );
   }
 
-  onGridTouchStart(event: GestureResponderEvent) {
-    nativifyGestureResponderEvent(event);
-    if (this.isOutsideGrid(event)) {
+  onGridPointerDown(coords: [number, number]) {
+    if (this.isOutsideGrid(coords)) {
       this.onGridTouchExit();
       return;
     }
-    const cell = this.findCell(event);
+    const cell = this.findCell(coords);
     if (!cell) return;
     this.onCellTouch(cell);
   }
 
-  onGridTouchMove(event: GestureResponderEvent) {
-    nativifyGestureResponderEvent(event);
+  onGridPointerMove(coords: [number, number]) {
     if (!this.isDragging) return;
-    if (this.isOutsideGrid(event)) {
+    if (this.isOutsideGrid(coords)) {
       this.onGridTouchExit();
       return;
     }
-    const cell = this.findCell(event);
+    const cell = this.findCell(coords);
     if (!cell) return;
     const isNewCell = !cell.equals(this.hoveredCell);
     if (isNewCell) {
@@ -627,14 +623,13 @@ class InteractionsStore {
     }
   }
 
-  onGridTouchEnd(event: GestureResponderEvent) {
-    nativifyGestureResponderEvent(event);
+  onGridPointerUp(coords: [number, number]) {
     if (!this.isDragging) return;
-    if (this.isOutsideGrid(event)) {
+    if (this.isOutsideGrid(coords)) {
       this.onGridTouchExit();
       return;
     }
-    const cell = this.findCell(event);
+    const cell = this.findCell(coords);
     if (!cell) return;
     this.onCellTouchEnd(cell);
   }
