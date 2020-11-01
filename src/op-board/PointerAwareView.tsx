@@ -33,6 +33,7 @@ interface PointerAwareViewProps extends ViewProps {
   onPointerDown: (coords: [number, number]) => void;
   onPointerMove: (coords: [number, number]) => void;
   onPointerUp: (coords: [number, number]) => void;
+  pointerEnabled?: boolean;
 }
 
 export const PointerAwareView: FC<PointerAwareViewProps> = ({
@@ -40,10 +41,19 @@ export const PointerAwareView: FC<PointerAwareViewProps> = ({
   onPointerDown,
   onPointerMove,
   onPointerUp,
+  pointerEnabled = false,
+  style,
   ...otherProps
 }) => {
+  const cursorStyle = Platform.select({
+    native: {},
+    default: {
+      cursor: pointerEnabled ? "pointer" : undefined,
+    },
+  });
   return (
     <View
+      pointerEvents={pointerEnabled ? undefined : "none"}
       onTouchStart={(e) => onPointerDown(getEventCoordinates(e))}
       onTouchMove={(e) => onPointerMove(getEventCoordinates(e))}
       onTouchEnd={(e) => onPointerUp(getEventCoordinates(e))}
@@ -53,6 +63,8 @@ export const PointerAwareView: FC<PointerAwareViewProps> = ({
       onMouseMove={(e) => onPointerMove(getEventCoordinates(e))}
       // @ts-ignore
       onMouseUp={(e) => onPointerUp(getEventCoordinates(e))}
+      // @ts-ignore
+      style={[style, cursorStyle]}
       {...otherProps}
     >
       {children}

@@ -116,7 +116,7 @@ export const Board: FC<BoardProps> = observer(function ({
       onPointerMove={(coords) => interactions.onGridPointerMove(coords)}
       onPointerUp={(coords) => interactions.onGridPointerUp(coords)}
       onLayout={(e) => interactions.enableInteraction(e)}
-      pointerEvents={board.cleared ? "none" : undefined}
+      pointerEnabled={!board.cleared}
       style={styles.root}
     >
       <Animated.View style={!isAndroid && animations.fade(fadeAnim.value)}>
