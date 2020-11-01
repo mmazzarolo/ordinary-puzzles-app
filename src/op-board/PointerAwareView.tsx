@@ -64,6 +64,8 @@ export const PointerAwareView: FC<PointerAwareViewProps> = ({
       // @ts-ignore
       onMouseUp={(e) => onPointerUp(getEventCoordinates(e))}
       // @ts-ignore
+      onMouseLeave={(e) => onPointerUp(getEventCoordinates(e))}
+      // @ts-ignore
       style={[style, cursorStyle]}
       {...otherProps}
     >
