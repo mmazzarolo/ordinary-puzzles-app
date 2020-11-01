@@ -124,6 +124,12 @@ export const Tile: FC<Props> = observer(function (props) {
   if (Platform.OS === "android" || Platform.OS === "ios") {
     textStyle.paddingRight = borderWidth / 2;
     textStyle.paddingBottom = borderWidth;
+    if (cell.col === 0) {
+      textStyle.paddingRight = 0;
+    }
+    if (cell.row === 0) {
+      textStyle.paddingBottom = 0;
+    }
   } else {
     // For some reasons on the web the text centering glitches a bit when a cell
     // is extended... I suppose there might be some differences on who the cell
@@ -140,12 +146,6 @@ export const Tile: FC<Props> = observer(function (props) {
     ) {
       textStyle.paddingBottom = borderWidth;
     }
-  }
-  if (cell.col === 0) {
-    textStyle.paddingRight = 0;
-  }
-  if (cell.row === 0) {
-    textStyle.paddingBottom = 0;
   }
 
   // Hover style
