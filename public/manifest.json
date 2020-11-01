@@ -1,0 +1,15 @@
+{
+  "short_name": "Ordinary Puzzles",
+  "name": "Ordinary Puzzles",
+  "icons": [
+    {
+      "src": "favicons/favicon.ico",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#fff",
+  "background_color": "#FBFAFF"
+}

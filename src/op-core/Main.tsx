@@ -4,8 +4,9 @@ import { useColors } from "op-design";
 import { Splash } from "op-splash";
 import { skipSplashScreen } from "op-config";
 import { Router } from "./Router";
+import { Layout } from "./Layout";
 
-export const Main: FC = function() {
+export const Main: FC = function () {
   const colors = useColors();
   const [isShowingSplash, setIsShowingSplash] = useState(!skipSplashScreen);
   const hideSplash = () => {
@@ -16,7 +17,9 @@ export const Main: FC = function() {
 
   return (
     <SafeAreaView style={[styles.root, { backgroundColor: colors.primary[9] }]}>
-      <Router />
+      <Layout>
+        <Router />
+      </Layout>
     </SafeAreaView>
   );
 };
@@ -24,6 +27,7 @@ export const Main: FC = function() {
 const styles = StyleSheet.create({
   root: {
     height: "100%",
-    width: "100%"
-  }
+    width: "100%",
+    flex: 1,
+  },
 });

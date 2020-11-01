@@ -19,14 +19,14 @@ interface MenuProps {
   items: MenuItem[];
 }
 
-export const Menu: FC<MenuProps> = function({ animValue, disabled, items }) {
+export const Menu: FC<MenuProps> = function ({ animValue, disabled, items }) {
   const colors = useColors();
   const starStyle = {
-    color: colors.primary[5]
+    color: colors.primary[5],
   };
   return (
     <Animated.View style={[styles.root, animations.fade(animValue)]}>
-      {items.map(item => (
+      {items.map((item) => (
         <Button
           key={item.value}
           disabled={disabled}
@@ -50,9 +50,9 @@ export const Menu: FC<MenuProps> = function({ animValue, disabled, items }) {
 const styles = StyleSheet.create({
   root: {},
   button: {
-    marginBottom: scale(2)
+    marginBottom: scale(2),
   },
   text: {
-    fontSize: scale(42)
-  }
+    fontSize: scale(42),
+  },
 });

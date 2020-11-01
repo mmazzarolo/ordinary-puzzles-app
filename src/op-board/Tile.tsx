@@ -1,5 +1,12 @@
 import React, { FC } from "react";
-import { StyleSheet, View, TextStyle, ViewStyle, Animated } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextStyle,
+  ViewStyle,
+  Animated,
+  Platform,
+} from "react-native";
 import { observer } from "mobx-react";
 import { useColors } from "op-design";
 import { Text } from "op-common";
@@ -38,7 +45,7 @@ const adjustBorderForOrientation = (cell: Cell, style: ViewStyle) => {
   }
 };
 
-export const Tile: FC<Props> = observer(function(props) {
+export const Tile: FC<Props> = observer(function (props) {
   const colors = useColors();
   const { cell, size, successAnimValue } = props;
 
@@ -70,7 +77,7 @@ export const Tile: FC<Props> = observer(function(props) {
   // @ts-ignore
   tileStyle.borderColor = successAnimValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [colors.primary[7], colors.primary[9]]
+    outputRange: [colors.primary[7], colors.primary[9]],
   });
 
   // Tile background color
@@ -114,13 +121,36 @@ export const Tile: FC<Props> = observer(function(props) {
     textStyle.color = "#fff";
   }
   textStyle.fontSize = calculateFontSize(size);
-  textStyle.paddingRight = borderWidth / 2;
-  textStyle.paddingBottom = borderWidth;
-  if (cell.col === 0) {
-    textStyle.paddingRight = 0;
+  if (Platform.OS === "android" || Platform.OS === "ios") {
+    textStyle.paddingRight = borderWidth / 2;
+    textStyle.paddingBottom = borderWidth;
+    if (cell.col === 0) {
+      textStyle.paddingRight = 0;
+    }
+    if (cell.row === 0) {
+      textStyle.paddingBottom = 0;
+    }
+  } else {
+    // For some reasons on the web the text centering glitches a bit when a cell
+    // is extended... I suppose there might be some differences on who the cell
+    // border is kept into account for the centering calculation.
+    if (
+      cell.orientation === "horizontal-middle" ||
+      cell.orientation === "horizontal-left"
+    ) {
+      textStyle.paddingRight = borderWidth;
+    }
+    if (
+      cell.orientation === "vertical-middle" ||
+      cell.orientation === "vertical-top"
+    ) {
+      textStyle.paddingBottom = borderWidth;
+    }
   }
-  if (cell.row === 0) {
-    textStyle.paddingBottom = 0;
+
+  if (Platform.OS !== "android" && Platform.OS !== "ios") {
+    // @ts-ignore
+    textStyle.userSelect = "none";
   }
 
   // Hover style
@@ -149,18 +179,18 @@ const styles = StyleSheet.create({
   root: {
     position: "relative",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   text: {
     position: "absolute",
     textAlign: "center",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   content: {
     position: "absolute",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   hover: {
     position: "absolute",
@@ -168,6 +198,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
-  }
+    bottom: 0,
+  },
 });

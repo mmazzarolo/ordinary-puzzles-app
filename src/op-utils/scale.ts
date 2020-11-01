@@ -1,4 +1,4 @@
-import { PixelRatio, Dimensions } from "react-native";
+import { PixelRatio, Dimensions, Platform } from "react-native";
 
 const isTablet = () => {
   let pixelDensity = PixelRatio.get();
@@ -13,14 +13,17 @@ const isTablet = () => {
 };
 
 export const scale = (size: number) => {
-  const GUIDELINE_BASE_WIDTH = isTablet() ? 520 : 350;
-  return (Dimensions.get("screen").width / GUIDELINE_BASE_WIDTH) * size;
+  if (Platform.OS === "android" || Platform.OS === "ios") {
+    const GUIDELINE_BASE_WIDTH = isTablet() ? 520 : 350;
+    return (Dimensions.get("window").width / GUIDELINE_BASE_WIDTH) * size;
+  }
+  return size;
 };
 
 export const scaleTextToFit = (text: string) => {
   const weight = text
     .split("")
-    .map(char => {
+    .map((char) => {
       if (["i", "l", "j", "f", "r", "t"].indexOf(char) >= 0) {
         return 0.7;
       } else if (["m", "w"].indexOf(char) >= 0) {

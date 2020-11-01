@@ -1,13 +1,13 @@
 import React, { FC, useRef } from "react";
 import { View, StyleSheet, Animated, Platform, ViewStyle } from "react-native";
 import { observer } from "mobx-react";
-import KeepAwake from "react-native-keep-awake";
+import KeepAwake from "op-native/react-native-keep-awake";
 import { useCoreStores } from "op-core";
 import { BottomNav, Button, Header, Score, Text } from "op-common";
 import { metrics, animations } from "op-design";
 import { useAnimation, useOnMount, scale, scaleTextToFit } from "op-utils";
 
-export const Success: FC = observer(function() {
+export const Success: FC = observer(function () {
   const { puzzle, router } = useCoreStores();
   const interactionsDisabledRef = useRef(false);
 
@@ -31,7 +31,7 @@ export const Success: FC = observer(function() {
       fadeTitleAnim.setup({ duration: fadeInterfaceInAnimDuration }),
       fadeSubtilteAnim.setup({ duration: fadeInterfaceInAnimDuration }),
       fadeBottomNavAnim.setup({ duration: fadeInterfaceInAnimDuration }),
-      fadeScoreAnim.setup({ duration: fadeInterfaceInAnimDuration })
+      fadeScoreAnim.setup({ duration: fadeInterfaceInAnimDuration }),
     ]);
   const fadeRootOut = () =>
     fadeRootAnim.setup({ duration: fadeRootOutDuration });
@@ -57,7 +57,7 @@ export const Success: FC = observer(function() {
   const fitFontSize = scaleTextToFit(`${puzzle.prefix} ${puzzle.name}`);
 
   const scoreStyle: ViewStyle = {
-    top: metrics.screenMargin
+    top: metrics.screenMargin,
   };
 
   return (
@@ -81,7 +81,7 @@ export const Success: FC = observer(function() {
           weight="semibold"
           style={[
             styles.textCompleted,
-            animations.fade(fadeSubtilteAnim.value)
+            animations.fade(fadeSubtilteAnim.value),
           ]}
         >
           Completed
@@ -97,20 +97,20 @@ export const Success: FC = observer(function() {
 
 const styles = StyleSheet.create({
   root: {
-    height: "100%",
-    marginHorizontal: metrics.screenMargin
+    flex: 1,
+    marginHorizontal: metrics.screenMargin,
   },
   middle: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   textCompleted: {
-    fontSize: scale(36)
+    fontSize: scale(36),
   },
   textScoreValue: {
-    fontSize: scale(32)
+    fontSize: scale(32),
   },
   completedWrapper: {
-    flexDirection: "row"
-  }
+    flexDirection: "row",
+  },
 });

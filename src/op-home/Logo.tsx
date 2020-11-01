@@ -8,14 +8,14 @@ interface LogoProps {
   dotAnimValue: Animated.Value;
 }
 
-export const Logo: FC<LogoProps> = function({ titleAnimValue, dotAnimValue }) {
+export const Logo: FC<LogoProps> = function ({ titleAnimValue, dotAnimValue }) {
   const title1 = "Ordinary";
   const title2 = "Puzzles";
   const titleLength = title1.length + title2.length;
   const charShowAnimDuration = 1 / titleLength;
   const dotAnimStyle = {
     opacity: dotAnimValue,
-    transform: [{ scale: dotAnimValue }]
+    transform: [{ scale: dotAnimValue }],
   };
   return (
     <View style={styles.root}>
@@ -58,12 +58,12 @@ export const Logo: FC<LogoProps> = function({ titleAnimValue, dotAnimValue }) {
 const styles = StyleSheet.create({
   root: {},
   titleRow: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   titleRow2: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   text: {
-    fontSize: scale(62)
-  }
+    fontSize: scale(62),
+  },
 });

@@ -1,10 +1,6 @@
-import {
-  LayoutRectangle,
-  LayoutChangeEvent,
-  GestureResponderEvent
-} from "react-native";
+import { LayoutRectangle, LayoutChangeEvent } from "react-native";
 import { createContext, useContext } from "react";
-import { observable, action, computed, autorun } from "mobx";
+import { observable, action, computed, autorun, makeObservable } from "mobx";
 import { takeWhile, takeRightWhile, sortBy, intersectionBy } from "lodash";
 
 const isOppositeDirectionOf = (dir1: string, dir2: string) => {
@@ -25,38 +21,45 @@ export class Cell {
   col: number;
   value: string;
 
-  @observable line?: Line;
+  line?: Line = undefined;
 
   constructor(root: RootStore, row: number, col: number, value: string) {
     this.root = root;
     this.row = row;
     this.col = col;
     this.value = value;
+
+    makeObservable(this, {
+      line: observable,
+      id: computed,
+      completed: computed,
+      valid: computed,
+      filled: computed,
+      orientation: computed,
+      hovered: computed,
+      highlighted: computed,
+      setLine: action,
+    });
   }
 
-  @computed
   get id() {
     return `${this.row}:${this.col}`;
   }
 
-  @computed
   get completed() {
     if (!this.line) return false;
     return this.line.completed;
   }
 
-  @computed
   get valid() {
     if (!this.line) return false;
     return this.line.valid;
   }
 
-  @computed
   get filled() {
     return !!this.line;
   }
 
-  @computed
   get orientation() {
     if (!this.line) return "none";
     if (this.line.orientation === "initial") {
@@ -89,12 +92,10 @@ export class Cell {
     return undefined;
   }
 
-  @computed
   get hovered() {
     return this.equals(this.root.interactions.hoveredCell);
   }
 
-  @computed
   get highlighted() {
     return (
       this.hovered && this.line?.equals(this.root.interactions.draggedLine)
@@ -137,18 +138,17 @@ export class Cell {
     return this.row + 1 === cell.row || this.row - 1 === cell.row;
   }
 
-  @action
   setLine(line?: Line) {
     this.line = line;
   }
 }
 
 class Line {
-  @observable origin: Cell;
-  @observable committedCells = observable.array<Cell>([]);
-  @observable pendingCells = observable.array<Cell>([]);
-  @observable stale: boolean;
-  @observable currentHandler: Cell | null;
+  origin: Cell;
+  committedCells = observable.array<Cell>([]);
+  pendingCells = observable.array<Cell>([]);
+  stale: boolean;
+  currentHandler: Cell | null;
 
   constructor(origin: Cell) {
     this.origin = origin;
@@ -156,14 +156,38 @@ class Line {
     this.pendingCells.replace([]);
     this.stale = false;
     this.currentHandler = null;
+
+    makeObservable(this, {
+      origin: observable,
+      committedCells: observable,
+      pendingCells: observable,
+      stale: observable,
+      currentHandler: observable,
+      id: computed,
+      orientation: computed,
+      edges: computed,
+      valid: computed,
+      completed: computed,
+      leftCommittedCells: computed,
+      rightCommittedCells: computed,
+      topCommittedCells: computed,
+      bottomCommittedCells: computed,
+      pendingCellsDirection: computed,
+      draggedDirection: computed,
+      cells: computed,
+      unlinkReference: action,
+      linkReference: action,
+      stalify: action,
+      replacePendingCells: action,
+      commit: action,
+      reset: action,
+    });
   }
 
-  @computed
   get id() {
     return this.origin.id;
   }
 
-  @computed
   get orientation() {
     if (!this.cells.length) {
       throw new Error("Line.orientation » Lines with no cells set");
@@ -176,50 +200,42 @@ class Line {
     }
   }
 
-  @computed
   get edges() {
     if (this.orientation === "initial") {
       return [this.cells[0], this.cells[0]];
     } else if (this.orientation === "horizontal") {
-      const cellsByCols = sortBy(this.cells.slice(), cell => cell.col);
+      const cellsByCols = sortBy(this.cells.slice(), (cell) => cell.col);
       return [cellsByCols[0], cellsByCols[cellsByCols.length - 1]];
     } else {
-      const cellsByRows = sortBy(this.cells.slice(), cell => cell.row);
+      const cellsByRows = sortBy(this.cells.slice(), (cell) => cell.row);
       return [cellsByRows[0], cellsByRows[cellsByRows.length - 1]];
     }
   }
 
-  @computed
   get valid() {
     return Number(this.origin.value) >= this.cells.length;
   }
 
-  @computed
   get completed() {
     return Number(this.origin.value) === this.cells.length;
   }
 
-  @computed
   get leftCommittedCells() {
-    return this.committedCells.filter(cell => cell.onLeftOf(this.origin));
+    return this.committedCells.filter((cell) => cell.onLeftOf(this.origin));
   }
 
-  @computed
   get rightCommittedCells() {
-    return this.committedCells.filter(cell => cell.onRightOf(this.origin));
+    return this.committedCells.filter((cell) => cell.onRightOf(this.origin));
   }
 
-  @computed
   get topCommittedCells() {
-    return this.committedCells.filter(cell => cell.onTopOf(this.origin));
+    return this.committedCells.filter((cell) => cell.onTopOf(this.origin));
   }
 
-  @computed
   get bottomCommittedCells() {
-    return this.committedCells.filter(cell => cell.onBottomOf(this.origin));
+    return this.committedCells.filter((cell) => cell.onBottomOf(this.origin));
   }
 
-  @computed
   get pendingCellsDirection() {
     if (this.pendingCells.length) {
       if (this.pendingCells[0].onSameRowOf(this.origin)) {
@@ -232,7 +248,6 @@ class Line {
     return "none";
   }
 
-  @computed
   get draggedDirection() {
     if (!this.currentHandler) return "none";
     if (this.currentHandler.equals(this.origin)) return "origin";
@@ -247,7 +262,6 @@ class Line {
     return "none";
   }
 
-  @computed
   get cells() {
     if (this.origin.equals(this.currentHandler)) {
       if (
@@ -296,39 +310,35 @@ class Line {
     return this.committedCells;
   }
 
-  @action
   unlinkReference() {
-    this.cells.forEach(cell => cell.setLine(undefined));
+    this.cells.forEach((cell) => cell.setLine(undefined));
   }
 
-  @action
   linkReference() {
-    this.cells.forEach(cell => cell.setLine(this));
+    this.cells.forEach((cell) => cell.setLine(this));
   }
 
-  @action
   stalify(currentHandler: Cell) {
     this.currentHandler = currentHandler;
   }
 
-  @action
   replacePendingCells(cells: Cell[]) {
     this.unlinkReference();
     if (!this.stale) {
       this.stale = true;
     }
-    this.pendingCells.replace(cells.filter(cell => !cell.equals(this.origin)));
+    this.pendingCells.replace(
+      cells.filter((cell) => !cell.equals(this.origin))
+    );
     this.linkReference();
   }
 
-  @action
   commit() {
     this.committedCells.replace(this.cells.slice());
     this.pendingCells.clear();
     this.stale = false;
   }
 
-  @action
   reset() {
     this.unlinkReference();
     this.committedCells.replace([this.origin]);
@@ -348,15 +358,28 @@ class Line {
 class BoardStore {
   root: RootStore;
 
-  @observable puzzleId?: string;
-  @observable grid = observable<Cell[]>([]);
-  @observable lines = observable<Line>([]);
+  puzzleId?: string = undefined;
+  grid = observable<Cell[]>([]);
+  lines = observable<Line>([]);
 
   constructor(rootStore: RootStore) {
     this.root = rootStore;
+
+    makeObservable(this, {
+      puzzleId: observable,
+      grid: observable,
+      lines: observable,
+      initialize: action,
+      reset: action,
+      destroy: action,
+      isInitialized: computed,
+      rowsCount: computed,
+      colsCount: computed,
+      cleared: computed,
+      fillLine: action,
+    });
   }
 
-  @action
   initialize(puzzleId: string, rows: string[]) {
     const grid: Cell[][] = [];
     const lines: Line[] = [];
@@ -377,42 +400,36 @@ class BoardStore {
     this.puzzleId = puzzleId;
   }
 
-  @action
   reset() {
-    this.lines.forEach(line => {
+    this.lines.forEach((line) => {
       line.reset();
     });
   }
 
-  @action
   destroy() {
     this.puzzleId = undefined;
     this.grid.replace([]);
     this.lines.replace([]);
   }
 
-  @computed
   get isInitialized() {
     return !!this.grid.length;
   }
 
-  @computed
   get rowsCount() {
     return this.grid.length;
   }
 
-  @computed
   get colsCount() {
     return this.grid?.[0]?.length;
   }
 
-  @computed
   get cleared() {
-    if (this.lines.find(line => !line.completed)) {
+    if (this.lines.find((line) => !line.completed)) {
       return false;
     }
-    const hasEmptyDot = this.grid.some(row => {
-      return row.some(cell => {
+    const hasEmptyDot = this.grid.some((row) => {
+      return row.some((cell) => {
         if (cell.value === ".") {
           return !cell.valid || !cell.completed;
         }
@@ -425,7 +442,6 @@ class BoardStore {
     return true;
   }
 
-  @action
   fillLine(line: Line, from: Cell, to: Cell) {
     let cellsInBetween: Cell[] = [];
     const shouldDrop = (cell: Cell) => {
@@ -433,7 +449,9 @@ class BoardStore {
     };
     if (from.onSameRowOf(to)) {
       const row = from.row;
-      const [colStart, colEnd] = [from, to].map(cell => cell.col).sort(sortInt);
+      const [colStart, colEnd] = [from, to]
+        .map((cell) => cell.col)
+        .sort(sortInt);
       for (let col = colStart; col <= colEnd; col++) {
         cellsInBetween.push(this.at(row, col));
       }
@@ -443,7 +461,9 @@ class BoardStore {
           : takeRightWhile(cellsInBetween, shouldDrop);
     } else if (from.onSameColumnOf(to)) {
       const col = from.col;
-      const [rowStart, rowEnd] = [from, to].map(cell => cell.row).sort(sortInt);
+      const [rowStart, rowEnd] = [from, to]
+        .map((cell) => cell.row)
+        .sort(sortInt);
       for (let row = rowStart; row <= rowEnd; row++) {
         cellsInBetween.push(this.at(row, col));
       }
@@ -461,7 +481,9 @@ class BoardStore {
     };
     if (from.onSameRowOf(to)) {
       const row = from.row;
-      const [colStart, colEnd] = [from, to].map(cell => cell.col).sort(sortInt);
+      const [colStart, colEnd] = [from, to]
+        .map((cell) => cell.col)
+        .sort(sortInt);
       const cellsInBetween = [];
       for (let col = colStart; col <= colEnd; col++) {
         cellsInBetween.push(this.at(row, col));
@@ -471,7 +493,9 @@ class BoardStore {
         : takeRightWhile(cellsInBetween, shouldDrop);
     } else if (from.onSameColumnOf(to)) {
       const col = from.col;
-      const [rowStart, rowEnd] = [from, to].map(cell => cell.row).sort(sortInt);
+      const [rowStart, rowEnd] = [from, to]
+        .map((cell) => cell.row)
+        .sort(sortInt);
       const cellsInBetween = [];
       for (let row = rowStart; row <= rowEnd; row++) {
         cellsInBetween.push(this.at(row, col));
@@ -496,13 +520,28 @@ class BoardStore {
 class InteractionsStore {
   root: RootStore;
 
-  gridLayout?: LayoutRectangle;
-  @observable currentHandler?: Cell;
-  @observable draggedLine?: Line;
-  @observable hoveredCell?: Cell;
-  @observable numberOfMoves: number = 0;
+  gridLayout?: LayoutRectangle = undefined;
+  currentHandler?: Cell = undefined;
+  draggedLine?: Line = undefined;
+  hoveredCell?: Cell = undefined;
+  numberOfMoves: number = 0;
 
   constructor(rootStore: RootStore) {
+    makeObservable(this, {
+      currentHandler: observable,
+      draggedLine: observable,
+      hoveredCell: observable,
+      numberOfMoves: observable,
+      enableInteraction: action,
+      disableInteractions: action,
+      isDragging: computed,
+      onCellTouch: action,
+      onCellEnter: action,
+      onCellLeave: action,
+      onCellTouchEnd: action,
+      onGridTouchExit: action,
+    });
+
     this.root = rootStore;
     autorun(() => {
       if (this.root.board.cleared) {
@@ -511,16 +550,15 @@ class InteractionsStore {
     });
   }
 
-  @action
   enableInteraction(layoutChangeEvent: LayoutChangeEvent) {
     this.gridLayout = layoutChangeEvent.nativeEvent.layout;
+
     this.currentHandler = undefined;
     this.draggedLine = undefined;
     this.hoveredCell = undefined;
     this.numberOfMoves = 0;
   }
 
-  @action
   disableInteractions() {
     this.gridLayout = undefined;
     this.currentHandler = undefined;
@@ -529,7 +567,6 @@ class InteractionsStore {
     this.numberOfMoves = 0;
   }
 
-  @computed
   get isDragging() {
     return !!this.currentHandler;
   }
@@ -537,43 +574,45 @@ class InteractionsStore {
   /* ===================
    * REACT NATIVE EVENTS
    * =================== */
-  findCell(event: GestureResponderEvent) {
+  findCell(coords: [number, number]) {
+    const [x, y] = coords;
     if (!this.gridLayout) return;
     const cellWidth = this.gridLayout.width / this.root.board.colsCount;
     const cellHeight = this.gridLayout.height / this.root.board.rowsCount;
-    const row = Math.floor(event.nativeEvent.locationY / cellHeight);
-    const col = Math.floor(event.nativeEvent.locationX / cellWidth);
+    const row = Math.floor(y / cellHeight);
+    const col = Math.floor(x / cellWidth);
     const cell = this.root.board.at(row, col);
     return cell;
   }
 
-  isOutsideGrid(event: GestureResponderEvent) {
+  isOutsideGrid(coords: [number, number]) {
+    const [x, y] = coords;
     if (!this.gridLayout) return true;
     return (
-      event.nativeEvent.locationY <= 0 ||
-      event.nativeEvent.locationY >= this.gridLayout.height ||
-      event.nativeEvent.locationX <= 0 ||
-      event.nativeEvent.locationX >= this.gridLayout.width
+      y <= 0 ||
+      y >= this.gridLayout.height ||
+      x <= 0 ||
+      x >= this.gridLayout.width
     );
   }
 
-  onGridTouchStart(event: GestureResponderEvent) {
-    if (this.isOutsideGrid(event)) {
+  onGridPointerDown(coords: [number, number]) {
+    if (this.isOutsideGrid(coords)) {
       this.onGridTouchExit();
       return;
     }
-    const cell = this.findCell(event);
+    const cell = this.findCell(coords);
     if (!cell) return;
     this.onCellTouch(cell);
   }
 
-  onGridTouchMove(event: GestureResponderEvent) {
+  onGridPointerMove(coords: [number, number]) {
     if (!this.isDragging) return;
-    if (this.isOutsideGrid(event)) {
+    if (this.isOutsideGrid(coords)) {
       this.onGridTouchExit();
       return;
     }
-    const cell = this.findCell(event);
+    const cell = this.findCell(coords);
     if (!cell) return;
     const isNewCell = !cell.equals(this.hoveredCell);
     if (isNewCell) {
@@ -584,13 +623,13 @@ class InteractionsStore {
     }
   }
 
-  onGridTouchEnd(event: GestureResponderEvent) {
+  onGridPointerUp(coords: [number, number]) {
     if (!this.isDragging) return;
-    if (this.isOutsideGrid(event)) {
+    if (this.isOutsideGrid(coords)) {
       this.onGridTouchExit();
       return;
     }
-    const cell = this.findCell(event);
+    const cell = this.findCell(coords);
     if (!cell) return;
     this.onCellTouchEnd(cell);
   }
@@ -598,7 +637,6 @@ class InteractionsStore {
   /* ===================
    * COMMON HANDLERS
    * =================== */
-  @action
   onCellTouch(cell: Cell) {
     const line = cell.line;
     if (!line) return;
@@ -611,7 +649,6 @@ class InteractionsStore {
     line.stalify(cell);
   }
 
-  @action
   onCellEnter(cell: Cell) {
     if (!this.currentHandler || !this.draggedLine) return;
     this.numberOfMoves++;
@@ -625,7 +662,6 @@ class InteractionsStore {
     this.root.board.fillLine(this.draggedLine, this.draggedLine.origin, cell);
   }
 
-  @action
   onCellLeave(cell: Cell) {
     if (!this.currentHandler || !this.draggedLine) return;
     if (
@@ -637,7 +673,6 @@ class InteractionsStore {
     }
   }
 
-  @action
   onCellTouchEnd(cell: Cell) {
     if (!this.currentHandler || !this.draggedLine) return;
     const isOrigin = cell.equals(this.draggedLine.origin);
@@ -656,7 +691,6 @@ class InteractionsStore {
     this.numberOfMoves = 0;
   }
 
-  @action
   onGridTouchExit() {
     if (this.draggedLine) {
       this.draggedLine.commit();
@@ -682,7 +716,7 @@ export const rootStore = new RootStore();
 
 export const storesContext = createContext({
   board: rootStore.board,
-  interactions: rootStore.interactions
+  interactions: rootStore.interactions,
 });
 
 export const useBoardStores = () => useContext(storesContext);

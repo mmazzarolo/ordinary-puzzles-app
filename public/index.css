@@ -1,0 +1,49 @@
+:root {
+  --color-background-root: #fbfaff;
+  --color-text: #161520;
+  --color-dot: #8f8c96;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background-root: #161520;
+    --color-text: #fbf8ff;
+  }
+}
+
+@font-face {
+  font-family: "Averta-Bold";
+  src: url("fonts/Averta-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Averta-Semibold";
+  src: url("fonts/Averta-Semibold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Averta-Regular";
+  src: url("fonts/Averta-Regular.ttf") format("truetype");
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
+  touch-action: none;
+  overflow-x: hidden;
+  user-select: text;
+  -webkit-overflow-scrolling: touch;
+  position: fixed;
+  touch-action: manipulation;
+  display: flex;
+  flex: 1;
+  background: var(--color-background-root);
+}

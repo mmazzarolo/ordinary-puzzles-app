@@ -11,7 +11,7 @@ type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
 type StorageItemKey = ElementType<typeof storageItemKeys>;
 
 export const clearStorage = async () => {
-  await Promise.all(storageItemKeys.map(key => AsyncStorage.removeItem(key)));
+  await Promise.all(storageItemKeys.map((key) => AsyncStorage.removeItem(key)));
 };
 
 export const rehydrateObject = async (key: StorageItemKey) => {

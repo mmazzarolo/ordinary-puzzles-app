@@ -9,7 +9,7 @@ import { Score } from "op-common";
 import { Logo } from "./Logo";
 import { Menu, MenuItem } from "./Menu";
 
-export const Home: FC = observer(function() {
+export const Home: FC = observer(function () {
   // Initialization
   const { router, stats } = useCoreStores();
   const { board } = useBoardStores();
@@ -36,7 +36,7 @@ export const Home: FC = observer(function() {
     } else {
       Animated.sequence([
         titleAnim.setup({ duration: titleAnimDuration }),
-        dotAnim.setup({ duration: dotAnimDuration })
+        dotAnim.setup({ duration: dotAnimDuration }),
       ]).start(() => {
         setIsMenuDisabled(false);
         menuAnim.setup({ duration: menuAnimDuration }).start();
@@ -65,40 +65,40 @@ export const Home: FC = observer(function() {
       value: "tutorial",
       onPress: handleItemPress,
       highlighted: !canContinue,
-      starred: !stats.tutorialCompleted && !canContinue
+      starred: !stats.tutorialCompleted && !canContinue,
     },
     {
       label: "small",
       value: "small",
       onPress: handleItemPress,
-      highlighted: !canContinue
+      highlighted: !canContinue,
     },
     {
       label: "medium",
       value: "medium",
       onPress: handleItemPress,
-      highlighted: !canContinue
+      highlighted: !canContinue,
     },
     {
       label: "large",
       value: "large",
       onPress: handleItemPress,
-      highlighted: !canContinue
-    }
+      highlighted: !canContinue,
+    },
   ];
   if (canContinue) {
     menuItems.unshift({
       label: "continue",
       value: "continue",
       onPress: handleItemPress,
-      highlighted: true
+      highlighted: true,
     });
   }
 
   // Score setup
   const scoreStyle: ViewStyle = {
     top: metrics.screenMargin,
-    right: metrics.screenMargin
+    right: metrics.screenMargin,
   };
   const handleScorePress = () => {
     if (isMenuDisabled) return;
@@ -136,15 +136,15 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     paddingVertical: metrics.screenMargin * 2,
-    paddingHorizontal: metrics.screenMargin
+    paddingHorizontal: metrics.screenMargin,
   },
   top: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   bottom: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "flex-end"
-  }
+    justifyContent: "flex-end",
+  },
 });

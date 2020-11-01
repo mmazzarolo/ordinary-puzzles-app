@@ -2,9 +2,7 @@ import React, { FC } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
-  StyleProp,
   TouchableOpacityProps,
-  ViewStyle
 } from "react-native";
 import { hapticFeedback, scale, playSound } from "op-utils";
 import { Text, TextFamily, TextWeight } from "./Text";
@@ -20,7 +18,7 @@ interface ButtonProps extends TouchableOpacityProps {
   textWeight?: TextWeight;
 }
 
-export const Button: FC<ButtonProps> = function({
+export const Button: FC<ButtonProps> = function ({
   children,
   highlighted = true,
   label,
@@ -47,7 +45,7 @@ export const Button: FC<ButtonProps> = function({
         style={[
           styles.label,
           highlighted && styles.labelHighlighted,
-          { fontSize: textSize }
+          { fontSize: textSize },
         ]}
       >
         {label.toLowerCase()}
@@ -59,8 +57,8 @@ export const Button: FC<ButtonProps> = function({
 
 const styles = StyleSheet.create({
   touchable: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   label: {},
-  labelHighlighted: {}
+  labelHighlighted: {},
 });

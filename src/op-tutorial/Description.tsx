@@ -10,7 +10,7 @@ interface DescriptionProps extends ViewProps {
   message: string;
 }
 
-export const Description: FC<DescriptionProps> = function({
+export const Description: FC<DescriptionProps> = function ({
   animValue,
   title,
   message,
@@ -33,13 +33,13 @@ export const Description: FC<DescriptionProps> = function({
 
 const styles = StyleSheet.create({
   root: {
-    marginTop: scale(32)
+    marginTop: scale(32),
   },
   title: {
     fontSize: scale(24),
-    marginBottom: scale(4)
+    marginBottom: scale(4),
   },
   message: {
-    fontSize: scale(22)
-  }
+    fontSize: scale(22),
+  },
 });
