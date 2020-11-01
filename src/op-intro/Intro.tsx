@@ -77,7 +77,7 @@ export const Intro: FC = function () {
 const styles = StyleSheet.create({
   root: {
     marginHorizontal: metrics.screenMargin,
-    height: "100%",
+    flex: 1,
     alignItems: "center",
     flexDirection: "row",
   },

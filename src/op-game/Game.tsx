@@ -122,8 +122,8 @@ export const Game: FC = observer(function () {
 
 const styles = StyleSheet.create({
   root: {
-    height: "100%",
     marginHorizontal: metrics.screenMargin,
+    flex: 1,
   },
   boardWrapper: {
     flex: 1,

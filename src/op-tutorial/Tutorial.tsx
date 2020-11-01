@@ -119,7 +119,7 @@ export const Tutorial: FC = observer(function () {
 
 const styles = StyleSheet.create({
   root: {
-    height: "100%",
+    flex: 1,
     marginHorizontal: metrics.screenMargin,
   },
   boardWrapper: {

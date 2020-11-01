@@ -5,7 +5,7 @@ import { StyleSheet, Platform, View } from "react-native";
 // Centers the layout horizontally on the web, clamping it to "webMaxLayoutWidth"
 export const Layout: FC = function ({ children }) {
   return Platform.select({
-    native: <>children</>,
+    native: <>{children}</>,
     default: <View style={styles.root}>{children}</View>,
   });
 };
@@ -16,5 +16,6 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: metrics.webMaxLayoutWidth,
     alignSelf: "center",
+    flex: 1,
   },
 });

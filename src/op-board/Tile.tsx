@@ -148,6 +148,11 @@ export const Tile: FC<Props> = observer(function (props) {
     }
   }
 
+  if (Platform.OS !== "android" && Platform.OS !== "ios") {
+    // @ts-ignore
+    textStyle.userSelect = "none";
+  }
+
   // Hover style
   const hoverStyle: ViewStyle = {};
   hoverStyle.backgroundColor = colors.primary[9];
@@ -181,7 +186,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
-    userSelect: "none", // react-native-web
   },
   content: {
     position: "absolute",

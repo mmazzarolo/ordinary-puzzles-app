@@ -1,4 +1,5 @@
 // @ts-ignore
-import immersive from "react-native-immersive";
+import * as immersive from "react-native-immersive";
 
-export default immersive;
+// @ts-ignore
+export const Immersive = immersive.Immersive;
