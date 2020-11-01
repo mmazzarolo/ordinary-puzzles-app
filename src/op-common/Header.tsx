@@ -37,20 +37,23 @@ export const Header: FC<HeaderProps> = observer(function ({
   );
 });
 
+const marginTop = metrics.screenMargin;
+const marginBottom = metrics.screenMargin / 2;
+const fontSize = scale(34);
+
 const styles = StyleSheet.create({
   root: {
     flexDirection: "column",
-    marginTop: metrics.screenMargin,
-    marginBottom: metrics.screenMargin / 2,
+    marginTop,
+    marginBottom,
     zIndex: 200,
   },
   identifier: {
     flexDirection: "row",
   },
   text: {
-    fontSize: scale(34),
+    fontSize,
   },
 });
 
-export const headerHeight =
-  styles.root.marginBottom + styles.root.marginTop + styles.text.fontSize;
+export const headerHeight = marginBottom + marginTop + fontSize;

@@ -60,11 +60,3 @@ const styles = StyleSheet.create({
     fontSize: scale(16),
   },
 });
-
-// <TouchableOpacity
-// disabled={!onPress}
-// onPress={() => null}
-// hitSlop={buttonHitSlop}
-// style={styles.content}
-// >
-// </TouchableOpacity>

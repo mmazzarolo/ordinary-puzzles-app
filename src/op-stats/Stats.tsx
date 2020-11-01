@@ -71,7 +71,7 @@ export const Stats: FC = observer(function () {
 
 const styles = StyleSheet.create({
   root: {
-    height: "100%",
+    flex: 1,
     marginHorizontal: metrics.screenMargin,
   },
   middle: {
