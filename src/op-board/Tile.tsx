@@ -1,5 +1,12 @@
 import React, { FC } from "react";
-import { StyleSheet, View, TextStyle, ViewStyle, Animated } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextStyle,
+  ViewStyle,
+  Animated,
+  Platform,
+} from "react-native";
 import { observer } from "mobx-react";
 import { useColors } from "op-design";
 import { Text } from "op-common";
@@ -114,8 +121,26 @@ export const Tile: FC<Props> = observer(function (props) {
     textStyle.color = "#fff";
   }
   textStyle.fontSize = calculateFontSize(size);
-  textStyle.paddingRight = borderWidth / 2;
-  textStyle.paddingBottom = borderWidth;
+  if (Platform.OS === "android" || Platform.OS === "ios") {
+    textStyle.paddingRight = borderWidth / 2;
+    textStyle.paddingBottom = borderWidth;
+  } else {
+    // For some reasons on the web the text centering glitches a bit when a cell
+    // is extended... I suppose there might be some differences on who the cell
+    // border is kept into account for the centering calculation.
+    if (
+      cell.orientation === "horizontal-middle" ||
+      cell.orientation === "horizontal-left"
+    ) {
+      textStyle.paddingRight = borderWidth;
+    }
+    if (
+      cell.orientation === "vertical-middle" ||
+      cell.orientation === "vertical-top"
+    ) {
+      textStyle.paddingBottom = borderWidth;
+    }
+  }
   if (cell.col === 0) {
     textStyle.paddingRight = 0;
   }
