@@ -59,6 +59,6 @@ buck-out/
 /ios/Pods/
 
 # Fonts
-Averta-Bold.ttf
-Averta-Regular.ttf
-Averta-Semibold.ttf
+Averta-Bold.*
+Averta-Regular.*
+Averta-Semibold.*
