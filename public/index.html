@@ -38,14 +38,30 @@
     <link
       rel="apple-touch-icon"
       sizes="152x152"
-      href="favicons/apple-touch-icon-152x152.png"
+      href="%PUBLIC_URL%/favicons/apple-touch-icon-152x152.png"
     />
-    <link rel="shortcut icon" type="image/x-icon" href="favicons/favicon.ico" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="%PUBLIC_URL%/favicons/favicon.ico"
+    />
     <meta name="msapplication-TileColor" content="#21272f" />
     <!-- Manifest -->
-    <link rel="manifest" href="./manifest.json" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <!-- Stylesheets -->
-    <link href="index.css" rel="stylesheet" />
+    <link href="%PUBLIC_URL%/index.css" rel="stylesheet" />
+
+    <link
+      rel="preload"
+      href="%PUBLIC_URL%/fonts/Averta-Regular.woff2"
+      as="font"
+    />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Averta-Bold.woff2" as="font" />
+    <link
+      rel="preload"
+      href="%PUBLIC_URL%/fonts/Averta-Semibold.woff2"
+      as="font"
+    />
   </head>
 
   <body>

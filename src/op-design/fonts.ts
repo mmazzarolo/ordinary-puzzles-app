@@ -17,7 +17,10 @@ const primaryFont = {
   },
   bold: {
     fontFamily: useAvertaFont ? "Averta-Bold" : undefined,
-    fontWeight: "600",
+    fontWeight: Platform.select({
+      native: "600",
+      default: "500", // On the web this alligns the Safari and Chrome rendering
+    }),
   },
 };
 
