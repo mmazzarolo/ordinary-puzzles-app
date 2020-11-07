@@ -10,6 +10,8 @@ const getEventCoordinates = (
     return [event.nativeEvent.locationX, event.nativeEvent.locationY];
   }
 
+  console.log("event", event);
+
   // On the web, touch events coords are relative to the root (still no idea
   // why) so we need to take into account the target view offset.
   // @ts-ignore
@@ -17,6 +19,7 @@ const getEventCoordinates = (
   if (touch) {
     // @ts-ignore
     const targetViewCoords = event?.target?.getBoundingClientRect?.();
+    event.preventDefault();
     return [
       touch.clientX - targetViewCoords.x,
       touch.clientY - targetViewCoords.y,
