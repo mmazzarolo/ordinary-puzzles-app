@@ -5,7 +5,7 @@ const simulateProduction = false;
 const _enableMobxLogging = true;
 
 // Don't show the splash screen
-const _skipSplashScreen = true;
+const _skipSplashScreen = false;
 
 // Clean the local-storage
 const _simulateFirstLoad = false;

@@ -55,17 +55,36 @@
       rel="preload"
       href="%PUBLIC_URL%/fonts/Averta-Regular.woff2"
       as="font"
+      crossorigin="anonymous"
     />
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Averta-Bold.woff2" as="font" />
+    <link
+      rel="preload"
+      href="%PUBLIC_URL%/fonts/Averta-Bold.woff2"
+      as="font"
+      crossorigin="anonymous"
+    />
     <link
       rel="preload"
       href="%PUBLIC_URL%/fonts/Averta-Semibold.woff2"
       as="font"
+      crossorigin="anonymous"
     />
   </head>
 
   <body>
     <noscript> You need to enable JavaScript to run this app. </noscript>
     <div id="root"></div>
+    <div id="splash">
+      <svg id="splash-loading" viewBox="0 0 50 50">
+        <circle
+          id="splash-loading-path"
+          cx="25"
+          cy="25"
+          r="20"
+          fill="none"
+          stroke-width="5"
+        ></circle>
+      </svg>
+    </div>
   </body>
 </html>

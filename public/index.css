@@ -1,13 +1,12 @@
 :root {
   --color-background-root: #fbfaff;
-  --color-text: #161520;
-  --color-dot: #8f8c96;
+  --color-spinner: #8f8c96;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background-root: #161520;
-    --color-text: #fbf8ff;
+    --color-spinner: #93bfec;
   }
 }
 
@@ -49,4 +48,70 @@ body,
   display: flex;
   flex: 1;
   background: var(--color-background-root);
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#splash {
+  opacity: 0;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex: 1;
+  background: var(--color-background-root);
+  justify-content: flex-end;
+  align-items: flex-end;
+  animation: fade-in ease 0.5s forwards;
+  animation-delay: 300ms;
+}
+
+@keyframes splash-loading-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes splash-loading-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+#splash-loading {
+  animation: splash-loading-rotate 2s linear infinite;
+  z-index: 2;
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  width: 50px;
+  height: 50px;
+}
+
+#splash-loading-path {
+  stroke: var(--color-spinner);
+  stroke-linecap: round;
+  animation: splash-loading-dash 1.5s ease-in-out infinite;
 }
