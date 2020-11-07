@@ -7,7 +7,7 @@ module.exports = override(
       "process.env.NODE_ENV": JSON.stringify(
         process.env.NODE_ENV || "development"
       ),
-      __DEV__: process.env.NODE_ENV === "production" || true,
+      __DEV__: process.env.NODE_ENV !== "production",
     })
   )
 );
