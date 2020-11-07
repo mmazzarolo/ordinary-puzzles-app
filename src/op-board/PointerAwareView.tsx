@@ -17,6 +17,7 @@ const getEventCoordinates = (
   if (touch) {
     // @ts-ignore
     const targetViewCoords = event?.target?.getBoundingClientRect?.();
+    event.preventDefault();
     return [
       touch.clientX - targetViewCoords.x,
       touch.clientY - targetViewCoords.y,
