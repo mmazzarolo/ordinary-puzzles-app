@@ -1,14 +1,22 @@
 <h1 align="center">
   <br>
-  <a href="https://ordinarypuzzles.com"><img src="./.github/icon-rounded.png" width="80" alt="Ordinary Puzzles"></a>
+  <a href="https://ordinarypuzzles.com"><img src="./.github/logo.png" width="200" alt="Ordinary Puzzles"></a>
   <br>
   Ordinary Puzzles
   <br>
 </h1>
 
-<h3 align="center">A minimalistic mobile puzzle game built with React-Native.</h3>
+<h3 align="center">A minimalistic puzzle game built with React-Native.</h3>
 
 <p align="center">
+  <a href="https://ordinarypuzzles.com/play">
+    <img
+      class="web-app-badge"
+      src="./.github/web-app-badge.png"
+      alt="Launch now as web app"
+      height="40"
+    />
+  </a>
   <a href="https://apps.apple.com/us/app/ordinary-puzzles/id1489599807">
     <img
       class="app-store-badge"
