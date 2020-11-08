@@ -1,15 +1,28 @@
 {
   "short_name": "Ordinary Puzzles",
   "name": "Ordinary Puzzles",
+  "description": "Minimalistic logic puzzle game",
   "icons": [
     {
-      "src": "/play/favicons/favicon.ico",
-      "sizes": "48x48",
-      "type": "image/png"
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": "./index.html",
-  "display": "standalone",
+  "start_url": ".",
+  "display": "fullscreen",
   "theme_color": "#fff",
   "background_color": "#FBFAFF"
 }
