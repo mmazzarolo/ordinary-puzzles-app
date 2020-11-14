@@ -4,10 +4,11 @@ import { observer } from "mobx-react";
 import { useCoreStores, PuzzleMode } from "op-core";
 import { useBoardStores } from "op-board";
 import { metrics, animations } from "op-design";
-import { useAnimation, useOnMount } from "op-utils";
+import { scale, useAnimation, useOnMount } from "op-utils";
 import { Score } from "op-common";
 import { Logo } from "./Logo";
 import { Menu, MenuItem } from "./Menu";
+import { About } from "./About";
 
 export const Home: FC = observer(function () {
   // Initialization
@@ -128,6 +129,9 @@ export const Home: FC = observer(function () {
         score={stats.score}
         style={scoreStyle}
       />
+      {Platform.OS === "web" && (
+        <About animValue={menuAnim.value} style={styles.about} />
+      )}
     </Animated.View>
   );
 });
@@ -146,5 +150,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-end",
+  },
+  about: {
+    position: "absolute",
+    alignItems: "flex-end",
+    bottom: metrics.screenMargin * 2 + scale(5),
+    right: metrics.screenMargin,
   },
 });
