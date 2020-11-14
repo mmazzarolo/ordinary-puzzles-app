@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   root: {},
   button: {
     marginBottom: scale(2),
+    alignSelf: "flex-start",
   },
   text: {
     fontSize: scale(42),

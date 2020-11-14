@@ -24,6 +24,7 @@ export const Button: FC<ButtonProps> = function ({
   label,
   style = {},
   textFamily,
+  textColor,
   textSize = defaultButtonTextSize,
   textWeight = "semibold",
   ...otherProps
@@ -45,6 +46,7 @@ export const Button: FC<ButtonProps> = function ({
         style={[
           styles.label,
           highlighted && styles.labelHighlighted,
+          textColor && { color: textColor },
           { fontSize: textSize },
         ]}
       >
