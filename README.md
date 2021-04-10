@@ -32,6 +32,10 @@
 </p>
 
 <p align="center" margin-bottom="0">
+  <a href="https://www.producthunt.com/posts/ordinary-puzzles?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-ordinary-puzzles" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=290608&theme=dark" alt="Ordinary Puzzles - A minimalistic puzzle game inspired by Picross and Sudoku. | Product Hunt" style="width: 250px; height: 54px;" width="250" height="40" /></a>
+</p>
+
+<p align="center" margin-bottom="0">
   <a href="https://ordinarypuzzles.com">
     <img alt="Ordinary Puzzles" width="320" height="auto" src="./.github/iphone-screenshot-light.png">
   </a>
