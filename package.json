@@ -2,12 +2,14 @@
   "name": "OrdinaryPuzzles",
   "version": "0.0.1",
   "private": true,
-  "homepage": "/play",
+  "main": "electron/main.js",
   "scripts": {
     "android": "react-native run-android",
+    "electron": "electron .",
+    "electron:build-web": "PUBLIC_URL='./' NODE_ENV=production react-app-rewired build",
     "ios": "react-native run-ios",
-    "web": "react-app-rewired start",
-    "web:build": "NODE_ENV=production react-app-rewired build",
+    "web": "PUBLIC_URL='/play' react-app-rewired start",
+    "web:build": "PUBLIC_URL='/play' NODE_ENV=production react-app-rewired build",
     "start": "react-native start",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -19,6 +21,7 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
+    "electron": "^12.0.2",
     "lodash": "^4.17.20",
     "mobx": "^6.0.1",
     "mobx-logger": "^0.7.1",
@@ -48,6 +51,7 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "customize-cra": "^1.0.0",
+    "electron-builder": "^22.10.5",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -89,5 +93,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "build": {
+    "appId": "com.mmazzarolo.ordinarypuzzles",
+    "win": {
+      "iconUrl": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png"
+    },
+    "directorifffffes": {
+      "buildResources": "public"
+    }
   }
 }

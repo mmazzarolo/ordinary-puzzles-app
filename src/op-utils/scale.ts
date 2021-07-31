@@ -23,19 +23,24 @@ const isTablet = () => {
 export const useScale = (): ScalingFunc => {
   if (Platform.OS === "android" || Platform.OS === "ios") {
     const windowDimensions = Dimensions.get("window");
-    const GUIDELINE_BASE_WIDTH = isTablet() ? 520 : 350;
+    const guidelineBaseWidth = isTablet() ? 520 : 350;
     return (size: number) =>
-      (windowDimensions.width / GUIDELINE_BASE_WIDTH) * size;
+      (windowDimensions.width / guidelineBaseWidth) * size;
   } else {
     /* eslint-disable react-hooks/rules-of-hooks */
     // Yeah, not the cleanest approach here calling a hook conditionally, but
     // we can ensure the order will always be respected because the platform
     // cannot change at runtime.
+    console.log("sclaging");
     const windowDimensions = useWindowDimensions();
     /* eslint-enable react-hooks/rules-of-hooks */
-    const GUIDELINE_BASE_WIDTH = 800;
+    const guidelineBaseWidth = 800;
+    const shorterWindowDimension =
+      windowDimensions.width > windowDimensions.height
+        ? windowDimensions.height
+        : windowDimensions.width;
     return (size: number) =>
-      (windowDimensions.width / GUIDELINE_BASE_WIDTH) * size;
+      (shorterWindowDimension / guidelineBaseWidth) * size;
   }
 };
 
