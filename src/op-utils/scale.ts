@@ -31,10 +31,9 @@ export const useScale = (): ScalingFunc => {
     // Yeah, not the cleanest approach here calling a hook conditionally, but
     // we can ensure the order will always be respected because the platform
     // cannot change at runtime.
-    console.log("sclaging");
     const windowDimensions = useWindowDimensions();
     /* eslint-enable react-hooks/rules-of-hooks */
-    const guidelineBaseWidth = 800;
+    const guidelineBaseWidth = 600;
     const shorterWindowDimension =
       windowDimensions.width > windowDimensions.height
         ? windowDimensions.height
