@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { Animated } from "react-native";
 import { Text, TextProps } from "op-common";
 import { animations } from "op-design";
+import { useScale } from "op-utils";
 
 interface AnimatedLetterProps extends TextProps {
   animValue: Animated.Value;
@@ -17,7 +18,8 @@ export const AnimatedLetter: FC<AnimatedLetterProps> = function ({
   value,
   secondary,
 }) {
-  const charAnimatedStyle = animations.fadeSlideBottom(animValue, {
+  const scale = useScale();
+  const charAnimatedStyle = animations.fadeSlideBottom(animValue, scale, {
     interpolateStart: delay,
   });
   return (

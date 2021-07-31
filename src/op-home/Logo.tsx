@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { StyleSheet, View, Animated } from "react-native";
+import { View, Animated } from "react-native";
 import { Text, AnimatedLetter } from "op-common";
-import { scale } from "op-utils";
+import { useScale, ScalingFunc } from "op-utils";
 
 interface LogoProps {
   titleAnimValue: Animated.Value;
@@ -9,6 +9,8 @@ interface LogoProps {
 }
 
 export const Logo: FC<LogoProps> = function ({ titleAnimValue, dotAnimValue }) {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   const title1 = "Ordinary";
   const title2 = "Puzzles";
   const titleLength = title1.length + title2.length;
@@ -55,7 +57,7 @@ export const Logo: FC<LogoProps> = function ({ titleAnimValue, dotAnimValue }) {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {},
   titleRow: {
     flexDirection: "row",

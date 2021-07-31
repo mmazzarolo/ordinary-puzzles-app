@@ -1,7 +1,6 @@
 import React, { FC, useRef, useState } from "react";
 import {
   View,
-  StyleSheet,
   LayoutChangeEvent,
   LayoutRectangle,
   Platform,
@@ -14,12 +13,20 @@ import { Board } from "op-board";
 import { useBoardStores } from "op-board";
 import { useCoreStores } from "op-core";
 import { metrics } from "op-design";
-import { BottomNav, Button, bottomNavHeight } from "op-common";
-import { useAnimation, useOnMount, useHardwareBackButton } from "op-utils";
+import { BottomNav, Button, getBottomNavHeight } from "op-common";
+import {
+  useAnimation,
+  useOnMount,
+  useHardwareBackButton,
+  useScale,
+  ScalingFunc,
+} from "op-utils";
 import { Description } from "./Description";
 import { clamp } from "lodash";
 
 export const Tutorial: FC = observer(function () {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   const { board } = useBoardStores();
   const { puzzle, router } = useCoreStores();
 
@@ -68,7 +75,7 @@ export const Tutorial: FC = observer(function () {
   const availableVerticalSpace = descriptionLayout
     ? screenHeight -
       descriptionLayout.height -
-      bottomNavHeight -
+      getBottomNavHeight(scale) -
       metrics.screenMargin * 8 // Additional vertical padding
     : undefined;
 
@@ -117,7 +124,7 @@ export const Tutorial: FC = observer(function () {
   );
 });
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     flex: 1,
     marginHorizontal: metrics.screenMargin,

@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { StyleSheet, Animated } from "react-native";
+import { Animated } from "react-native";
 import { animations } from "op-design";
-import { scale } from "op-utils";
+import { useScale, ScalingFunc } from "op-utils";
 import { defaultButtonTextSize } from "./Button";
 
 interface BottomNavProps {
@@ -12,23 +12,28 @@ export const BottomNav: FC<BottomNavProps> = function ({
   animValue,
   children,
 }) {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   return (
-    <Animated.View style={[styles.root, animations.fadeSlideBottom(animValue)]}>
+    <Animated.View
+      style={[styles.root, animations.fadeSlideBottom(animValue, scale)]}
+    >
       {children}
     </Animated.View>
   );
 };
 
-const marginTop = scale(10);
-const marginBottom = scale(14);
+const marginTop = 10;
+const marginBottom = 14;
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop,
-    marginBottom,
+    marginTop: scale(marginTop),
+    marginBottom: scale(marginBottom),
   },
 });
 
-export const bottomNavHeight = marginTop + marginBottom + defaultButtonTextSize;
+export const getBottomNavHeight = (scale: ScalingFunc): any =>
+  scale(marginTop) + scale(marginBottom) + scale(defaultButtonTextSize);

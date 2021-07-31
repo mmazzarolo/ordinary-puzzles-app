@@ -1,16 +1,19 @@
 import React, { FC } from "react";
-import { View, StyleSheet, Animated } from "react-native";
+import { View, Animated } from "react-native";
 import { Text, Button, BottomNav } from "op-common";
 import {
   useAnimation,
   useOnMount,
-  scale,
+  useScale,
   useHardwareBackButton,
+  ScalingFunc,
 } from "op-utils";
 import { animations } from "op-design";
 import { useCoreStores } from "op-core";
 
 export const Message: FC = function () {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   const { router, puzzle, stats } = useCoreStores();
 
   // Routing setup
@@ -60,7 +63,7 @@ export const Message: FC = function () {
           weight="bold"
           style={[
             styles.title,
-            animations.fadeSlideBottom(fadeTitleAnim.value),
+            animations.fadeSlideBottom(fadeTitleAnim.value, scale),
           ]}
         >
           {puzzle.tutorialTitle}
@@ -69,7 +72,7 @@ export const Message: FC = function () {
           weight="regular"
           style={[
             styles.message,
-            animations.fadeSlideBottom(fadeMessageAnim.value),
+            animations.fadeSlideBottom(fadeMessageAnim.value, scale),
           ]}
         >
           {puzzle.tutorialMessage}
@@ -82,7 +85,7 @@ export const Message: FC = function () {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     margin: scale(20),
     flex: 1,

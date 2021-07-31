@@ -1,13 +1,21 @@
 import React, { FC, useRef } from "react";
-import { View, StyleSheet, Animated, Platform, ViewStyle } from "react-native";
+import { View, Animated, Platform, ViewStyle } from "react-native";
 import { observer } from "mobx-react";
 import KeepAwake from "op-native/react-native-keep-awake";
 import { useCoreStores } from "op-core";
 import { BottomNav, Button, Header, Score, Text } from "op-common";
 import { metrics, animations } from "op-design";
-import { useAnimation, useOnMount, scale, scaleTextToFit } from "op-utils";
+import {
+  useAnimation,
+  useOnMount,
+  useScale,
+  scaleTextToFit,
+  ScalingFunc,
+} from "op-utils";
 
 export const Success: FC = observer(function () {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   const { puzzle, router } = useCoreStores();
   const interactionsDisabledRef = useRef(false);
 
@@ -54,7 +62,7 @@ export const Success: FC = observer(function () {
     fadeRootOut().start(startNewGame);
   };
 
-  const fitFontSize = scaleTextToFit(`${puzzle.prefix} ${puzzle.name}`);
+  const fitFontSize = scaleTextToFit(scale, `${puzzle.prefix} ${puzzle.name}`);
 
   const scoreStyle: ViewStyle = {
     top: metrics.screenMargin,
@@ -95,7 +103,7 @@ export const Success: FC = observer(function () {
   );
 });
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     flex: 1,
     marginHorizontal: metrics.screenMargin,

@@ -1,5 +1,4 @@
 import { Animated } from "react-native";
-import { scale } from "op-utils";
 
 interface Config {
   interpolateStart?: number;
@@ -26,18 +25,17 @@ const fade = (animValue: Animated.Value, config: Config = {}) => ({
   opacity: animValue.interpolate(createInterpolationRanges(0, 1, config)),
 });
 
-const slideValue = scale(20);
-
 const slide = (
   animValue: Animated.Value,
   from: "top" | "bottom",
-  config: Config = {}
+  config: Config = {},
+  scale: (n: number) => number
 ) => ({
   transform: [
     {
       translateY: animValue.interpolate(
         createInterpolationRanges(
-          from === "top" ? -slideValue : +slideValue,
+          from === "top" ? -scale(20) : +scale(20),
           1,
           config
         )
@@ -46,14 +44,22 @@ const slide = (
   ],
 });
 
-const fadeSlideTop = (animValue: Animated.Value, config: Config = {}) => ({
+const fadeSlideTop = (
+  animValue: Animated.Value,
+  scale: (n: number) => number,
+  config: Config = {}
+) => ({
   ...fade(animValue, config),
-  ...slide(animValue, "top", config),
+  ...slide(animValue, "top", config, scale),
 });
 
-const fadeSlideBottom = (animValue: Animated.Value, config: Config = {}) => ({
+const fadeSlideBottom = (
+  animValue: Animated.Value,
+  scale: (n: number) => number,
+  config: Config = {}
+) => ({
   ...fade(animValue, config),
-  ...slide(animValue, "bottom", config),
+  ...slide(animValue, "bottom", config, scale),
 });
 
 export const animations = {

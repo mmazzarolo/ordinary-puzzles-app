@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { StyleSheet, Animated, ViewStyle } from "react-native";
+import { Animated, ViewStyle } from "react-native";
 import { Text } from "op-common";
-import { scale } from "op-utils";
+import { useScale, ScalingFunc } from "op-utils";
 import { animations } from "op-design";
 import { Button } from "./Button";
 
@@ -18,6 +18,8 @@ export const Score: FC<ScoreProps> = function ({
   score,
   style,
 }) {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   if (!score) return null;
   const buttonHitSlop = {
     top: scale(20),
@@ -45,7 +47,7 @@ export const Score: FC<ScoreProps> = function ({
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     position: "absolute",
     alignSelf: "flex-end",

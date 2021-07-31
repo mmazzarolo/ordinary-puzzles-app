@@ -1,9 +1,9 @@
 import React, { FC } from "react";
-import { StyleSheet, Animated } from "react-native";
+import { Animated } from "react-native";
 import { Button, Text } from "op-common";
 import { PuzzleMode } from "op-core";
 import { animations, useColors } from "op-design";
-import { scale } from "op-utils";
+import { useScale, ScalingFunc } from "op-utils";
 
 export interface MenuItem {
   label: string;
@@ -20,6 +20,8 @@ interface MenuProps {
 }
 
 export const Menu: FC<MenuProps> = function ({ animValue, disabled, items }) {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   const colors = useColors();
   const starStyle = {
     color: colors.primary[5],
@@ -47,7 +49,7 @@ export const Menu: FC<MenuProps> = function ({ animValue, disabled, items }) {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {},
   button: {
     marginBottom: scale(2),

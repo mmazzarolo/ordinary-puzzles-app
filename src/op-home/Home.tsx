@@ -1,16 +1,19 @@
 import React, { FC, useState } from "react";
-import { View, StyleSheet, Animated, Platform, ViewStyle } from "react-native";
+import { View, Animated, Platform, ViewStyle } from "react-native";
 import { observer } from "mobx-react";
 import { useCoreStores, PuzzleMode } from "op-core";
 import { useBoardStores } from "op-board";
 import { metrics, animations } from "op-design";
-import { scale, useAnimation, useOnMount } from "op-utils";
+import { useScale, useAnimation, useOnMount, ScalingFunc } from "op-utils";
 import { Score } from "op-common";
 import { Logo } from "./Logo";
 import { Menu, MenuItem } from "./Menu";
 import { About } from "./About";
 
 export const Home: FC = observer(function () {
+  const scale = useScale();
+  const styles = createStyles({ scale });
+
   // Initialization
   const { router, stats } = useCoreStores();
   const { board } = useBoardStores();
@@ -136,7 +139,7 @@ export const Home: FC = observer(function () {
   );
 });
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     flex: 1,
     paddingVertical: metrics.screenMargin * 2,
