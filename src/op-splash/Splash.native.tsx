@@ -1,7 +1,13 @@
 import React, { FC, useRef } from "react";
-import { StyleSheet, Animated, TouchableWithoutFeedback } from "react-native";
+import { Animated, TouchableWithoutFeedback } from "react-native";
 import { Text } from "op-common";
-import { useAnimation, useOnMount, scale, delay } from "op-utils";
+import {
+  useAnimation,
+  useOnMount,
+  useScale,
+  delay,
+  ScalingFunc,
+} from "op-utils";
 import { animations, metrics, colors } from "op-design";
 import { credits } from "op-config";
 
@@ -13,6 +19,8 @@ interface SplashProps {
 }
 
 export const Splash: FC<SplashProps> = function ({ onHide }) {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   const skippingEnabledRef = useRef(true);
   const hasSkippedRef = useRef(false);
 
@@ -82,7 +90,7 @@ export const Splash: FC<SplashProps> = function ({ onHide }) {
             weight="bold"
             style={[
               styles.credit,
-              animations.fadeSlideBottom(fadeCreditsAnims[index].value),
+              animations.fadeSlideBottom(fadeCreditsAnims[index].value, scale),
             ]}
           >
             {credit}
@@ -93,7 +101,7 @@ export const Splash: FC<SplashProps> = function ({ onHide }) {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     padding: metrics.screenMargin,
     flex: 1,

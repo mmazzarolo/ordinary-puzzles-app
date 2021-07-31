@@ -1,17 +1,20 @@
 import React, { FC, useRef } from "react";
-import { StyleSheet, Animated } from "react-native";
+import { Animated } from "react-native";
 import { observer } from "mobx-react";
 import { useCoreStores } from "op-core";
-import { BottomNav, Button, Text, bottomNavHeight } from "op-common";
+import { BottomNav, Button, Text, getBottomNavHeight } from "op-common";
 import { metrics, animations } from "op-design";
 import {
   useAnimation,
   useOnMount,
-  scale,
+  useScale,
   useHardwareBackButton,
+  ScalingFunc,
 } from "op-utils";
 
 export const Stats: FC = observer(function () {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   const { stats, router } = useCoreStores();
   const interactionsDisabledRef = useRef(false);
 
@@ -69,14 +72,14 @@ export const Stats: FC = observer(function () {
   );
 });
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     flex: 1,
     marginHorizontal: metrics.screenMargin,
   },
   middle: {
     flex: 1,
-    marginTop: bottomNavHeight,
+    marginTop: getBottomNavHeight,
     justifyContent: "center",
   },
   title: {

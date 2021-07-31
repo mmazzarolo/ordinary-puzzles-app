@@ -51,13 +51,12 @@ export const playSound = async (id: SoundEffectId) => {
   const soundEffect = soundEffects[id];
   return new Promise((resolve, reject) => {
     if (soundEffect.sound && soundEffect.sound.play) {
-      soundEffect.sound
-        .setVolume(soundEffect.volume)
-        .play((success: boolean) =>
-          success
-            ? resolve()
-            : reject("Playback failed due to audio decoding errors")
-        );
+      soundEffect.sound.setVolume(soundEffect.volume).play((success: boolean) =>
+        success
+          ? // @ts-ignore
+            resolve()
+          : reject("Playback failed due to audio decoding errors")
+      );
     }
   });
 };

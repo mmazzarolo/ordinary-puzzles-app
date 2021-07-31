@@ -1,7 +1,6 @@
 import React, { FC, useRef } from "react";
 import {
   View,
-  StyleSheet,
   Animated,
   Platform,
   Dimensions,
@@ -14,19 +13,28 @@ import { useCoreStores } from "op-core";
 import { useBoardStores } from "op-board";
 import {
   BottomNav,
-  bottomNavHeight,
+  getBottomNavHeight,
   Button,
   Header,
-  headerHeight,
+  getHeaderHeight,
 } from "op-common";
 import { metrics, animations } from "op-design";
-import { useAnimation, useOnMount, useHardwareBackButton } from "op-utils";
+import {
+  useAnimation,
+  useOnMount,
+  useHardwareBackButton,
+  useScale,
+  ScalingFunc,
+} from "op-utils";
 import { clamp } from "lodash";
 
 export const Game: FC = observer(function () {
   const { puzzle, router } = useCoreStores();
   const { board } = useBoardStores();
   const interactionsDisabledRef = useRef(false);
+
+  const scale = useScale();
+  const styles = createStyles({ scale });
 
   // Screen width/height setup
   const windowDimensions = useWindowDimensions();
@@ -90,8 +98,8 @@ export const Game: FC = observer(function () {
   const availableVerticalSpace =
     screenHeight -
     metrics.screenMargin * 2 -
-    bottomNavHeight -
-    headerHeight -
+    getBottomNavHeight(scale) -
+    getHeaderHeight(scale) -
     metrics.screenMargin * 4; // Additional vertical padding
 
   return (
@@ -120,7 +128,7 @@ export const Game: FC = observer(function () {
   );
 });
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     marginHorizontal: metrics.screenMargin,
     flex: 1,

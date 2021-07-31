@@ -2,7 +2,13 @@ import React, { FC, useRef } from "react";
 import { StyleSheet, Animated, TouchableWithoutFeedback } from "react-native";
 import { animations, metrics } from "op-design";
 import { AnimatedLetter } from "op-common";
-import { useAnimation, scaleTextToFit, delay, useOnMount } from "op-utils";
+import {
+  useAnimation,
+  scaleTextToFit,
+  delay,
+  useOnMount,
+  useScale,
+} from "op-utils";
 import { useCoreStores } from "op-core";
 
 const asyncAnimationStart = (anim: Animated.CompositeAnimation) =>
@@ -12,6 +18,8 @@ export const Intro: FC = function () {
   const { puzzle, router } = useCoreStores();
   const skippingEnabledRef = useRef(true);
   const hasSkippedRef = useRef(false);
+
+  const scale = useScale();
 
   // Routing setup
   const handleComplete = () => router.changeRoute("game");
@@ -43,7 +51,7 @@ export const Intro: FC = function () {
   };
 
   // Split the title into multiple charaters to animate them asynchronously
-  const fitFontSize = scaleTextToFit(`${puzzle.prefix} ${puzzle.name}`);
+  const fitFontSize = scaleTextToFit(scale, `${puzzle.prefix} ${puzzle.name}`);
   const digitList = puzzle.prefix.split("");
   const letterList = puzzle.name.split("");
   const chars = digitList
@@ -54,7 +62,7 @@ export const Intro: FC = function () {
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       <Animated.View
-        style={[styles.root, animations.fadeSlideTop(hideAnim.value)]}
+        style={[styles.root, animations.fadeSlideTop(hideAnim.value, scale)]}
       >
         {chars.map((char, index) => {
           const delay = (1 / chars.length) * index;

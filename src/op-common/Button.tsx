@@ -1,13 +1,9 @@
 import React, { FC } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from "react-native";
-import { hapticFeedback, scale, playSound } from "op-utils";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import { hapticFeedback, playSound, ScalingFunc, useScale } from "op-utils";
 import { Text, TextFamily, TextWeight } from "./Text";
 
-export const defaultButtonTextSize = scale(32);
+export const defaultButtonTextSize = 32;
 
 interface ButtonProps extends TouchableOpacityProps {
   highlighted?: boolean;
@@ -25,10 +21,12 @@ export const Button: FC<ButtonProps> = function ({
   style = {},
   textFamily,
   textColor,
-  textSize = defaultButtonTextSize,
+  textSize,
   textWeight = "semibold",
   ...otherProps
 }) {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   const handlePressIn = () => {
     hapticFeedback.generate("impactMedium");
     playSound("buttonPress");
@@ -47,7 +45,7 @@ export const Button: FC<ButtonProps> = function ({
           styles.label,
           highlighted && styles.labelHighlighted,
           textColor && { color: textColor },
-          { fontSize: textSize },
+          { fontSize: textSize || scale(defaultButtonTextSize) },
         ]}
       >
         {label.toLowerCase()}
@@ -57,7 +55,7 @@ export const Button: FC<ButtonProps> = function ({
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   touchable: {
     flexDirection: "row",
   },

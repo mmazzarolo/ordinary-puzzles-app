@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import {
-  StyleSheet,
   Animated,
   ViewStyle,
   Image,
@@ -8,7 +7,7 @@ import {
   Platform,
 } from "react-native";
 import { animations } from "op-design";
-import { scale } from "op-utils";
+import { useScale, ScalingFunc } from "op-utils";
 import { Button } from "op-common";
 import logoBorderDark from "./logo-border-dark.png";
 import logoBorderLight from "./logo-border-light.png";
@@ -19,6 +18,8 @@ interface AboutProps {
 }
 
 export const About: FC<AboutProps> = function ({ animValue, style }) {
+  const scale = useScale();
+  const styles = createStyles({ scale });
   const colorScheme = useColorScheme();
   const imageSrc = colorScheme === "dark" ? logoBorderDark : logoBorderLight;
 
@@ -54,15 +55,17 @@ export const About: FC<AboutProps> = function ({ animValue, style }) {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   root: {
     opacity: 0.9,
     flexDirection: "row",
+    alignItems: "center",
   },
   button: {},
   image: {
-    width: 22,
-    height: 22,
-    marginLeft: 4,
+    marginTop: scale(2),
+    width: scale(19),
+    height: scale(19),
+    marginLeft: scale(4),
   },
 });
