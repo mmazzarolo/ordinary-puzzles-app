@@ -2,11 +2,17 @@
   "name": "OrdinaryPuzzles",
   "version": "0.0.1",
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "web": "PUBLIC_URL='/play' react-app-rewired start",
+    "android:dev": "react-native run-android",
+    "ios:dev": "react-native run-ios",
+    "web:dev": "PUBLIC_URL='/play' react-app-rewired start",
     "web:build": "PUBLIC_URL='/play' NODE_ENV=production react-app-rewired build",
+    "electron:dev": "run-p --print-label electron:dev:*",
+    "electron:dev:cra": "PUBLIC_URL='./' BROWSER=none ELECTRON=true react-app-rewired start",
+    "electron:dev:start": "wait-on tcp:3000 && ELECTRON_START_URL=http://localhost:3000 electron .",
+    "electron:build": "PUBLIC_URL='./' NODE_ENV=production ELECTRON=true react-app-rewired build",
+    "electron:build:start": "electron .",
     "start": "react-native start",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -47,6 +53,8 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "customize-cra": "^1.0.0",
+    "electron": "^13.1.7",
+    "electron-builder": "^22.11.7",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -59,7 +67,8 @@
     "react-app-rewired": "^2.1.6",
     "react-scripts": "^4.0.0",
     "react-test-renderer": "16.13.1",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "wait-on": "^6.0.0"
   },
   "jest": {
     "preset": "react-native"
@@ -77,6 +86,15 @@
     "*.md": [
       "prettier --write"
     ]
+  },
+  "build": {
+    "appId": "com.mmazzarolo.ordinarypuzzles",
+    "win": {
+      "iconUrl": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png"
+    },
+    "directories": {
+      "buildResources": "public"
+    }
   },
   "browserslist": {
     "production": [
