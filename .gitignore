@@ -62,3 +62,6 @@ buck-out/
 Averta-Bold.*
 Averta-Regular.*
 Averta-Semibold.*
+
+# Electron outputs
+dist/

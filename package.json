@@ -2,19 +2,29 @@
   "name": "OrdinaryPuzzles",
   "version": "0.0.1",
   "private": true,
+  "author": "Mazzarolo Matteo",
+  "description": "Minimalistic puzzle game inspired by Picross and Sudoku.",
+  "main": "./public/electron.js",
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "web": "PUBLIC_URL='/play' react-app-rewired start",
+    "android:dev": "react-native run-android",
+    "ios:dev": "react-native run-ios",
+    "web:dev": "PUBLIC_URL='/play' react-app-rewired start",
     "web:build": "PUBLIC_URL='/play' NODE_ENV=production react-app-rewired build",
+    "electron:dev": "run-p --print-label electron:dev:*",
+    "electron:dev:cra": "PUBLIC_URL='./' BROWSER=none ELECTRON=true react-app-rewired start",
+    "electron:dev:start": "wait-on tcp:3000 && ELECTRON_START_URL=http://localhost:3000 electron .",
+    "electron:build": "run-s --print-label electron:build:*",
+    "electron:build:cra": "PUBLIC_URL='./' NODE_ENV=production ELECTRON=true react-app-rewired build",
+    "electron:build:package": "electron-builder build --mac -c.extraMetadata.main=build/electron.js --publish never",
     "start": "react-native start",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint 'src/' --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "npm run lint --fix",
+    "lint:fix": "yarn lint --fix",
     "typecheck": "tsc",
     "xcode": "open ios/OrdinaryPuzzles.xcworkspace",
-    "studio": "open -a /Applications/Android\\ Studio.app ./android/"
+    "studio": "open -a /Applications/Android\\ Studio.app ./android/",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
@@ -46,7 +56,10 @@
     "babel-jest": "^24.9.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "cross-env": "^7.0.3",
     "customize-cra": "^1.0.0",
+    "electron": "^13.1.7",
+    "electron-builder": "^22.11.7",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -59,7 +72,8 @@
     "react-app-rewired": "^2.1.6",
     "react-scripts": "^4.0.0",
     "react-test-renderer": "16.13.1",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "wait-on": "^6.0.0"
   },
   "jest": {
     "preset": "react-native"
@@ -77,6 +91,28 @@
     "*.md": [
       "prettier --write"
     ]
+  },
+  "build": {
+    "appId": "com.mmazzarolo.ordinarypuzzles",
+    "files": [
+      "**/*",
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.puzzle-games"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "deb",
+      "category": "Games"
+    }
   },
   "browserslist": {
     "production": [
