@@ -1,14 +1,14 @@
-import React, { FC, useState } from "react";
-import { View, Animated, Platform, ViewStyle } from "react-native";
 import { observer } from "mobx-react";
-import { useCoreStores, PuzzleMode } from "op-core";
 import { useBoardStores } from "op-board";
+import { Score } from "op-common";
+import { useCoreStores, PuzzleMode } from "op-core";
 import { metrics, animations } from "op-design";
 import { useScale, useAnimation, useOnMount, ScalingFunc } from "op-utils";
-import { Score } from "op-common";
+import React, { FC, useState } from "react";
+import { View, Animated, Platform, ViewStyle } from "react-native";
+import { About } from "./About";
 import { Logo } from "./Logo";
 import { Menu, MenuItem } from "./Menu";
-import { About } from "./About";
 
 export const Home: FC = observer(function () {
   const scale = useScale();
@@ -53,15 +53,13 @@ export const Home: FC = observer(function () {
   const handleItemPress = (value: PuzzleMode | "continue") => {
     if (isMenuDisabled) return;
     setIsMenuDisabled(true);
-    rootFadeAnim
-      .setup({ duration: rootFadeOutAnimDuration, toValue: 0 })
-      .start(() => {
-        if (value === "tutorial") {
-          router.changeRoute(value);
-        } else {
-          router.changeRoute("intro", value);
-        }
-      });
+    rootFadeAnim.setup({ duration: rootFadeOutAnimDuration, toValue: 0 }).start(() => {
+      if (value === "tutorial") {
+        router.changeRoute(value);
+      } else {
+        router.changeRoute("intro", value);
+      }
+    });
   };
   const menuItems: MenuItem[] = [
     {
@@ -107,11 +105,9 @@ export const Home: FC = observer(function () {
   const handleScorePress = () => {
     if (isMenuDisabled) return;
     setIsMenuDisabled(true);
-    rootFadeAnim
-      .setup({ duration: rootFadeOutAnimDuration, toValue: 0 })
-      .start(() => {
-        router.changeRoute("stats");
-      });
+    rootFadeAnim.setup({ duration: rootFadeOutAnimDuration, toValue: 0 }).start(() => {
+      router.changeRoute("stats");
+    });
   };
 
   return (
@@ -120,11 +116,7 @@ export const Home: FC = observer(function () {
         <Logo titleAnimValue={titleAnim.value} dotAnimValue={dotAnim.value} />
       </View>
       <View style={styles.bottom}>
-        <Menu
-          animValue={menuAnim.value}
-          disabled={isMenuDisabled}
-          items={menuItems}
-        />
+        <Menu animValue={menuAnim.value} disabled={isMenuDisabled} items={menuItems} />
       </View>
       <Score
         animValue={menuAnim.value}
@@ -132,9 +124,7 @@ export const Home: FC = observer(function () {
         score={stats.score}
         style={scoreStyle}
       />
-      {Platform.OS === "web" && (
-        <About animValue={menuAnim.value} style={styles.about} />
-      )}
+      {Platform.OS === "web" && <About animValue={menuAnim.value} style={styles.about} />}
     </Animated.View>
   );
 });

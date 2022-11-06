@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Animated, Easing } from "react-native";
 
-export const useAnimation = function (initialValue: number = 0) {
+export const useAnimation = function (initialValue = 0) {
   const endValue = initialValue === 0 ? 1 : 0;
   const animationValueRef = useRef(new Animated.Value(initialValue));
 

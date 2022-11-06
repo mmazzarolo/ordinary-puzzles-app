@@ -1,9 +1,9 @@
-import React, { FC } from "react";
-import { Animated } from "react-native";
 import { Button, Text } from "op-common";
 import { PuzzleMode } from "op-core";
 import { animations, useColors } from "op-design";
 import { useScale, ScalingFunc } from "op-utils";
+import React, { FC } from "react";
+import { Animated } from "react-native";
 
 export interface MenuItem {
   label: string;

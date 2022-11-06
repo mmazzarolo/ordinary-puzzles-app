@@ -1,5 +1,5 @@
-import last from "lodash/last";
 import difference from "lodash/difference";
+import last from "lodash/last";
 import takeRight from "lodash/takeRight";
 
 interface Params {
@@ -22,14 +22,12 @@ export const pickRandomPuzzle = ({
   // the next one from the not-played puzzle list
   if (!hasPlayedAllPuzzles) {
     const lastPlayedPuzzle = last(playedHistory);
-    const nextPuzzle =
-      lastPlayedPuzzle === undefined ? 0 : lastPlayedPuzzle + 1;
+    const nextPuzzle = lastPlayedPuzzle === undefined ? 0 : lastPlayedPuzzle + 1;
     // Should always be true... but it's better to be safe than sorry
     if (!contains(playedHistory, nextPuzzle)) return nextPuzzle;
   }
   const hasCompletedAllPuzzles =
-    completedHistory.length >= allPuzzlesLength &&
-    completedHistory.length >= playedHistory.length;
+    completedHistory.length >= allPuzzlesLength && completedHistory.length >= playedHistory.length;
   // If all the puzzles for this mode have already been completed, pick a random
   // one, making sure it wasn't played recently
   if (hasCompletedAllPuzzles) {

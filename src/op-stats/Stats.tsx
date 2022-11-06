@@ -1,16 +1,10 @@
+import { observer } from "mobx-react";
+import { BottomNav, Button, Text, getBottomNavHeight } from "op-common";
+import { useCoreStores } from "op-core";
+import { metrics, animations } from "op-design";
+import { useAnimation, useOnMount, useScale, useHardwareBackButton, ScalingFunc } from "op-utils";
 import React, { FC, useRef } from "react";
 import { Animated } from "react-native";
-import { observer } from "mobx-react";
-import { useCoreStores } from "op-core";
-import { BottomNav, Button, Text, getBottomNavHeight } from "op-common";
-import { metrics, animations } from "op-design";
-import {
-  useAnimation,
-  useOnMount,
-  useScale,
-  useHardwareBackButton,
-  ScalingFunc,
-} from "op-utils";
 
 export const Stats: FC = observer(function () {
   const scale = useScale();
@@ -26,10 +20,8 @@ export const Stats: FC = observer(function () {
   const fadeRootInAnimDuration = 400;
   const fadeRootOutAnimDuration = 200;
   const fadeRootAnim = useAnimation(0);
-  const fadeRootIn = () =>
-    fadeRootAnim.setup({ duration: fadeRootInAnimDuration });
-  const fadeRootOut = () =>
-    fadeRootAnim.setup({ duration: fadeRootOutAnimDuration, toValue: 0 });
+  const fadeRootIn = () => fadeRootAnim.setup({ duration: fadeRootInAnimDuration });
+  const fadeRootOut = () => fadeRootAnim.setup({ duration: fadeRootOutAnimDuration, toValue: 0 });
 
   useOnMount(() => {
     fadeRootIn().start();
@@ -46,9 +38,7 @@ export const Stats: FC = observer(function () {
 
   return (
     <Animated.View style={styles.root}>
-      <Animated.View
-        style={[styles.middle, animations.fade(fadeRootAnim.value)]}
-      >
+      <Animated.View style={[styles.middle, animations.fade(fadeRootAnim.value)]}>
         <Text weight="bold" style={styles.title}>
           Statistics
         </Text>
@@ -79,7 +69,7 @@ const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   },
   middle: {
     flex: 1,
-    marginTop: getBottomNavHeight,
+    marginTop: getBottomNavHeight(scale),
     justifyContent: "center",
   },
   title: {

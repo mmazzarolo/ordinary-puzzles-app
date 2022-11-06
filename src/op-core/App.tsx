@@ -1,11 +1,12 @@
-import React, { FC } from "react";
-import { StatusBar, Platform, UIManager } from "react-native";
-import RNBootSplash from "op-native/react-native-bootsplash";
-import { Immersive } from "op-native/react-native-immersive";
+import * as Font from "expo-font";
 import { configure } from "mobx";
 import { enableLogging } from "mobx-logger";
-import { useOnMount, clearStorage, initializeAudio } from "op-utils";
 import { simulateFirstLoad, enableMobxLogging } from "op-config";
+import { fontAssets } from "op-design";
+import { useOnMount, clearStorage, initializeAudio } from "op-utils";
+import { initializeImmersiveMode, useStickyImmersiveReset } from "op-utils/androidImmersiveMode";
+import React, { FC } from "react";
+import { Platform, UIManager } from "react-native";
 import { Main } from "./Main";
 import { useCoreStores } from "./store";
 
@@ -18,33 +19,30 @@ if (enableMobxLogging) {
 }
 
 if (Platform.OS === "android") {
-  Immersive.on();
-  Immersive.setImmersive(true);
-  Immersive.addImmersiveListener(() => Immersive.on());
   if (UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 }
 
+initializeImmersiveMode();
+
 export const App: FC = function () {
   const { initializeStore } = useCoreStores();
+  const [areFontsLoaded] = Font.useFonts(fontAssets);
+  useStickyImmersiveReset();
   const initializeApp = async () => {
     if (simulateFirstLoad) {
       await clearStorage();
     }
     await initializeStore();
     initializeAudio();
-    if (Platform.OS === "android" || Platform.OS === "ios") {
-      RNBootSplash.hide();
-    }
   };
   useOnMount(() => {
     initializeApp();
   });
   return (
     <>
-      <StatusBar hidden />
-      <Main />
+      <Main areFontsLoaded={areFontsLoaded} />
     </>
   );
 };

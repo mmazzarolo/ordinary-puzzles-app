@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import { Animated } from "react-native";
 import { Text, TextProps } from "op-common";
 import { animations } from "op-design";
 import { useScale } from "op-utils";
+import React, { FC } from "react";
+import { Animated } from "react-native";
 
 interface AnimatedLetterProps extends TextProps {
   animValue: Animated.Value;
@@ -23,11 +23,7 @@ export const AnimatedLetter: FC<AnimatedLetterProps> = function ({
     interpolateStart: delay,
   });
   return (
-    <Text
-      weight="bold"
-      secondary={secondary}
-      style={[style, charAnimatedStyle]}
-    >
+    <Text weight="bold" secondary={secondary} style={[style, charAnimatedStyle]}>
       {value}
     </Text>
   );

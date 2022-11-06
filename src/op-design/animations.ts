@@ -4,11 +4,7 @@ interface Config {
   interpolateStart?: number;
 }
 
-const createInterpolationRanges = (
-  from: number,
-  to: number,
-  config?: Config
-) => {
+const createInterpolationRanges = (from: number, to: number, config?: Config) => {
   if (config && config.interpolateStart) {
     return {
       inputRange: [0, config.interpolateStart, 1],
@@ -34,11 +30,7 @@ const slide = (
   transform: [
     {
       translateY: animValue.interpolate(
-        createInterpolationRanges(
-          from === "top" ? -scale(20) : +scale(20),
-          1,
-          config
-        )
+        createInterpolationRanges(from === "top" ? -scale(20) : +scale(20), 1, config)
       ),
     },
   ],

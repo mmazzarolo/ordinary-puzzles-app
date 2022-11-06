@@ -1,23 +1,18 @@
-import React, { FC } from "react";
-import { Animated } from "react-native";
 import { animations } from "op-design";
 import { useScale, ScalingFunc } from "op-utils";
+import React, { FC, PropsWithChildren } from "react";
+import { Animated } from "react-native";
 import { defaultButtonTextSize } from "./Button";
 
 interface BottomNavProps {
   animValue: Animated.Value;
 }
 
-export const BottomNav: FC<BottomNavProps> = function ({
-  animValue,
-  children,
-}) {
+export const BottomNav: FC<PropsWithChildren<BottomNavProps>> = function ({ animValue, children }) {
   const scale = useScale();
   const styles = createStyles({ scale });
   return (
-    <Animated.View
-      style={[styles.root, animations.fadeSlideBottom(animValue, scale)]}
-    >
+    <Animated.View style={[styles.root, animations.fadeSlideBottom(animValue, scale)]}>
       {children}
     </Animated.View>
   );

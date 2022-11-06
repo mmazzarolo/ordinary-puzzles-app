@@ -1,19 +1,15 @@
+import { useKeepAwake } from "expo-keep-awake";
+import { observer } from "mobx-react";
+import { BottomNav, Button, Header, Score, Text } from "op-common";
+import { useCoreStores } from "op-core";
+import { metrics, animations } from "op-design";
+import { useAnimation, useOnMount, useScale, scaleTextToFit, ScalingFunc } from "op-utils";
 import React, { FC, useRef } from "react";
 import { View, Animated, Platform, ViewStyle } from "react-native";
-import { observer } from "mobx-react";
-import KeepAwake from "op-native/react-native-keep-awake";
-import { useCoreStores } from "op-core";
-import { BottomNav, Button, Header, Score, Text } from "op-common";
-import { metrics, animations } from "op-design";
-import {
-  useAnimation,
-  useOnMount,
-  useScale,
-  scaleTextToFit,
-  ScalingFunc,
-} from "op-utils";
 
 export const Success: FC = observer(function () {
+  useKeepAwake();
+
   const scale = useScale();
   const styles = createStyles({ scale });
   const { puzzle, router } = useCoreStores();
@@ -41,8 +37,7 @@ export const Success: FC = observer(function () {
       fadeBottomNavAnim.setup({ duration: fadeInterfaceInAnimDuration }),
       fadeScoreAnim.setup({ duration: fadeInterfaceInAnimDuration }),
     ]);
-  const fadeRootOut = () =>
-    fadeRootAnim.setup({ duration: fadeRootOutDuration });
+  const fadeRootOut = () => fadeRootAnim.setup({ duration: fadeRootOutDuration });
 
   useOnMount(() => {
     fadeInterfaceIn().start();
@@ -70,13 +65,8 @@ export const Success: FC = observer(function () {
 
   return (
     <Animated.View style={[styles.root, animations.fade(fadeRootAnim.value)]}>
-      <KeepAwake />
       {puzzle.increasesScore && (
-        <Score
-          score={`+${puzzle.score}`}
-          animValue={fadeScoreAnim.value}
-          style={scoreStyle}
-        />
+        <Score score={`+${puzzle.score}`} animValue={fadeScoreAnim.value} style={scoreStyle} />
       )}
       <View style={styles.middle}>
         <Header
@@ -87,10 +77,7 @@ export const Success: FC = observer(function () {
         />
         <Text
           weight="semibold"
-          style={[
-            styles.textCompleted,
-            animations.fade(fadeSubtilteAnim.value),
-          ]}
+          style={[styles.textCompleted, animations.fade(fadeSubtilteAnim.value)]}
         >
           Completed
         </Text>

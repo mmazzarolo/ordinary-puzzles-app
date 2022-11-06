@@ -14,7 +14,7 @@ const _simulateFirstLoad = false;
 const _autoSolve = false;
 
 // Use the Averta font?
-const _useAvertaFont = true;
+const _supportsAvertaFont = true;
 
 // To be safe, let's make sure we don't user development settings in production
 const isDevelopment = __DEV__ && !simulateProduction;
@@ -22,4 +22,4 @@ export const enableMobxLogging = isDevelopment && _enableMobxLogging;
 export const skipSplashScreen = isDevelopment && _skipSplashScreen;
 export const simulateFirstLoad = isDevelopment && _simulateFirstLoad;
 export const autoSolve = isDevelopment && _autoSolve;
-export const useAvertaFont = !isDevelopment || _useAvertaFont;
+export const supportsAvertaFont = !isDevelopment || _supportsAvertaFont;

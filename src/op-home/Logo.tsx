@@ -1,7 +1,7 @@
-import React, { FC } from "react";
-import { View, Animated } from "react-native";
 import { Text, AnimatedLetter } from "op-common";
 import { useScale, ScalingFunc } from "op-utils";
+import React, { FC } from "react";
+import { View, Animated } from "react-native";
 
 interface LogoProps {
   titleAnimValue: Animated.Value;

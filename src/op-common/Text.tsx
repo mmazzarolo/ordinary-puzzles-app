@@ -1,6 +1,6 @@
+import { fonts, useColors } from "op-design";
 import React, { FC } from "react";
 import { TextProps as RNTextProps, StyleSheet, Animated } from "react-native";
-import { fonts, useColors } from "op-design";
 
 export type TextFamily = keyof typeof fonts;
 
@@ -23,11 +23,7 @@ export const Text: FC<TextProps> = function ({
   const colors = useColors();
   const font = fonts[family][weight];
   const color = secondary ? colors.primary[5] : colors.primary[0];
-  return (
-    <Animated.Text style={[{ ...font, color }, styles.text, style]}>
-      {children}
-    </Animated.Text>
-  );
+  return <Animated.Text style={[{ ...font, color }, styles.text, style]}>{children}</Animated.Text>;
 };
 
 const styles = StyleSheet.create({

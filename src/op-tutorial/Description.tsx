@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import { Animated, ViewProps } from "react-native";
 import { Text } from "op-common";
 import { animations } from "op-design";
 import { useScale, ScalingFunc } from "op-utils";
+import React, { FC } from "react";
+import { Animated, ViewProps } from "react-native";
 
 interface DescriptionProps extends ViewProps {
   animValue: Animated.Value;
@@ -19,10 +19,7 @@ export const Description: FC<DescriptionProps> = function ({
   const scale = useScale();
   const styles = createStyles({ scale });
   return (
-    <Animated.View
-      style={[styles.root, animations.fadeSlideTop(animValue, scale)]}
-      {...otherProps}
-    >
+    <Animated.View style={[styles.root, animations.fadeSlideTop(animValue, scale)]} {...otherProps}>
       <Text weight="bold" style={styles.title}>
         {title}
       </Text>

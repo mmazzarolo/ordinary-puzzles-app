@@ -1,6 +1,6 @@
 /* global __ELECTRON__ */
-import { AppRegistry } from "react-native";
 import { App } from "op-core";
+import { AppRegistry } from "react-native";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 AppRegistry.registerComponent("OrdinaryPuzzles", () => App);

@@ -1,12 +1,12 @@
-import React, { FC } from "react";
 import { observer } from "mobx-react";
-import { Home } from "op-home/Home";
 import { Game } from "op-game/Game";
+import { Home } from "op-home/Home";
 import { Intro } from "op-intro/Intro";
-import { Tutorial } from "op-tutorial/Tutorial";
 import { Message } from "op-message/Message";
-import { Success } from "op-success/Success";
 import { Stats } from "op-stats/Stats";
+import { Success } from "op-success/Success";
+import { Tutorial } from "op-tutorial/Tutorial";
+import React, { FC } from "react";
 import { useCoreStores } from "./store";
 
 export const Router: FC = observer(function () {

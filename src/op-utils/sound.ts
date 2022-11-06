@@ -1,62 +1,34 @@
-import ReactNativeSound from "op-native/react-native-sound";
+import { Audio } from "expo-av";
 import { Platform } from "react-native";
-
-type SoundEffectId = keyof typeof soundEffects;
 
 const soundEffects = {
   buttonPress: {
-    path: "buttonpress.wav",
-    sound: null as any,
-    volume: Platform.select({ ios: 0.4, android: 0.5 }),
+    asset: require("../../assets/audio/buttonpress.wav"),
+    audio: null as Audio.SoundObject | null,
   },
 };
 
-// Makes sure we can play audio effects without breaking other backgound app's
-// playback
-ReactNativeSound.setCategory("Ambient", true);
+type SoundEffectId = keyof typeof soundEffects;
 
-const preloadSound = async (id: SoundEffectId) => {
+export async function initializeAudio() {
   if (Platform.OS === "android") return;
-  const soundEffect = soundEffects[id];
-  return new Promise((resolve, reject) => {
-    const sound: any = new ReactNativeSound(
-      soundEffect.path,
-      ReactNativeSound.MAIN_BUNDLE,
-      (error) => {
-        if (error) {
-          console.error(`Failed to preload ${soundEffect.path}`, error);
-          return reject(error);
-        } else {
-          soundEffect.sound = sound;
-          resolve(sound);
-        }
-      }
-    );
-  });
-};
-
-export const initializeAudio = async () => {
-  if (Platform.OS === "android") return;
-  // Preload sound effects
   try {
     const soundEffectIds = Object.keys(soundEffects) as SoundEffectId[];
-    Promise.all(soundEffectIds.map((id) => preloadSound(id)));
+    return Promise.all(
+      soundEffectIds.map(async function (id) {
+        const soundEffect = soundEffects[id];
+        soundEffect.audio = await Audio.Sound.createAsync(soundEffect.asset);
+      })
+    );
   } catch (error) {
     console.error("Failed to preload sound", error);
   }
-};
+}
 
 export const playSound = async (id: SoundEffectId) => {
   if (Platform.OS === "android") return;
   const soundEffect = soundEffects[id];
-  return new Promise((resolve, reject) => {
-    if (soundEffect.sound && soundEffect.sound.play) {
-      soundEffect.sound.setVolume(soundEffect.volume).play((success: boolean) =>
-        success
-          ? // @ts-ignore
-            resolve()
-          : reject("Playback failed due to audio decoding errors")
-      );
-    }
-  });
+  // We must use "replay" instead of "play" here so that the track can be played
+  // multiple times.
+  soundEffect.audio.sound.replayAsync();
 };

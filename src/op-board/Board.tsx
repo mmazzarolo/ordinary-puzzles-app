@@ -1,14 +1,14 @@
-import React, { FC, useEffect } from "react";
-import { View, StyleSheet, Animated, Platform } from "react-native";
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
-import { animations, useColors } from "op-design";
-import { useAnimation, useOnMount, hapticFeedback } from "op-utils";
-import { useCoreStores } from "op-core";
 import { autoSolve } from "op-config";
-import { useBoardStores } from "./store";
-import { Tile } from "./Tile";
+import { useCoreStores } from "op-core";
+import { animations, useColors } from "op-design";
+import { useAnimation, useOnMount, hapticFeedback, ImpactFeedbackType } from "op-utils";
+import React, { FC, useEffect } from "react";
+import { View, StyleSheet, Animated, Platform } from "react-native";
 import { PointerAwareView } from "./PointerAwareView";
+import { Tile } from "./Tile";
+import { useBoardStores } from "./store";
 
 const isAndroid = Platform.OS === "android";
 
@@ -71,7 +71,7 @@ export const Board: FC<BoardProps> = observer(function ({
     }
     const disposeHapticReaction = reaction(
       () => interactions.hoveredCell,
-      () => hapticFeedback.generate("impactLight")
+      () => hapticFeedback.generate(ImpactFeedbackType.Light)
     );
     const disposeClearedReaction = reaction(
       () => board.cleared,
@@ -93,8 +93,7 @@ export const Board: FC<BoardProps> = observer(function ({
   // Scale the board given the vertical and horizontal contraints defined
   // in the pros
   const doesBoardFitVertically =
-    (availableHorizontalSpace / board.colsCount) * board.rowsCount <
-    availableVerticalSpace;
+    (availableHorizontalSpace / board.colsCount) * board.rowsCount < availableVerticalSpace;
   const tileSize = doesBoardFitVertically
     ? Math.floor(availableHorizontalSpace / board.colsCount)
     : Math.floor(availableVerticalSpace / board.rowsCount);
@@ -134,10 +133,7 @@ export const Board: FC<BoardProps> = observer(function ({
         ))}
       </Animated.View>
       {isAndroid && (
-        <Animated.View
-          style={[styles.androidOpacity, androidOpacityStyle]}
-          pointerEvents="none"
-        />
+        <Animated.View style={[styles.androidOpacity, androidOpacityStyle]} pointerEvents="none" />
       )}
     </PointerAwareView>
   );

@@ -1,9 +1,7 @@
 import React, { FC } from "react";
 import { View, Platform, ViewProps, GestureResponderEvent } from "react-native";
 
-const getEventCoordinates = (
-  event: GestureResponderEvent
-): [number, number] => {
+const getEventCoordinates = (event: GestureResponderEvent): [number, number] => {
   // On Android and iOS, let's use the native location which are relative
   // to the target view.
   if (Platform.OS === "android" || Platform.OS === "ios") {
@@ -18,10 +16,10 @@ const getEventCoordinates = (
     // @ts-ignore
     const targetViewCoords = event?.target?.getBoundingClientRect?.();
     event.preventDefault();
-    return [
-      touch.clientX - targetViewCoords.x,
-      touch.clientY - targetViewCoords.y,
-    ] as [number, number];
+    return [touch.clientX - targetViewCoords.x, touch.clientY - targetViewCoords.y] as [
+      number,
+      number
+    ];
   }
 
   // On the web (desktop), we can use layerX and layerY which are relative to

@@ -1,23 +1,10 @@
-import { createContext, useContext } from "react";
-import {
-  observable,
-  action,
-  computed,
-  toJS,
-  runInAction,
-  makeObservable,
-} from "mobx";
-import { rehydrateObject, persistObject, pickRandomPuzzle } from "op-utils";
 import uniq from "lodash/uniq";
+import { observable, action, computed, toJS, runInAction, makeObservable } from "mobx";
+import { rehydrateObject, persistObject, pickRandomPuzzle } from "op-utils";
+import { createContext, useContext } from "react";
 import puzzles from "./puzzles.json";
 
-export type Route =
-  | "home"
-  | "game"
-  | "intro"
-  | "tutorial"
-  | "success"
-  | "stats";
+export type Route = "home" | "game" | "intro" | "tutorial" | "success" | "stats";
 export type PuzzleMode = "tutorial" | "small" | "medium" | "large";
 
 const sum = (a: number, b: number) => a + b;
@@ -43,8 +30,7 @@ class RouterStore {
 
   get hasLoadedHomeOnce() {
     return (
-      this.routesHistory.length > 1 &&
-      this.routesHistory.filter((x) => x === "home").length > 1
+      this.routesHistory.length > 1 && this.routesHistory.filter((x) => x === "home").length > 1
     );
   }
 
@@ -80,7 +66,7 @@ class PuzzleStore {
 
   mode?: PuzzleMode = undefined;
   index?: number = undefined;
-  increasesScore: boolean = false;
+  increasesScore = false;
 
   constructor(rootStore: RootStore) {
     this.root = rootStore;
@@ -151,9 +137,7 @@ class PuzzleStore {
    * TUTORIAL
    * =================== */
   get isTutorialEnd() {
-    return (
-      this.mode === "tutorial" && this.index === puzzles.tutorial.length - 1
-    );
+    return this.mode === "tutorial" && this.index === puzzles.tutorial.length - 1;
   }
 
   get tutorialTitle() {
@@ -173,8 +157,7 @@ class PuzzleStore {
     this.mode = mode;
     this.index = index;
     this.root.stats.updatePlayedPuzzles(mode, index);
-    this.increasesScore =
-      this.root.stats.completedPuzzles[this.mode]?.indexOf(this.index) === -1;
+    this.increasesScore = this.root.stats.completedPuzzles[this.mode]?.indexOf(this.index) === -1;
   }
 
   setRandomPuzzle(mode: PuzzleMode = this.mode || "small") {
@@ -267,9 +250,9 @@ class StatsStore {
 
   updateCompletedPuzzles(mode?: PuzzleMode, index?: number) {
     if (mode && index !== undefined) {
-      this.completedPuzzles[mode] = uniq(
-        this.completedPuzzles[mode] || []
-      ).filter((x) => x !== index);
+      this.completedPuzzles[mode] = uniq(this.completedPuzzles[mode] || []).filter(
+        (x) => x !== index
+      );
       this.completedPuzzles[mode].push(index);
       persistObject("completedPuzzles", toJS(this.completedPuzzles));
     }
@@ -277,9 +260,7 @@ class StatsStore {
 
   updatePlayedPuzzles(mode?: PuzzleMode, index?: number) {
     if (mode && index !== undefined) {
-      this.playedPuzzles[mode] = uniq(this.playedPuzzles[mode] || []).filter(
-        (x) => x !== index
-      );
+      this.playedPuzzles[mode] = uniq(this.playedPuzzles[mode] || []).filter((x) => x !== index);
       this.playedPuzzles[mode].push(index);
       persistObject("playedPuzzles", toJS(this.playedPuzzles));
     }

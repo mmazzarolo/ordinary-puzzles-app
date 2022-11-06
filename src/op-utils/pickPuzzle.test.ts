@@ -73,17 +73,14 @@ describe("pickRandomPuzzle", () => {
     describe("with all puzzles played", () => {
       describe("with all puzzles completed", () => {
         const randomTestSuite = times(10);
-        it.each(randomTestSuite)(
-          "should return a random non-recently played puzzle",
-          () => {
-            const randomPuzzle = pickRandomPuzzle({
-              allPuzzlesLength: allPuzzlesLength,
-              playedHistory: [0, 1, 2, 3, 4, 5],
-              completedHistory: [0, 1, 2, 3, 4, 5],
-            });
-            expect([0, 1, 2]).toContain(randomPuzzle);
-          }
-        );
+        it.each(randomTestSuite)("should return a random non-recently played puzzle", () => {
+          const randomPuzzle = pickRandomPuzzle({
+            allPuzzlesLength: allPuzzlesLength,
+            playedHistory: [0, 1, 2, 3, 4, 5],
+            completedHistory: [0, 1, 2, 3, 4, 5],
+          });
+          expect([0, 1, 2]).toContain(randomPuzzle);
+        });
       });
 
       describe("with at least a non-completed puzzle", () => {

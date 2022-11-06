@@ -1,15 +1,9 @@
+import { AnimatedLetter } from "op-common";
+import { useCoreStores } from "op-core";
+import { animations, metrics } from "op-design";
+import { useAnimation, scaleTextToFit, delay, useOnMount, useScale } from "op-utils";
 import React, { FC, useRef } from "react";
 import { StyleSheet, Animated, TouchableWithoutFeedback } from "react-native";
-import { animations, metrics } from "op-design";
-import { AnimatedLetter } from "op-common";
-import {
-  useAnimation,
-  scaleTextToFit,
-  delay,
-  useOnMount,
-  useScale,
-} from "op-utils";
-import { useCoreStores } from "op-core";
 
 const asyncAnimationStart = (anim: Animated.CompositeAnimation) =>
   new Promise((resolve) => anim.start(resolve));
@@ -61,9 +55,7 @@ export const Intro: FC = function () {
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
-      <Animated.View
-        style={[styles.root, animations.fadeSlideTop(hideAnim.value, scale)]}
-      >
+      <Animated.View style={[styles.root, animations.fadeSlideTop(hideAnim.value, scale)]}>
         {chars.map((char, index) => {
           const delay = (1 / chars.length) * index;
           return (

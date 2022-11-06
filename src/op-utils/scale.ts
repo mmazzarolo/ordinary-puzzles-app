@@ -1,9 +1,4 @@
-import {
-  PixelRatio,
-  Dimensions,
-  Platform,
-  useWindowDimensions,
-} from "react-native";
+import { PixelRatio, Dimensions, Platform, useWindowDimensions } from "react-native";
 
 export type ScalingFunc = (n: number) => number;
 
@@ -14,18 +9,14 @@ const isTablet = () => {
   const adjustedHeight = screenDimensions.height * pixelDensity;
   if (pixelDensity < 2 && (adjustedWidth >= 1000 || adjustedHeight >= 1000)) {
     return true;
-  } else
-    return (
-      pixelDensity === 2 && (adjustedWidth >= 1920 || adjustedHeight >= 1920)
-    );
+  } else return pixelDensity === 2 && (adjustedWidth >= 1920 || adjustedHeight >= 1920);
 };
 
 export const useScale = (): ScalingFunc => {
   if (Platform.OS === "android" || Platform.OS === "ios") {
     const windowDimensions = Dimensions.get("window");
     const guidelineBaseWidth = isTablet() ? 520 : 350;
-    return (size: number) =>
-      (windowDimensions.width / guidelineBaseWidth) * size;
+    return (size: number) => (windowDimensions.width / guidelineBaseWidth) * size;
   } else {
     /* eslint-disable react-hooks/rules-of-hooks */
     // Yeah, not the cleanest approach here calling a hook conditionally, but
@@ -38,8 +29,7 @@ export const useScale = (): ScalingFunc => {
       windowDimensions.width > windowDimensions.height
         ? windowDimensions.height
         : windowDimensions.width;
-    return (size: number) =>
-      (shorterWindowDimension / guidelineBaseWidth) * size;
+    return (size: number) => (shorterWindowDimension / guidelineBaseWidth) * size;
   }
 };
 

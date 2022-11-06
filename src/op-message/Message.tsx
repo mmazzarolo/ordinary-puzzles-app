@@ -1,15 +1,9 @@
+import { Text, Button, BottomNav } from "op-common";
+import { useCoreStores } from "op-core";
+import { animations } from "op-design";
+import { useAnimation, useOnMount, useScale, useHardwareBackButton, ScalingFunc } from "op-utils";
 import React, { FC } from "react";
 import { View, Animated } from "react-native";
-import { Text, Button, BottomNav } from "op-common";
-import {
-  useAnimation,
-  useOnMount,
-  useScale,
-  useHardwareBackButton,
-  ScalingFunc,
-} from "op-utils";
-import { animations } from "op-design";
-import { useCoreStores } from "op-core";
 
 export const Message: FC = function () {
   const scale = useScale();
@@ -61,19 +55,13 @@ export const Message: FC = function () {
       <View style={styles.top}>
         <Text
           weight="bold"
-          style={[
-            styles.title,
-            animations.fadeSlideBottom(fadeTitleAnim.value, scale),
-          ]}
+          style={[styles.title, animations.fadeSlideBottom(fadeTitleAnim.value, scale)]}
         >
           {puzzle.tutorialTitle}
         </Text>
         <Text
           weight="regular"
-          style={[
-            styles.message,
-            animations.fadeSlideBottom(fadeMessageAnim.value, scale),
-          ]}
+          style={[styles.message, animations.fadeSlideBottom(fadeMessageAnim.value, scale)]}
         >
           {puzzle.tutorialMessage}
         </Text>

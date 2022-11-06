@@ -1,7 +1,7 @@
-import { LayoutRectangle, LayoutChangeEvent } from "react-native";
-import { createContext, useContext } from "react";
-import { observable, action, computed, autorun, makeObservable } from "mobx";
 import { takeWhile, takeRightWhile, sortBy, intersectionBy } from "lodash";
+import { observable, action, computed, autorun, makeObservable } from "mobx";
+import { createContext, useContext } from "react";
+import { LayoutRectangle, LayoutChangeEvent } from "react-native";
 
 const isOppositeDirectionOf = (dir1: string, dir2: string) => {
   return (
@@ -65,9 +65,7 @@ export class Cell {
     if (this.line.orientation === "initial") {
       return this.line.origin.equals(this) ? "single" : "none";
     } else if (this.line.orientation === "horizontal") {
-      const edgeCols = [this.line.edges[0].col, this.line.edges[1].col].sort(
-        sortInt
-      );
+      const edgeCols = [this.line.edges[0].col, this.line.edges[1].col].sort(sortInt);
       const [leftEdgeCol, rightEdgeCol] = edgeCols;
       if (leftEdgeCol === this.col) {
         return "horizontal-left";
@@ -77,9 +75,7 @@ export class Cell {
         return "horizontal-middle";
       }
     } else if (this.line.orientation === "vertical") {
-      const edgeRows = [this.line.edges[0].row, this.line.edges[1].row].sort(
-        sortInt
-      );
+      const edgeRows = [this.line.edges[0].row, this.line.edges[1].row].sort(sortInt);
       const [topEdgeRow, bottomEdgeRow] = edgeRows;
       if (topEdgeRow === this.row) {
         return "vertical-top";
@@ -97,9 +93,7 @@ export class Cell {
   }
 
   get highlighted() {
-    return (
-      this.hovered && this.line?.equals(this.root.interactions.draggedLine)
-    );
+    return this.hovered && this.line?.equals(this.root.interactions.draggedLine);
   }
 
   equals(cell?: Cell | null) {
@@ -271,10 +265,7 @@ class Line {
         return this.committedCells;
       }
     }
-    const isOpp = isOppositeDirectionOf(
-      this.draggedDirection,
-      this.pendingCellsDirection
-    );
+    const isOpp = isOppositeDirectionOf(this.draggedDirection, this.pendingCellsDirection);
     if (isOpp) {
       if (this.draggedDirection === "left") {
         return this.rightCommittedCells;
@@ -327,9 +318,7 @@ class Line {
     if (!this.stale) {
       this.stale = true;
     }
-    this.pendingCells.replace(
-      cells.filter((cell) => !cell.equals(this.origin))
-    );
+    this.pendingCells.replace(cells.filter((cell) => !cell.equals(this.origin)));
     this.linkReference();
   }
 
@@ -449,9 +438,7 @@ class BoardStore {
     };
     if (from.onSameRowOf(to)) {
       const row = from.row;
-      const [colStart, colEnd] = [from, to]
-        .map((cell) => cell.col)
-        .sort(sortInt);
+      const [colStart, colEnd] = [from, to].map((cell) => cell.col).sort(sortInt);
       for (let col = colStart; col <= colEnd; col++) {
         cellsInBetween.push(this.at(row, col));
       }
@@ -461,9 +448,7 @@ class BoardStore {
           : takeRightWhile(cellsInBetween, shouldDrop);
     } else if (from.onSameColumnOf(to)) {
       const col = from.col;
-      const [rowStart, rowEnd] = [from, to]
-        .map((cell) => cell.row)
-        .sort(sortInt);
+      const [rowStart, rowEnd] = [from, to].map((cell) => cell.row).sort(sortInt);
       for (let row = rowStart; row <= rowEnd; row++) {
         cellsInBetween.push(this.at(row, col));
       }
@@ -481,9 +466,7 @@ class BoardStore {
     };
     if (from.onSameRowOf(to)) {
       const row = from.row;
-      const [colStart, colEnd] = [from, to]
-        .map((cell) => cell.col)
-        .sort(sortInt);
+      const [colStart, colEnd] = [from, to].map((cell) => cell.col).sort(sortInt);
       const cellsInBetween = [];
       for (let col = colStart; col <= colEnd; col++) {
         cellsInBetween.push(this.at(row, col));
@@ -493,9 +476,7 @@ class BoardStore {
         : takeRightWhile(cellsInBetween, shouldDrop);
     } else if (from.onSameColumnOf(to)) {
       const col = from.col;
-      const [rowStart, rowEnd] = [from, to]
-        .map((cell) => cell.row)
-        .sort(sortInt);
+      const [rowStart, rowEnd] = [from, to].map((cell) => cell.row).sort(sortInt);
       const cellsInBetween = [];
       for (let row = rowStart; row <= rowEnd; row++) {
         cellsInBetween.push(this.at(row, col));
@@ -524,7 +505,7 @@ class InteractionsStore {
   currentHandler?: Cell = undefined;
   draggedLine?: Line = undefined;
   hoveredCell?: Cell = undefined;
-  numberOfMoves: number = 0;
+  numberOfMoves = 0;
 
   constructor(rootStore: RootStore) {
     makeObservable(this, {
@@ -588,12 +569,7 @@ class InteractionsStore {
   isOutsideGrid(coords: [number, number]) {
     const [x, y] = coords;
     if (!this.gridLayout) return true;
-    return (
-      y <= 0 ||
-      y >= this.gridLayout.height ||
-      x <= 0 ||
-      x >= this.gridLayout.width
-    );
+    return y <= 0 || y >= this.gridLayout.height || x <= 0 || x >= this.gridLayout.width;
   }
 
   onGridPointerDown(coords: [number, number]) {
@@ -652,10 +628,7 @@ class InteractionsStore {
   onCellEnter(cell: Cell) {
     if (!this.currentHandler || !this.draggedLine) return;
     this.numberOfMoves++;
-    if (
-      !this.draggedLine.origin.onSameColumnOf(cell) &&
-      !this.draggedLine.origin.onSameRowOf(cell)
-    )
+    if (!this.draggedLine.origin.onSameColumnOf(cell) && !this.draggedLine.origin.onSameRowOf(cell))
       return;
     this.hoveredCell = cell;
 
@@ -676,9 +649,7 @@ class InteractionsStore {
   onCellTouchEnd(cell: Cell) {
     if (!this.currentHandler || !this.draggedLine) return;
     const isOrigin = cell.equals(this.draggedLine.origin);
-    const isTap =
-      this.numberOfMoves < 1 &&
-      this.currentHandler.equals(this.draggedLine.origin);
+    const isTap = this.numberOfMoves < 1 && this.currentHandler.equals(this.draggedLine.origin);
     if (isOrigin && isTap) {
       this.draggedLine.reset();
     }

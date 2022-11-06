@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "OrdinaryPuzzles",
+    "slug": "ordinary-puzzles",
+    "version": "1.4",
+    "orientation": "portrait",
+    "icon": "./assets/ios-icon.png",
+    "userInterfaceStyle": "automatic",
+    "jsEngine": "hermes",
+    "splash": {
+      "resizeMode": "contain",
+      "image": "./assets/splash.png",
+      "backgroundColor": "#84818D"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "icon": "./assets/ios-icon.png",
+      "buildNumber": "14",
+      "bundleIdentifier": "com.mmazzarolo.ordinarypuzzles"
+    },
+    "android": {
+      "blockedPermissions": [
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.INTERNET",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-adaptive-icon-foreground.png"
+      },
+      "icon": "./assets/android-icon.png",
+      "package": "com.mmazzarolo.ordinarypuzzles",
+      "versionCode": 8
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cfa7fed1-cb8c-44db-b893-5b463072ef7e"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true
+          }
+        }
+      ]
+    ]
+  }
+}

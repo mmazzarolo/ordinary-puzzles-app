@@ -1,15 +1,11 @@
-import React, { FC } from "react";
-import {
-  Animated,
-  ViewStyle,
-  Image,
-  useColorScheme,
-  Platform,
-} from "react-native";
+import { Button } from "op-common";
 import { animations } from "op-design";
 import { useScale, ScalingFunc } from "op-utils";
-import { Button } from "op-common";
+import React, { FC } from "react";
+import { Animated, ViewStyle, Image, useColorScheme, Platform } from "react-native";
+// @ts-ignore
 import logoBorderDark from "./logo-border-dark.png";
+// @ts-ignore
 import logoBorderLight from "./logo-border-light.png";
 
 interface AboutProps {

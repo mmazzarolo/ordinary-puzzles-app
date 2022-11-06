@@ -1,15 +1,9 @@
+import { Text } from "op-common";
+import { credits } from "op-config";
+import { animations, metrics, colors } from "op-design";
+import { useAnimation, useOnMount, useScale, delay, ScalingFunc } from "op-utils";
 import React, { FC, useRef } from "react";
 import { Animated, TouchableWithoutFeedback } from "react-native";
-import { Text } from "op-common";
-import {
-  useAnimation,
-  useOnMount,
-  useScale,
-  delay,
-  ScalingFunc,
-} from "op-utils";
-import { animations, metrics, colors } from "op-design";
-import { credits } from "op-config";
 
 const asyncAnimationStart = (anim: Animated.CompositeAnimation) =>
   new Promise((resolve) => anim.start(resolve));
@@ -35,17 +29,13 @@ export const Splash: FC<SplashProps> = function ({ onHide }) {
   const splashDuration = 2000;
   const showAnim = Animated.stagger(
     fadeCreditsStaggerDuration,
-    fadeCreditsAnims.map((anim) =>
-      anim.setup({ duration: fadeCreditsAnimDuration })
-    )
+    fadeCreditsAnims.map((anim) => anim.setup({ duration: fadeCreditsAnimDuration }))
   );
 
   const hideAnim = Animated.sequence([
     Animated.stagger(
       fadeCreditsStaggerDuration,
-      fadeCreditsAnims.map((anim) =>
-        anim.setup({ duration: fadeCreditsAnimDuration, toValue: 0 })
-      )
+      fadeCreditsAnims.map((anim) => anim.setup({ duration: fadeCreditsAnimDuration, toValue: 0 }))
     ),
     backgroundColorAnim.setup({
       duration: backgroundColorAnimDuration,

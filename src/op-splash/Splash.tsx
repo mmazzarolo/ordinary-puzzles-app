@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { useOnMount } from "op-utils";
+import { FC } from "react";
 
 interface SplashProps {
   onHide: () => void;

@@ -1,15 +1,8 @@
-import React, { FC } from "react";
-import {
-  StyleSheet,
-  View,
-  TextStyle,
-  ViewStyle,
-  Animated,
-  Platform,
-} from "react-native";
 import { observer } from "mobx-react";
-import { useColors } from "op-design";
 import { Text } from "op-common";
+import { useColors } from "op-design";
+import React, { FC } from "react";
+import { StyleSheet, View, TextStyle, ViewStyle, Animated, Platform } from "react-native";
 import { Cell } from "./store";
 
 interface Props {
@@ -53,7 +46,7 @@ export const Tile: FC<Props> = observer(function (props) {
   const borderWidth = calculateBorderWidth(size);
 
   // Tile size
-  let tileStyle: ViewStyle = {};
+  const tileStyle: ViewStyle = {};
   tileStyle.width = size;
   tileStyle.height = size;
   if (cell.col === 0) {
@@ -134,16 +127,10 @@ export const Tile: FC<Props> = observer(function (props) {
     // For some reasons on the web the text centering glitches a bit when a cell
     // is extended... I suppose there might be some differences on who the cell
     // border is kept into account for the centering calculation.
-    if (
-      cell.orientation === "horizontal-middle" ||
-      cell.orientation === "horizontal-left"
-    ) {
+    if (cell.orientation === "horizontal-middle" || cell.orientation === "horizontal-left") {
       textStyle.paddingRight = borderWidth;
     }
-    if (
-      cell.orientation === "vertical-middle" ||
-      cell.orientation === "vertical-top"
-    ) {
+    if (cell.orientation === "vertical-middle" || cell.orientation === "vertical-top") {
       textStyle.paddingBottom = borderWidth;
     }
   }
@@ -163,11 +150,7 @@ export const Tile: FC<Props> = observer(function (props) {
   return (
     <Animated.View style={[styles.root, tileStyle]} pointerEvents="none">
       <View style={[styles.content, contentStyle]} />
-      <Text
-        family="secondary"
-        weight="semibold"
-        style={[styles.text, textStyle]}
-      >
+      <Text family="secondary" weight="semibold" style={[styles.text, textStyle]}>
         {symbol}
       </Text>
       {cell.highlighted && <View style={[styles.hover, hoverStyle]} />}

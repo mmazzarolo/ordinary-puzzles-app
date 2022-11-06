@@ -1,9 +1,9 @@
 import { metrics } from "op-design";
-import React, { FC } from "react";
+import React, { FC, PropsWithChildren } from "react";
 import { StyleSheet, Platform, View } from "react-native";
 
 // Centers the layout horizontally on the web, clamping it to "webMaxLayoutWidth"
-export const Layout: FC = function ({ children }) {
+export const Layout: FC<PropsWithChildren> = function ({ children }) {
   return Platform.select({
     native: <>{children}</>,
     default: <View style={styles.root}>{children}</View>,

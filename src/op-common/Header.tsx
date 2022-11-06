@@ -1,9 +1,9 @@
+import { observer } from "mobx-react-lite";
+import { Text } from "op-common";
+import { metrics, animations } from "op-design";
+import { useScale, ScalingFunc } from "op-utils";
 import React, { FC } from "react";
 import { Animated } from "react-native";
-import { metrics, animations } from "op-design";
-import { Text } from "op-common";
-import { observer } from "mobx-react-lite";
-import { useScale, ScalingFunc } from "op-utils";
 
 interface HeaderProps {
   fadeAnimValue: Animated.Value;
@@ -24,9 +24,7 @@ export const Header: FC<HeaderProps> = observer(function ({
     fontSize: fontSize || scale(34),
   };
   return (
-    <Animated.View
-      style={[styles.root, animations.fadeSlideTop(fadeAnimValue, scale)]}
-    >
+    <Animated.View style={[styles.root, animations.fadeSlideTop(fadeAnimValue, scale)]}>
       <Animated.View style={styles.identifier}>
         <Text weight="bold" secondary style={[styles.text, textStyle]}>
           {prefix}{" "}
@@ -57,6 +55,4 @@ const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
 });
 
 export const getHeaderHeight = (scale: ScalingFunc) =>
-  scale(metrics.screenMargin) +
-  scale(metrics.screenMargin) / 2 +
-  scale(fontSize);
+  scale(metrics.screenMargin) + scale(metrics.screenMargin) / 2 + scale(fontSize);

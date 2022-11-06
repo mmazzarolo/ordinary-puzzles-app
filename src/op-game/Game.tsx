@@ -1,34 +1,18 @@
-import React, { FC, useRef } from "react";
-import {
-  View,
-  Animated,
-  Platform,
-  Dimensions,
-  useWindowDimensions,
-} from "react-native";
-import { observer } from "mobx-react";
-import KeepAwake from "op-native/react-native-keep-awake";
-import { Board } from "op-board";
-import { useCoreStores } from "op-core";
-import { useBoardStores } from "op-board";
-import {
-  BottomNav,
-  getBottomNavHeight,
-  Button,
-  Header,
-  getHeaderHeight,
-} from "op-common";
-import { metrics, animations } from "op-design";
-import {
-  useAnimation,
-  useOnMount,
-  useHardwareBackButton,
-  useScale,
-  ScalingFunc,
-} from "op-utils";
+import { useKeepAwake } from "expo-keep-awake";
 import { clamp } from "lodash";
+import { observer } from "mobx-react";
+import { Board } from "op-board";
+import { useBoardStores } from "op-board";
+import { BottomNav, getBottomNavHeight, Button, Header, getHeaderHeight } from "op-common";
+import { useCoreStores } from "op-core";
+import { metrics, animations } from "op-design";
+import { useAnimation, useOnMount, useHardwareBackButton, useScale, ScalingFunc } from "op-utils";
+import React, { FC, useRef } from "react";
+import { View, Animated, Platform, Dimensions, useWindowDimensions } from "react-native";
 
 export const Game: FC = observer(function () {
+  useKeepAwake();
+
   const { puzzle, router } = useCoreStores();
   const { board } = useBoardStores();
   const interactionsDisabledRef = useRef(false);
@@ -60,15 +44,13 @@ export const Game: FC = observer(function () {
   const fadeRootOutDuration = 200;
   const fadeInterfaceAnim = useAnimation();
   const fadeRootAnim = useAnimation(maxOpacity);
-  const fadeInterfaceIn = () =>
-    fadeInterfaceAnim.setup({ duration: fadeInterfaceInAnimDuration });
+  const fadeInterfaceIn = () => fadeInterfaceAnim.setup({ duration: fadeInterfaceInAnimDuration });
   const fadeInterfaceOut = () =>
     fadeInterfaceAnim.setup({
       duration: fadeInterfaceOutAnimDuration,
       toValue: 0,
     });
-  const fadeRootOut = () =>
-    fadeRootAnim.setup({ duration: fadeRootOutDuration });
+  const fadeRootOut = () => fadeRootAnim.setup({ duration: fadeRootOutDuration });
 
   useOnMount(() => {
     fadeInterfaceIn().start();
@@ -104,12 +86,7 @@ export const Game: FC = observer(function () {
 
   return (
     <Animated.View style={[styles.root, animations.fade(fadeRootAnim.value)]}>
-      <KeepAwake />
-      <Header
-        prefix={puzzle.prefix}
-        name={puzzle.name}
-        fadeAnimValue={fadeInterfaceAnim.value}
-      />
+      <Header prefix={puzzle.prefix} name={puzzle.name} fadeAnimValue={fadeInterfaceAnim.value} />
       <View style={styles.boardWrapper}>
         {puzzle.data && (
           <Board

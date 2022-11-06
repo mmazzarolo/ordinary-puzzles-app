@@ -1,8 +1,8 @@
+import { Text } from "op-common";
+import { animations } from "op-design";
+import { useScale, ScalingFunc } from "op-utils";
 import React, { FC } from "react";
 import { Animated, ViewStyle } from "react-native";
-import { Text } from "op-common";
-import { useScale, ScalingFunc } from "op-utils";
-import { animations } from "op-design";
 import { Button } from "./Button";
 
 interface ScoreProps {
@@ -12,12 +12,7 @@ interface ScoreProps {
   style?: ViewStyle;
 }
 
-export const Score: FC<ScoreProps> = function ({
-  animValue,
-  onPress,
-  score,
-  style,
-}) {
+export const Score: FC<ScoreProps> = function ({ animValue, onPress, score, style }) {
   const scale = useScale();
   const styles = createStyles({ scale });
   if (!score) return null;

@@ -1,6 +1,6 @@
+import { hapticFeedback, ImpactFeedbackType, playSound, ScalingFunc, useScale } from "op-utils";
 import React, { FC } from "react";
 import { TouchableOpacity, TouchableOpacityProps } from "react-native";
-import { hapticFeedback, playSound, ScalingFunc, useScale } from "op-utils";
 import { Text, TextFamily, TextWeight } from "./Text";
 
 export const defaultButtonTextSize = 32;
@@ -28,15 +28,11 @@ export const Button: FC<ButtonProps> = function ({
   const scale = useScale();
   const styles = createStyles({ scale });
   const handlePressIn = () => {
-    hapticFeedback.generate("impactMedium");
+    hapticFeedback.generate(ImpactFeedbackType.Medium);
     playSound("buttonPress");
   };
   return (
-    <TouchableOpacity
-      style={[styles.touchable, style]}
-      onPressIn={handlePressIn}
-      {...otherProps}
-    >
+    <TouchableOpacity style={[styles.touchable, style]} onPressIn={handlePressIn} {...otherProps}>
       <Text
         secondary={!highlighted}
         family={textFamily}
