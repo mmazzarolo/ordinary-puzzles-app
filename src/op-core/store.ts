@@ -268,7 +268,7 @@ class StatsStore {
   updateCompletedPuzzles(mode?: PuzzleMode, index?: number) {
     if (mode && index !== undefined) {
       this.completedPuzzles[mode] = uniq(
-        this.completedPuzzles[mode] || []
+        this.completedPuzzles[mode] || [],
       ).filter((x) => x !== index);
       this.completedPuzzles[mode].push(index);
       persistObject("completedPuzzles", toJS(this.completedPuzzles));
@@ -278,7 +278,7 @@ class StatsStore {
   updatePlayedPuzzles(mode?: PuzzleMode, index?: number) {
     if (mode && index !== undefined) {
       this.playedPuzzles[mode] = uniq(this.playedPuzzles[mode] || []).filter(
-        (x) => x !== index
+        (x) => x !== index,
       );
       this.playedPuzzles[mode].push(index);
       persistObject("playedPuzzles", toJS(this.playedPuzzles));

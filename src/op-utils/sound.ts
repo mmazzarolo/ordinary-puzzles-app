@@ -1,62 +1,68 @@
-import ReactNativeSound from "op-native/react-native-sound";
+import {
+  createAudioPlayer,
+  setAudioModeAsync,
+  type AudioPlayer,
+} from "expo-audio";
 import { Platform } from "react-native";
+import buttonPressSource from "../../assets/audio/buttonpress.wav";
 
 type SoundEffectId = keyof typeof soundEffects;
 
 const soundEffects = {
   buttonPress: {
-    path: "buttonpress.wav",
-    sound: null as any,
-    volume: Platform.select({ ios: 0.4, android: 0.5 }),
+    player: undefined as AudioPlayer | undefined,
+    source: buttonPressSource,
+    volume: 0.4,
   },
 };
 
-// Makes sure we can play audio effects without breaking other backgound app's
-// playback
-ReactNativeSound.setCategory("Ambient", true);
+let initializationPromise: Promise<void> | undefined;
 
-const preloadSound = async (id: SoundEffectId) => {
-  if (Platform.OS === "android") return;
+const getSoundEffectIds = () => Object.keys(soundEffects) as SoundEffectId[];
+
+const createPlayer = (id: SoundEffectId) => {
   const soundEffect = soundEffects[id];
-  return new Promise((resolve, reject) => {
-    const sound: any = new ReactNativeSound(
-      soundEffect.path,
-      ReactNativeSound.MAIN_BUNDLE,
-      (error) => {
-        if (error) {
-          console.error(`Failed to preload ${soundEffect.path}`, error);
-          return reject(error);
-        } else {
-          soundEffect.sound = sound;
-          resolve(sound);
-        }
-      }
-    );
+  const player = createAudioPlayer(soundEffect.source, {
+    keepAudioSessionActive: false,
+    updateInterval: 1_000,
   });
+  player.volume = soundEffect.volume;
+  soundEffect.player = player;
+  return player;
 };
 
 export const initializeAudio = async () => {
-  if (Platform.OS === "android") return;
-  // Preload sound effects
-  try {
-    const soundEffectIds = Object.keys(soundEffects) as SoundEffectId[];
-    Promise.all(soundEffectIds.map((id) => preloadSound(id)));
-  } catch (error) {
-    console.error("Failed to preload sound", error);
-  }
+  if (Platform.OS !== "ios") return;
+  initializationPromise =
+    initializationPromise ||
+    (async () => {
+      try {
+        await setAudioModeAsync({
+          allowsRecording: false,
+          interruptionMode: "mixWithOthers",
+          playsInSilentMode: false,
+          shouldPlayInBackground: false,
+          shouldRouteThroughEarpiece: false,
+        });
+        getSoundEffectIds().forEach((id) => createPlayer(id));
+      } catch (error) {
+        console.error("Failed to initialize audio", error);
+      }
+    })();
+
+  return initializationPromise;
 };
 
 export const playSound = async (id: SoundEffectId) => {
-  if (Platform.OS === "android") return;
+  if (Platform.OS !== "ios") return;
   const soundEffect = soundEffects[id];
-  return new Promise((resolve, reject) => {
-    if (soundEffect.sound && soundEffect.sound.play) {
-      soundEffect.sound.setVolume(soundEffect.volume).play((success: boolean) =>
-        success
-          ? // @ts-ignore
-            resolve()
-          : reject("Playback failed due to audio decoding errors")
-      );
-    }
-  });
+  try {
+    const player = soundEffect.player || createPlayer(id);
+    player.volume = soundEffect.volume;
+    await player.seekTo(0);
+    player.play();
+  } catch (error) {
+    console.error(`Failed to play sound "${id}"`, error);
+  }
+  return undefined;
 };

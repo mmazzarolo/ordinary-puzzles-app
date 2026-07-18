@@ -1,5 +1,5 @@
-// @ts-ignore
-import * as immersive from "react-native-immersive";
-
-// @ts-ignore
-export const Immersive = immersive.Immersive;
+export const Immersive = {
+  on: () => undefined,
+  setImmersive: () => undefined,
+  addImmersiveListener: () => undefined,
+};

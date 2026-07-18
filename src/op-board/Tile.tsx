@@ -7,7 +7,7 @@ import {
   Animated,
   Platform,
 } from "react-native";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 import { useColors } from "op-design";
 import { Text } from "op-common";
 import { Cell } from "./store";

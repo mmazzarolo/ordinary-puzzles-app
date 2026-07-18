@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 import { Home } from "op-home/Home";
 import { Game } from "op-game/Game";
 import { Intro } from "op-intro/Intro";

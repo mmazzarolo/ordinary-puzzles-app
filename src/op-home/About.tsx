@@ -49,7 +49,7 @@ export const About: FC<AboutProps> = function ({ animValue, style }) {
         textWeight="semibold"
         textSize={scale(20)}
       >
-        <Image source={{ uri: imageSrc }} style={styles.image} />
+        <Image source={imageSrc} style={styles.image} />
       </Button>
     </Animated.View>
   );

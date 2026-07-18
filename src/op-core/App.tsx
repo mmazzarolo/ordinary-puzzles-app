@@ -1,11 +1,12 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import { StatusBar, Platform, UIManager } from "react-native";
-import RNBootSplash from "op-native/react-native-bootsplash";
-import { Immersive } from "op-native/react-native-immersive";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import { configure } from "mobx";
-import { enableLogging } from "mobx-logger";
-import { useOnMount, clearStorage, initializeAudio } from "op-utils";
-import { simulateFirstLoad, enableMobxLogging } from "op-config";
+import { clearStorage, initializeAudio } from "op-utils";
+import { simulateFirstLoad } from "op-config";
+import { enableImmersiveMode } from "op-native/immersiveMode";
+import { registerServiceWorker } from "op-web/registerServiceWorker";
 import { Main } from "./Main";
 import { useCoreStores } from "./store";
 
@@ -13,14 +14,9 @@ configure({
   enforceActions: "always",
 });
 
-if (enableMobxLogging) {
-  enableLogging({});
-}
+void SplashScreen.preventAutoHideAsync();
 
 if (Platform.OS === "android") {
-  Immersive.on();
-  Immersive.setImmersive(true);
-  Immersive.addImmersiveListener(() => Immersive.on());
   if (UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
@@ -28,19 +24,38 @@ if (Platform.OS === "android") {
 
 export const App: FC = function () {
   const { initializeStore } = useCoreStores();
+  const didInitializeRef = useRef(false);
+  const [fontsLoaded, fontError] = useFonts({
+    "Averta-Bold": require("../../assets/fonts/Averta-Bold.otf"),
+    "Averta-Regular": require("../../assets/fonts/Averta-Regular.otf"),
+    "Averta-Semibold": require("../../assets/fonts/Averta-Semibold.otf"),
+    "Inter-SemiBold": require("../../assets/fonts/Inter-SemiBold.otf"),
+  });
+
   const initializeApp = async () => {
+    if (didInitializeRef.current || !fontsLoaded) return;
+    didInitializeRef.current = true;
     if (simulateFirstLoad) {
       await clearStorage();
     }
     await initializeStore();
-    initializeAudio();
-    if (Platform.OS === "android" || Platform.OS === "ios") {
-      RNBootSplash.hide();
+    void initializeAudio();
+    if (Platform.OS === "web") {
+      registerServiceWorker();
     }
+    await SplashScreen.hideAsync();
   };
-  useOnMount(() => {
+
+  useEffect(() => {
     initializeApp();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fontsLoaded]);
+
+  useEffect(() => enableImmersiveMode(), []);
+
+  if (fontError) throw fontError;
+  if (!fontsLoaded) return null;
+
   return (
     <>
       <StatusBar hidden />

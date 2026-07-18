@@ -1,12 +1,9 @@
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const storageItemKeys = ["completedPuzzles", "playedPuzzles"] as const;
 
-type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
-  infer ElementType
->
-  ? ElementType
-  : never;
+type ElementType<T extends readonly unknown[]> =
+  T extends readonly (infer ElementType)[] ? ElementType : never;
 
 type StorageItemKey = ElementType<typeof storageItemKeys>;
 
@@ -20,7 +17,7 @@ export const rehydrateObject = async (key: StorageItemKey) => {
   return item;
 };
 
-export const persistObject = async (key: StorageItemKey, value: Object) => {
+export const persistObject = async (key: StorageItemKey, value: object) => {
   const serializedItem = JSON.stringify(value);
   await AsyncStorage.setItem(key, serializedItem);
 };

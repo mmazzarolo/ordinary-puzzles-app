@@ -1,11 +1,15 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, Platform } from "react-native";
 import { reaction } from "mobx";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 import { animations, useColors } from "op-design";
 import { useAnimation, useOnMount, hapticFeedback } from "op-utils";
 import { useCoreStores } from "op-core";
-import { autoSolve } from "op-config";
+import {
+  autoSolve,
+  autoSolveDelay,
+  e2eAutoSolveDisableStorageKey,
+} from "op-config";
 import { useBoardStores } from "./store";
 import { Tile } from "./Tile";
 import { PointerAwareView } from "./PointerAwareView";
@@ -36,7 +40,10 @@ export const Board: FC<BoardProps> = observer(function ({
   const successAnimDelay = 400;
   const fadeAnim = useAnimation();
   const successAnim = useAnimation();
+  const didStartSuccessAnimationRef = useRef(false);
   const animateSuccess = () => {
+    if (didStartSuccessAnimationRef.current) return;
+    didStartSuccessAnimationRef.current = true;
     onClearedAnimStart();
     Animated.sequence([
       successAnim.setup({
@@ -52,12 +59,18 @@ export const Board: FC<BoardProps> = observer(function ({
     fadeAnim.setup({ duration: fadeInAnimDuration }).start();
   });
 
-  // Auto-solve the puzzle in development mode if needed
-  if (autoSolve) {
-    useOnMount(() => {
-      setTimeout(animateSuccess, 2000);
-    });
-  }
+  // Auto-solve the puzzle in development or in the dedicated E2E export.
+  // A per-context storage switch lets pointer-interaction tests opt out while
+  // sharing the same production bundle as the rest of the browser matrix.
+  const autoSolveDisabled =
+    autoSolve &&
+    Platform.OS === "web" &&
+    window.localStorage.getItem(e2eAutoSolveDisableStorageKey) === "1";
+  useOnMount(() => {
+    if (!autoSolve || autoSolveDisabled) return;
+    const timeout = setTimeout(animateSuccess, autoSolveDelay);
+    return () => clearTimeout(timeout);
+  });
 
   // - Trigger an light haptic feedback when a cell is pressed
   // - Trigger the success animation when the board is cleared
@@ -71,13 +84,13 @@ export const Board: FC<BoardProps> = observer(function ({
     }
     const disposeHapticReaction = reaction(
       () => interactions.hoveredCell,
-      () => hapticFeedback.generate("impactLight")
+      () => hapticFeedback.generate("impactLight"),
     );
     const disposeClearedReaction = reaction(
       () => board.cleared,
       (didSucceed) => {
         if (didSucceed) animateSuccess();
-      }
+      },
     );
     return () => {
       disposeHapticReaction();
@@ -112,6 +125,7 @@ export const Board: FC<BoardProps> = observer(function ({
 
   return (
     <PointerAwareView
+      testID="puzzle-board"
       onPointerDown={(coords) => interactions.onGridPointerDown(coords)}
       onPointerMove={(coords) => interactions.onGridPointerMove(coords)}
       onPointerUp={(coords) => interactions.onGridPointerUp(coords)}

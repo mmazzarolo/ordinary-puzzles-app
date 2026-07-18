@@ -10,7 +10,7 @@ describe("pickRandomPuzzle", () => {
           pickRandomPuzzle({
             allPuzzlesLength: allPuzzlesLength,
             playedHistory: [],
-          })
+          }),
         ).toBe(0);
       });
     });
@@ -21,7 +21,7 @@ describe("pickRandomPuzzle", () => {
           pickRandomPuzzle({
             allPuzzlesLength: allPuzzlesLength,
             playedHistory: [0],
-          })
+          }),
         ).toBe(1);
       });
     });
@@ -32,7 +32,7 @@ describe("pickRandomPuzzle", () => {
           pickRandomPuzzle({
             allPuzzlesLength: allPuzzlesLength,
             playedHistory: [0, 1],
-          })
+          }),
         ).toBe(2);
       });
     });
@@ -43,7 +43,7 @@ describe("pickRandomPuzzle", () => {
           pickRandomPuzzle({
             allPuzzlesLength: allPuzzlesLength,
             playedHistory: [0, 1, 2],
-          })
+          }),
         ).toBe(3);
       });
     });
@@ -54,7 +54,7 @@ describe("pickRandomPuzzle", () => {
           pickRandomPuzzle({
             allPuzzlesLength: allPuzzlesLength,
             playedHistory: [0, 1, 2, 3],
-          })
+          }),
         ).toBe(4);
       });
     });
@@ -65,7 +65,7 @@ describe("pickRandomPuzzle", () => {
           pickRandomPuzzle({
             allPuzzlesLength: allPuzzlesLength,
             playedHistory: [0, 1, 2, 3, 4],
-          })
+          }),
         ).toBe(5);
       });
     });
@@ -82,7 +82,7 @@ describe("pickRandomPuzzle", () => {
               completedHistory: [0, 1, 2, 3, 4, 5],
             });
             expect([0, 1, 2]).toContain(randomPuzzle);
-          }
+          },
         );
       });
 

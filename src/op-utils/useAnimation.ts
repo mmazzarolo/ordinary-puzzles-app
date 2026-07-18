@@ -1,20 +1,23 @@
-import { useRef } from "react";
+import { useCallback, useState } from "react";
 import { Animated, Easing } from "react-native";
 
 export const useAnimation = function (initialValue: number = 0) {
   const endValue = initialValue === 0 ? 1 : 0;
-  const animationValueRef = useRef(new Animated.Value(initialValue));
+  const [value] = useState(() => new Animated.Value(initialValue));
 
-  const setup = (config: Partial<Animated.TimingAnimationConfig> = {}) =>
-    Animated.timing(animationValueRef.current, {
-      toValue: endValue,
-      useNativeDriver: true,
-      easing: Easing.inOut(Easing.quad),
-      ...config,
-    });
+  const setup = useCallback(
+    (config: Partial<Animated.TimingAnimationConfig> = {}) =>
+      Animated.timing(value, {
+        toValue: endValue,
+        useNativeDriver: true,
+        easing: Easing.inOut(Easing.quad),
+        ...config,
+      }),
+    [endValue, value]
+  );
 
   return {
-    value: animationValueRef.current,
+    value: value,
     setup: setup,
   };
 };

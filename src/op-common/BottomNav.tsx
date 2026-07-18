@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, PropsWithChildren } from "react";
 import { Animated } from "react-native";
 import { animations } from "op-design";
 import { useScale, ScalingFunc } from "op-utils";
@@ -8,7 +8,7 @@ interface BottomNavProps {
   animValue: Animated.Value;
 }
 
-export const BottomNav: FC<BottomNavProps> = function ({
+export const BottomNav: FC<PropsWithChildren<BottomNavProps>> = function ({
   animValue,
   children,
 }) {

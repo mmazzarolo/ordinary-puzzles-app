@@ -1,2 +1,5 @@
-import RNBootSplash from "react-native-bootsplash";
+const RNBootSplash = {
+  hide: () => undefined,
+};
+
 export default RNBootSplash;

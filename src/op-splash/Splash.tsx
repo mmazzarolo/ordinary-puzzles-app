@@ -6,9 +6,6 @@ interface SplashProps {
 }
 
 export const Splash: FC<SplashProps> = function ({ onHide }) {
-  // @ts-ignore
-  document.getElementById("splash").style.display = "none";
-
   useOnMount(() => {
     onHide();
   });
