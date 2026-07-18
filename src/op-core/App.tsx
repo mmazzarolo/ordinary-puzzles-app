@@ -40,7 +40,7 @@ export const App: FC = function () {
     }
     await initializeStore();
     void initializeAudio();
-    if (Platform.OS === "web") {
+    if (Platform.OS === "web" && process.env.NODE_ENV === "production") {
       registerServiceWorker();
     }
     await SplashScreen.hideAsync();

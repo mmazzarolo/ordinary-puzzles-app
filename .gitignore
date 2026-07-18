@@ -67,6 +67,11 @@ experiments/native-generator/rust-core/target/
 # CocoaPods
 /ios/Pods/
 
+# Proprietary fonts (provisioned privately before bundling)
+Averta-Bold.*
+Averta-Regular.*
+Averta-Semibold.*
+
 # Electron outputs
 dist/
 dist-*/

@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 // Turn "simulateProduction" on to simulate a production environment
 const simulateProduction = false;
 
@@ -16,7 +18,8 @@ const _autoSolve = false;
 // Production exports used by the browser suite can opt into deterministic
 // completion. Expo replaces EXPO_PUBLIC_* values at bundle time, so release
 // builds keep this disabled unless the test export explicitly enables it.
-const e2eAutoSolve = process.env.EXPO_PUBLIC_E2E_AUTO_SOLVE === "1";
+const e2eAutoSolve =
+  Platform.OS === "web" && process.env.EXPO_PUBLIC_E2E_AUTO_SOLVE === "1";
 
 export const e2eAutoSolveDisableStorageKey =
   "__ordinaryPuzzlesE2EDisableAutoSolve";
