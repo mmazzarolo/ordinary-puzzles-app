@@ -22,9 +22,9 @@ found without running product flows on devices.
 
 - Pin the complete Expo SDK 56 dependency graph and require clean results from
   Expo dependency checks, Expo Doctor, and pnpm peer checks.
-- Use app version 1.4.0 and iOS build 14. Before producing Android store
-  artifacts, inspect Play Console history and choose a version code above the
-  legacy ABI-split codes (potentially above 4,194,311).
+- Use app version 1.4.0, iOS build 14, and Android version code 3,145,736. The
+  Android code is one above the confirmed highest Play Console code of
+  3,145,735 from production version 1.2.
 - Generate native projects from `app.json`; do not restore the deleted legacy
   native projects as hand-maintained source.
 - Remove platform-resolution cycles and require production Metro exports for
