@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { StatusBar, Platform, UIManager } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -25,6 +25,7 @@ if (Platform.OS === "android") {
 export const App: FC = function () {
   const { initializeStore } = useCoreStores();
   const didInitializeRef = useRef(false);
+  const [appReady, setAppReady] = useState(false);
   const [fontsLoaded, fontError] = useFonts({
     "Averta-Bold": require("../../assets/fonts/Averta-Bold.otf"),
     "Averta-Regular": require("../../assets/fonts/Averta-Regular.otf"),
@@ -35,26 +36,30 @@ export const App: FC = function () {
   const initializeApp = async () => {
     if (didInitializeRef.current || !fontsLoaded) return;
     didInitializeRef.current = true;
-    if (simulateFirstLoad) {
-      await clearStorage();
+    try {
+      if (simulateFirstLoad) {
+        await clearStorage();
+      }
+      await initializeStore();
+      void initializeAudio();
+      if (Platform.OS === "web" && process.env.NODE_ENV === "production") {
+        registerServiceWorker();
+      }
+    } finally {
+      setAppReady(true);
+      await SplashScreen.hideAsync();
     }
-    await initializeStore();
-    void initializeAudio();
-    if (Platform.OS === "web" && process.env.NODE_ENV === "production") {
-      registerServiceWorker();
-    }
-    await SplashScreen.hideAsync();
   };
 
   useEffect(() => {
-    initializeApp();
+    void initializeApp().catch(() => undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fontsLoaded]);
 
   useEffect(() => enableImmersiveMode(), []);
 
   if (fontError) throw fontError;
-  if (!fontsLoaded) return null;
+  if (!fontsLoaded || !appReady) return null;
 
   return (
     <>

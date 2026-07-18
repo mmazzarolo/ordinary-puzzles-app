@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { parseStoredJson } from "./puzzleHistory";
 
 const storageItemKeys = ["completedPuzzles", "playedPuzzles"] as const;
 
@@ -13,8 +14,7 @@ export const clearStorage = async () => {
 
 export const rehydrateObject = async (key: StorageItemKey) => {
   const serializedItem = await AsyncStorage.getItem(key);
-  const item = serializedItem ? JSON.parse(serializedItem) : undefined;
-  return item;
+  return parseStoredJson(serializedItem);
 };
 
 export const persistObject = async (key: StorageItemKey, value: object) => {

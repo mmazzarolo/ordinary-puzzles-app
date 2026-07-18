@@ -85,8 +85,8 @@ function readCookie(cookieHeader, name) {
 async function writeServiceWorkerVariant(response, filePath, version) {
   const source = await readFile(filePath, "utf8");
   const updatedSource = source.replace(
-    "const CACHE_NAME = `${CACHE_PREFIX}v2`;",
-    `const CACHE_NAME = \`\${CACHE_PREFIX}${version}\`;`,
+    /const CACHE_VERSION = "[^"]+";/,
+    `const CACHE_VERSION = "${version}";`,
   );
   if (updatedSource === source) {
     throw new Error("Unable to create the service-worker test payload");

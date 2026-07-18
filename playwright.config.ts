@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: process.env.CI ? [["html", { open: "never" }], ["list"]] : "list",
   webServer: {
     command:
-      "CI=1 EXPO_PUBLIC_E2E_AUTO_SOLVE=1 WEB_PUBLIC_PATH=/play pnpm run export:web && WEB_PUBLIC_PATH=/play node scripts/serve-static.mjs dist-web 8098",
+      "EXPO_PUBLIC_E2E_AUTO_SOLVE=1 WEB_PUBLIC_PATH=/play pnpm run export:web:e2e && WEB_PUBLIC_PATH=/play node scripts/serve-static.mjs dist-web-e2e 8098",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
     url: "http://127.0.0.1:8098/play/",

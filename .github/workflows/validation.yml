@@ -51,6 +51,8 @@ jobs:
 
       - name: Run production browser matrix
         run: pnpm run e2e
+        env:
+          ALLOW_FONT_FALLBACK: "1"
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}

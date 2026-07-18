@@ -1,5 +1,13 @@
 import { expect, test, waitForHome } from "./fixtures";
 
+const CACHE_PREFIX = "ordinary-puzzles-app-";
+
+const getOwnedCacheNames = (page: import("@playwright/test").Page) =>
+  page.evaluate(async (prefix) => {
+    const keys = await caches.keys();
+    return keys.filter((key) => key.startsWith(prefix)).sort();
+  }, CACHE_PREFIX);
+
 const activateAndFillCache = async (page: import("@playwright/test").Page) => {
   await page.goto("/play/");
   await waitForHome(page);
@@ -30,9 +38,9 @@ test("registers under /play and owns its cache", async ({ page }) => {
   expect(registration.scriptURL).toBe(
     "http://127.0.0.1:8098/play/service-worker.js",
   );
-  await expect
-    .poll(() => page.evaluate(() => caches.keys()))
-    .toContain("ordinary-puzzles-app-v2");
+  await expect.poll(() => getOwnedCacheNames(page)).toHaveLength(1);
+  const [cacheName] = await getOwnedCacheNames(page);
+  expect(cacheName).toMatch(/^ordinary-puzzles-app-[a-f0-9]{16}$/);
 });
 
 test("activation removes only owned legacy caches", async ({ page }) => {
@@ -44,7 +52,7 @@ test("activation removes only owned legacy caches", async ({ page }) => {
       registrations.map((registration) => registration.unregister()),
     );
     await Promise.all([
-      caches.open("ordinary-puzzles-app-v1"),
+      caches.open("ordinary-puzzles-app-obsolete"),
       caches.open("ordinary-puzzles-v1"),
       caches.open("unrelated-app-cache"),
     ]);
@@ -71,9 +79,14 @@ test("activation removes only owned legacy caches", async ({ page }) => {
     }
   });
 
+  await expect.poll(() => getOwnedCacheNames(page)).toHaveLength(1);
   await expect
-    .poll(() => page.evaluate(async () => (await caches.keys()).sort()))
-    .toEqual(["ordinary-puzzles-app-v2", "unrelated-app-cache"]);
+    .poll(() =>
+      page.evaluate(async () =>
+        (await caches.keys()).filter((key) => key === "unrelated-app-cache"),
+      ),
+    )
+    .toEqual(["unrelated-app-cache"]);
 });
 
 test("does not cache failed asset responses", async ({ diagnostics, page }) => {
@@ -84,7 +97,11 @@ test("does not cache failed asset responses", async ({ diagnostics, page }) => {
   const result = await page.evaluate(async () => {
     const url = new URL("missing-e2e-asset.png", window.location.href).href;
     const response = await fetch(url);
-    const cache = await caches.open("ordinary-puzzles-app-v2");
+    const cacheName = (await caches.keys()).find((key) =>
+      key.startsWith("ordinary-puzzles-app-"),
+    );
+    if (!cacheName) throw new Error("Application cache not found");
+    const cache = await caches.open(cacheName);
     return {
       cached: Boolean(await cache.match(url)),
       status: response.status,
@@ -98,6 +115,8 @@ test("activates a changed payload and retires the previous owned cache", async (
   page,
 }) => {
   await activateAndFillCache(page);
+  const [previousCacheName] = await getOwnedCacheNames(page);
+  expect(previousCacheName).toMatch(/^ordinary-puzzles-app-[a-f0-9]{16}$/);
   await page.evaluate(() => caches.open("unrelated-app-cache"));
   await context.addCookies([
     {
@@ -151,6 +170,7 @@ test("activates a changed payload and retires the previous owned cache", async (
   await expect
     .poll(() => page.evaluate(async () => (await caches.keys()).sort()))
     .toEqual(["ordinary-puzzles-app-v3", "unrelated-app-cache"]);
+  expect(previousCacheName).not.toBe("ordinary-puzzles-app-v3");
 
   await page.reload({ waitUntil: "domcontentloaded" });
   await waitForHome(page);

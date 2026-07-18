@@ -1,5 +1,6 @@
 const CACHE_PREFIX = "ordinary-puzzles-app-";
-const CACHE_NAME = `${CACHE_PREFIX}v2`;
+const CACHE_VERSION = /* __CACHE_VERSION__ */ "development";
+const CACHE_NAME = `${CACHE_PREFIX}${CACHE_VERSION}`;
 const LEGACY_CACHE_NAMES = new Set(["ordinary-puzzles-v1"]);
 const PRECACHE_URLS = /* __PRECACHE_MANIFEST__ */ [];
 

@@ -22,8 +22,9 @@ found without running product flows on devices.
 
 - Pin the complete Expo SDK 56 dependency graph and require clean results from
   Expo dependency checks, Expo Doctor, and pnpm peer checks.
-- Use app version 1.4.0, iOS build 14, and Android version code 8 so store
-  upgrades are monotonic.
+- Use app version 1.4.0 and iOS build 14. Before producing Android store
+  artifacts, inspect Play Console history and choose a version code above the
+  legacy ABI-split codes (potentially above 4,194,311).
 - Generate native projects from `app.json`; do not restore the deleted legacy
   native projects as hand-maintained source.
 - Remove platform-resolution cycles and require production Metro exports for
@@ -72,11 +73,10 @@ CI and can reproduce failures with traces and screenshots.
 ### Milestone 2 implementation status
 
 The local production-export matrix is green on Playwright's pinned Chromium,
-Firefox, and WebKit builds. It currently exercises 75 project/test pairs: 73
+Firefox, and WebKit builds. It currently exercises 66 project/test pairs: 64
 pass and two are explicitly skipped because Playwright's protocol-level offline
 mode prevents top-level Firefox/WebKit navigation before a service worker can
-answer it. A two-repeat stability run completed with 146 passes and four
-expected skips without retries.
+answer it.
 
 Implemented coverage:
 
@@ -92,10 +92,10 @@ Implemented coverage:
 - 320x568 phone, 390x844 phone, 768x1024 tablet, and 1440x900 desktop layout
   bounds and reviewed per-engine visual baselines, plus live light/dark
   color-scheme changes;
-- service-worker scope, selective legacy-cache cleanup, failed-response
-  rejection, cache ownership, and an in-place v2-to-v3 payload update in all
-  engines, plus a real offline reload in Chromium and server-level origin
-  failure recovery in every engine;
+- service-worker scope, content-derived cache versioning, selective legacy-cache
+  cleanup, failed-response rejection, cache ownership, and an in-place payload
+  update in all engines, plus a real offline reload in Chromium and server-level
+  origin failure recovery in every engine;
 - failure artifacts for page errors, console errors, failed same-origin
   requests/responses, screenshots, video, and traces;
 - a pull-request/default-branch GitHub Actions gate that installs the pinned
@@ -131,8 +131,10 @@ pnpm run e2e -- --project=webkit --grep "small opens"
 ```
 
 The browser binaries live in the ignored `.playwright-browsers` directory. The
-test server exports with `EXPO_PUBLIC_E2E_AUTO_SOLVE=1`; ordinary development
-and release builds do not enable deterministic completion.
+test server exports with `EXPO_PUBLIC_E2E_AUTO_SOLVE=1` into the isolated
+`dist-web-e2e` directory. Ordinary development and release builds force this
+flag off and use `dist-web`, so an Electron package cannot consume a test
+export accidentally.
 
 ## Milestone 3: native runtime and device matrix
 
@@ -199,8 +201,7 @@ emulator/device:
 
 ```sh
 node_modules/.bin/expo prebuild --clean --no-install --platform android
-NODE_ENV=production EXPO_PUBLIC_E2E_AUTO_SOLVE=1 \
-  android/gradlew -p android app:assembleRelease --no-daemon
+NODE_ENV=production android/gradlew -p android app:assembleRelease --no-daemon
 pnpm run test:native:android
 ```
 

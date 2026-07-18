@@ -67,3 +67,22 @@ test("selects the next unplayed legacy puzzle without losing history", async ({
   );
   expect(completed.small).toEqual([0, 2]);
 });
+
+test("recovers from malformed and partial legacy history", async ({ page }) => {
+  await seedStorage(page, {
+    playedPuzzles: JSON.stringify({ small: [0, 0, -1, 999] }),
+    completedPuzzles: "{malformed-json",
+  });
+
+  await openHome(page);
+  await chooseMode(page, "small");
+  await expect(page.getByText("placket", { exact: true })).toBeVisible();
+  await expect(page.getByText("Completed", { exact: true })).toBeVisible({
+    timeout: 10_000,
+  });
+
+  const completed = await page.evaluate(() =>
+    JSON.parse(window.localStorage.getItem("completedPuzzles") ?? "null"),
+  );
+  expect(completed.small).toEqual([1]);
+});

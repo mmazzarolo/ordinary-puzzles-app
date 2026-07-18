@@ -28,6 +28,31 @@ const run = (command, args, options = {}) => {
 const delay = (milliseconds) =>
   new Promise((resolve) => setTimeout(resolve, milliseconds));
 
+const waitForAndroidBoot = async (timeoutMilliseconds = 90_000) => {
+  const startedAt = Date.now();
+  while (Date.now() - startedAt < timeoutMilliseconds) {
+    const bootCompleted = spawnSync(
+      "adb",
+      ["shell", "getprop", "sys.boot_completed"],
+      { encoding: "utf8" },
+    );
+    const packageManagerReady = spawnSync(
+      "adb",
+      ["shell", "cmd", "package", "list", "packages", packageName],
+      { encoding: "utf8" },
+    );
+    if (
+      bootCompleted.status === 0 &&
+      bootCompleted.stdout.trim() === "1" &&
+      packageManagerReady.status === 0
+    ) {
+      return;
+    }
+    await delay(1_000);
+  }
+  throw new Error("Timed out waiting for Android to finish booting");
+};
+
 const dumpHierarchy = () => {
   run("adb", ["shell", "uiautomator", "dump", remoteHierarchyPath]);
   return run("adb", ["exec-out", "cat", remoteHierarchyPath]);
@@ -146,7 +171,8 @@ if (!existsSync(apkPath)) {
   throw new Error(`Release APK not found: ${apkPath}`);
 }
 
-run("adb", ["get-state"]);
+run("adb", ["wait-for-device"]);
+await waitForAndroidBoot();
 const sdk = Number(run("adb", ["shell", "getprop", "ro.build.version.sdk"]));
 if (!Number.isInteger(sdk) || sdk < 24) {
   throw new Error(

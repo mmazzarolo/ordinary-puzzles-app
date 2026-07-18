@@ -1,7 +1,8 @@
+import { createHash } from "node:crypto";
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const outputDir = path.resolve("dist-web");
+const outputDir = path.resolve(process.env.WEB_OUTPUT_DIR || "dist-web");
 const publicPath = normalizePublicPath(process.env.WEB_PUBLIC_PATH);
 
 function normalizePublicPath(value) {
@@ -71,11 +72,27 @@ const precachePaths = (await listFiles(outputDir))
   .sort();
 precachePaths.unshift("./");
 
-const patchedServiceWorker = serviceWorkerSource.replace(
+const cacheVersionHash = createHash("sha256");
+for (const filePath of (await listFiles(outputDir))
+  .filter((filePath) => filePath !== serviceWorkerPath)
+  .sort()) {
+  cacheVersionHash.update(path.relative(outputDir, filePath));
+  cacheVersionHash.update(await readFile(filePath));
+}
+const cacheVersion = cacheVersionHash.digest("hex").slice(0, 16);
+
+const versionedServiceWorker = serviceWorkerSource.replace(
+  '/* __CACHE_VERSION__ */ "development"',
+  JSON.stringify(cacheVersion),
+);
+if (versionedServiceWorker === serviceWorkerSource) {
+  throw new Error("Unable to inject the service-worker cache version");
+}
+const patchedServiceWorker = versionedServiceWorker.replace(
   "/* __PRECACHE_MANIFEST__ */ []",
   JSON.stringify(precachePaths, null, 2),
 );
-if (patchedServiceWorker === serviceWorkerSource) {
+if (patchedServiceWorker === versionedServiceWorker) {
   throw new Error("Unable to inject the service-worker precache manifest");
 }
 await writeFile(serviceWorkerPath, patchedServiceWorker);
