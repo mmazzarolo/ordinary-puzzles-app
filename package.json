@@ -24,6 +24,8 @@
     "test:electron": "pnpm run export:web:electron && node scripts/electron-smoke.mjs",
     "test": "jest --runInBand --no-watchman",
     "test:native:android": "node scripts/native-smoke-android.mjs",
+    "eas:build:android": "pnpm run prepare:fonts && eas build --platform android --profile production",
+    "eas:build:ios": "pnpm run prepare:fonts && eas build --platform ios --profile production",
     "test:watch": "jest --watch --no-watchman",
     "e2e": "PLAYWRIGHT_BROWSERS_PATH=.playwright-browsers playwright test",
     "e2e:install-browsers": "PLAYWRIGHT_BROWSERS_PATH=.playwright-browsers playwright install chromium firefox webkit",

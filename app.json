@@ -51,6 +51,12 @@
       ],
       "./plugins/withGradleJvmMemory",
       "./plugins/withPortraitOnly"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "cfa7fed1-cb8c-44db-b893-5b463072ef7e"
+      }
+    },
+    "owner": "mmazzarolo"
   }
 }
