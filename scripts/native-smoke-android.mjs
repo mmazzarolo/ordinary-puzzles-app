@@ -47,6 +47,22 @@ const findNode = (hierarchy, label) => {
   };
 };
 
+const findResourceNode = (hierarchy, resourceId) => {
+  const escapedResourceId = resourceId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const node = hierarchy.match(
+    new RegExp(
+      `<node[^>]*resource-id="${escapedResourceId}"[^>]*bounds="\\[(\\d+),(\\d+)\\]\\[(\\d+),(\\d+)\\]"[^>]*>`,
+    ),
+  );
+  if (!node) return undefined;
+  return {
+    left: Number(node[1]),
+    top: Number(node[2]),
+    right: Number(node[3]),
+    bottom: Number(node[4]),
+  };
+};
+
 const waitForNode = async (label, timeoutMilliseconds = 15_000) => {
   const startedAt = Date.now();
   while (Date.now() - startedAt < timeoutMilliseconds) {
@@ -69,6 +85,61 @@ const waitForNode = async (label, timeoutMilliseconds = 15_000) => {
 const tapNode = async (label) => {
   const node = await waitForNode(label);
   run("adb", ["shell", "input", "tap", String(node.x), String(node.y)]);
+};
+
+const waitForResourceNode = async (
+  resourceId,
+  timeoutMilliseconds = 15_000,
+) => {
+  const startedAt = Date.now();
+  while (Date.now() - startedAt < timeoutMilliseconds) {
+    const node = findResourceNode(dumpHierarchy(), resourceId);
+    if (node) return node;
+    await delay(300);
+  }
+  throw new Error(`Timed out waiting for native resource: ${resourceId}`);
+};
+
+const solveFirstSmallPuzzle = async () => {
+  const board = await waitForResourceNode("puzzle-board");
+  const rows = 9;
+  const cols = 6;
+  const center = (row, col) => ({
+    x: Math.round(
+      board.left + ((col + 0.5) / cols) * (board.right - board.left),
+    ),
+    y: Math.round(
+      board.top + ((row + 0.5) / rows) * (board.bottom - board.top),
+    ),
+  });
+  const swipe = async (fromRow, fromCol, toRow, toCol) => {
+    const from = center(fromRow, fromCol);
+    const to = center(toRow, toCol);
+    run("adb", [
+      "shell",
+      "input",
+      "swipe",
+      String(from.x),
+      String(from.y),
+      String(to.x),
+      String(to.y),
+      "250",
+    ]);
+    await delay(100);
+  };
+
+  // Unique solution for the first small puzzle ("quire"). Lines whose
+  // numbered origin is in the middle are extended in both directions.
+  await swipe(0, 1, 0, 3);
+  await swipe(0, 1, 0, 0);
+  await swipe(0, 4, 0, 5);
+  await swipe(1, 4, 1, 3);
+  await swipe(3, 3, 3, 1);
+  await swipe(3, 5, 1, 5);
+  await swipe(3, 5, 5, 5);
+  await swipe(7, 5, 6, 5);
+  await swipe(7, 5, 8, 5);
+  await swipe(8, 3, 6, 3);
 };
 
 if (!existsSync(apkPath)) {
@@ -107,6 +178,7 @@ const launchOutput = run("adb", [
 ]);
 
 await tapNode("small");
+await solveFirstSmallPuzzle();
 await waitForNode("Completed");
 await tapNode("menu");
 await waitForNode("small");
