@@ -9,13 +9,16 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "bundleIdentifier": "com.mmazzarolo.ordinarypuzzles",
-      "buildNumber": "14",
+      "buildNumber": "15",
       "supportsTablet": true,
-      "requireFullScreen": true
+      "requireFullScreen": true,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.mmazzarolo.ordinarypuzzles",
-      "versionCode": 3145736,
+      "versionCode": 3145737,
       "allowBackup": true,
       "blockedPermissions": [
         "android.permission.MODIFY_AUDIO_SETTINGS",
@@ -38,9 +41,12 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#ffffff",
-          "image": "./assets/images/icon.png",
-          "imageWidth": 96
+          "backgroundColor": "#84818D",
+          "android": {
+            "drawable": {
+              "icon": "./assets/android/splashscreen-logo-transparent.xml"
+            }
+          }
         }
       ],
       [
