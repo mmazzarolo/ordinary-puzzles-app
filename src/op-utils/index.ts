@@ -1,6 +1,7 @@
 export * from "./delay";
 export * from "./hapticFeedback";
 export * from "./pickPuzzle";
+export * from "./puzzleHistory";
 export * from "./scale";
 export * from "./sound";
 export * from "./storage";

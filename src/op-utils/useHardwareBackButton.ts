@@ -3,7 +3,9 @@ import { NativeEventSubscription, BackHandler } from "react-native";
 import { useOnMount } from "./useOnMount";
 
 export function useHardwareBackButton(onBackButtonPress: () => void) {
-  const backHandlerRef = useRef<NativeEventSubscription>();
+  const backHandlerRef = useRef<NativeEventSubscription | undefined>(
+    undefined
+  );
   useOnMount(() => {
     backHandlerRef.current = BackHandler.addEventListener(
       "hardwareBackPress",

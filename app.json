@@ -1,0 +1,68 @@
+{
+  "expo": {
+    "name": "Ordinary Puzzles",
+    "slug": "ordinary-puzzles",
+    "version": "1.4.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "ordinarypuzzles",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "com.mmazzarolo.ordinarypuzzles",
+      "buildNumber": "15",
+      "supportsTablet": true,
+      "requireFullScreen": true,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.mmazzarolo.ordinarypuzzles",
+      "versionCode": 3145737,
+      "allowBackup": true,
+      "blockedPermissions": [
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.VIBRATE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./public/favicon.ico"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#84818D",
+          "android": {
+            "drawable": {
+              "icon": "./assets/android/splashscreen-logo-transparent.xml"
+            }
+          }
+        }
+      ],
+      [
+        "expo-navigation-bar",
+        {
+          "hidden": true
+        }
+      ],
+      "./plugins/withGradleJvmMemory",
+      "./plugins/withPortraitOnly"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "cfa7fed1-cb8c-44db-b893-5b463072ef7e"
+      }
+    },
+    "owner": "mmazzarolo"
+  }
+}

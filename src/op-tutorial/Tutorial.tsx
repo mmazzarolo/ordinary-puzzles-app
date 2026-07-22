@@ -7,10 +7,9 @@ import {
   Dimensions,
   useWindowDimensions,
 } from "react-native";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 import KeepAwake from "op-native/react-native-keep-awake";
-import { Board } from "op-board";
-import { useBoardStores } from "op-board";
+import { Board, useBoardStores } from "op-board";
 import { useCoreStores } from "op-core";
 import { metrics } from "op-design";
 import { BottomNav, Button, getBottomNavHeight } from "op-common";

@@ -1,104 +1,107 @@
 {
-  "name": "OrdinaryPuzzles",
-  "version": "0.0.1",
+  "name": "ordinary-puzzles",
+  "version": "1.4.0",
   "private": true,
   "author": "Mazzarolo Matteo",
   "description": "Minimalistic puzzle game inspired by Picross and Sudoku.",
-  "main": "./public/electron.js",
+  "main": "index.js",
+  "packageManager": "pnpm@11.8.0",
   "scripts": {
-    "android:dev": "react-native run-android",
-    "ios:dev": "react-native run-ios",
-    "web:dev": "PUBLIC_URL='/play' react-app-rewired start",
-    "web:build": "PUBLIC_URL='/play' NODE_ENV=production react-app-rewired build",
-    "electron:dev": "run-p --print-label electron:dev:*",
-    "electron:dev:cra": "PUBLIC_URL='./' BROWSER=none ELECTRON=true react-app-rewired start",
-    "electron:dev:start": "wait-on tcp:3000 && ELECTRON_START_URL=http://localhost:3000 electron .",
-    "electron:build": "run-s --print-label electron:build:*",
-    "electron:build:cra": "PUBLIC_URL='./' NODE_ENV=production ELECTRON=true react-app-rewired build",
-    "electron:build:package": "electron-builder build --mac -c.extraMetadata.main=build/electron.js --publish never",
-    "start": "react-native start",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "lint": "eslint 'src/' --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "yarn lint --fix",
-    "typecheck": "tsc",
-    "xcode": "open ios/OrdinaryPuzzles.xcworkspace",
-    "studio": "open -a /Applications/Android\\ Studio.app ./android/",
-    "postinstall": "electron-builder install-app-deps"
+    "prepare:fonts": "node scripts/prepare-fonts.mjs",
+    "start": "pnpm run prepare:fonts && expo start",
+    "android": "pnpm run prepare:fonts && expo start --android",
+    "ios": "pnpm run prepare:fonts && expo start --ios",
+    "web": "pnpm run prepare:fonts && expo start --web",
+    "export:web": "pnpm run prepare:fonts && EXPO_PUBLIC_E2E_AUTO_SOLVE=0 expo export --clear --platform web --output-dir dist-web && node scripts/patch-web-export.mjs",
+    "export:web:e2e": "pnpm run prepare:fonts && expo export --clear --platform web --output-dir dist-web-e2e && WEB_OUTPUT_DIR=dist-web-e2e node scripts/patch-web-export.mjs",
+    "export:web:play": "WEB_PUBLIC_PATH=/play pnpm run export:web",
+    "export:web:electron": "WEB_PUBLIC_PATH=. pnpm run export:web",
+    "electron:dev": "pnpm run prepare:fonts && concurrently -k -s first \"pnpm run electron:dev:web\" \"pnpm run electron:dev:app\"",
+    "electron:dev:web": "EXPO_PUBLIC_ELECTRON=1 expo start --web --port 8081",
+    "electron:dev:app": "wait-on http://127.0.0.1:8081 && electron public/electron.js http://127.0.0.1:8081",
+    "electron:build": "pnpm run export:web:electron && electron-builder build --mac -c.extraMetadata.main=public/electron.js --publish never",
+    "electron:package": "pnpm run electron:build",
+    "test:electron": "pnpm run export:web:electron && node scripts/electron-smoke.mjs",
+    "test": "jest --runInBand --no-watchman",
+    "test:native:android": "node scripts/native-smoke-android.mjs",
+    "eas:build:android": "pnpm run prepare:fonts && eas build --platform android --profile production",
+    "eas:build:ios": "pnpm run prepare:fonts && eas build --platform ios --profile production",
+    "test:watch": "jest --watch --no-watchman",
+    "e2e": "PLAYWRIGHT_BROWSERS_PATH=.playwright-browsers playwright test",
+    "e2e:install-browsers": "PLAYWRIGHT_BROWSERS_PATH=.playwright-browsers playwright install chromium firefox webkit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "pnpm lint --fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.12.1",
-    "lodash": "^4.17.20",
-    "mobx": "^6.0.1",
-    "mobx-logger": "^0.7.1",
-    "mobx-react": "^7.0.0",
-    "react": "16.13.1",
-    "react-dom": "^17.0.1",
-    "react-native": "0.63.3",
-    "react-native-bootsplash": "^1.0.3",
-    "react-native-haptic": "oblador/react-native-haptic#package-cleanup",
-    "react-native-immersive": "^2.0.0",
-    "react-native-keep-awake": "corbt/react-native-keep-awake#146c2db",
-    "react-native-sound": "^0.11.0",
-    "react-native-web": "^0.14.4",
-    "tinycolor2": "^1.4.2"
+    "@expo/dom-webview": "~56.0.6",
+    "@expo/metro-runtime": "~56.0.17",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "expo": "~56.0.16",
+    "expo-asset": "~56.0.20",
+    "expo-audio": "~56.0.12",
+    "expo-font": "~56.0.7",
+    "expo-haptics": "~56.0.3",
+    "expo-keep-awake": "~56.0.3",
+    "expo-navigation-bar": "~56.0.3",
+    "expo-splash-screen": "~56.0.13",
+    "expo-status-bar": "~56.0.4",
+    "expo-system-ui": "~56.0.5",
+    "lodash": "^4.18.1",
+    "mobx": "^6.16.1",
+    "mobx-react-lite": "^4.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.85.3",
+    "react-native-web": "~0.21.0",
+    "tinycolor2": "^1.6.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/plugin-proposal-class-properties": "^7.8.4",
-    "@babel/runtime": "^7.8.4",
-    "@types/jest": "^26.0.14",
-    "@types/lodash": "^4.14.162",
-    "@types/react": "^16.9.34",
-    "@types/react-native": "^0.63.25",
-    "@types/react-test-renderer": "^16.9.3",
-    "@types/tinycolor2": "^1.4.2",
-    "babel-jest": "^24.9.0",
-    "babel-plugin-module-resolver": "^4.0.0",
-    "babel-plugin-transform-remove-console": "^6.9.4",
-    "cross-env": "^7.0.3",
-    "customize-cra": "^1.0.0",
-    "electron": "^13.1.7",
-    "electron-builder": "^22.11.7",
-    "eslint": "^7.11.0",
-    "eslint-config-prettier": "^6.12.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.3.0",
-    "jest": "^26.5.2",
-    "lint-staged": "^10.4.0",
-    "metro-react-native-babel-preset": "^0.59.0",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.1.2",
-    "react-app-rewired": "^2.1.6",
-    "react-scripts": "^4.0.0",
-    "react-test-renderer": "16.13.1",
-    "typescript": "^4.0.3",
-    "wait-on": "^6.0.0"
+    "@babel/core": "^7.28.5",
+    "@playwright/test": "^1.61.0",
+    "@react-native/jest-preset": "0.85.3",
+    "@types/jest": "^29.5.14",
+    "@types/lodash": "^4.17.20",
+    "@types/react": "~19.2.2",
+    "@types/tinycolor2": "^1.4.6",
+    "@typescript-eslint/parser": "^8.61.1",
+    "babel-plugin-module-resolver": "^5.0.2",
+    "babel-preset-expo": "56.0.17",
+    "concurrently": "10.0.3",
+    "electron": "43.1.0",
+    "electron-builder": "26.15.3",
+    "eslint": "^9.39.4",
+    "eslint-config-expo": "~56.0.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "jest": "^29.7.0",
+    "jest-expo": "~56.0.5",
+    "prettier": "^3.8.4",
+    "react-test-renderer": "19.2.3",
+    "typescript": "~6.0.3",
+    "wait-on": "9.0.10"
   },
-  "jest": {
-    "preset": "react-native"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run typecheck && npm run lint && npm run test"
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ],
-    "*.md": [
-      "prettier --write"
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   },
   "build": {
     "appId": "com.mmazzarolo.ordinarypuzzles",
     "files": [
-      "**/*",
-      "build/**/*",
-      "node_modules/**/*"
+      "public/electron.js",
+      "dist-web/**/*",
+      "package.json",
+      "!node_modules/**/*"
     ],
+    "npmRebuild": false,
     "directories": {
       "buildResources": "public"
     },
@@ -113,17 +116,5 @@
       "target": "deb",
       "category": "Games"
     }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }

@@ -1,0 +1,10 @@
+packages:
+  - .
+
+allowBuilds:
+  electron: true
+  electron-winstaller: false
+  unrs-resolver: true
+
+overrides:
+  semver@7.8.5: 7.8.4

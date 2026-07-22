@@ -1,0 +1,23 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: iOS native smoke
+---
+- launchApp:
+    clearState: true
+- assertVisible: small
+- tapOn: small
+- assertVisible: quire
+- assertVisible: reset
+- tapOn: reset
+- tapOn: menu
+- assertVisible: continue
+- stopApp
+- launchApp
+- assertVisible: small
+- tapOn: small
+- assertVisible: placket
+- tapOn: menu
+- tapOn: tutorial
+- assertVisible: Welcome to Ordinary Puzzle.
+- assertVisible: Create a line by dragging the "4" to the left.
+- tapOn: menu
+- assertVisible: small

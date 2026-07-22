@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, PropsWithChildren } from "react";
 import { View, Platform, ViewProps, GestureResponderEvent } from "react-native";
 
 const getEventCoordinates = (
@@ -30,14 +30,15 @@ const getEventCoordinates = (
   return [event?.nativeEvent?.layerX, event?.nativeEvent?.layerY];
 };
 
-interface PointerAwareViewProps extends ViewProps {
+interface PointerAwareViewProps
+  extends Omit<ViewProps, "onPointerDown" | "onPointerMove" | "onPointerUp"> {
   onPointerDown: (coords: [number, number]) => void;
   onPointerMove: (coords: [number, number]) => void;
   onPointerUp: (coords: [number, number]) => void;
   pointerEnabled?: boolean;
 }
 
-export const PointerAwareView: FC<PointerAwareViewProps> = ({
+export const PointerAwareView: FC<PropsWithChildren<PointerAwareViewProps>> = ({
   children,
   onPointerDown,
   onPointerMove,

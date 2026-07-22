@@ -1,24 +1,30 @@
-const { app, BrowserWindow, protocol } = require("electron");
+const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const url = require("url");
 
 let mainWindow;
 
-const isDev = !!process.env.ELECTRON_START_URL;
+const startUrl = process.argv.find((argument) => /^https?:\/\//.test(argument));
+const isDev = !!startUrl;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true,
+    },
   });
 
   mainWindow.loadURL(
-    process.env.ELECTRON_START_URL ||
+    startUrl ||
       url.format({
-        pathname: path.join(__dirname, "../build/index.html"),
+        pathname: path.join(__dirname, "../dist-web/index.html"),
         protocol: "file:",
         slashes: true,
-      })
+      }),
   );
 
   if (isDev) {
@@ -30,20 +36,7 @@ function createWindow() {
   });
 }
 
-// Call when we're ready to create browser windows.
 app.on("ready", () => {
-  // This proxy adjusts the path of the requested files when loading from the
-  // local production bundle.
-  protocol.registerHttpProtocol(
-    "file",
-    (request, callback) => {
-      const url = request.url.substr(8);
-      callback({ path: path.normalize(`${__dirname}/${url}`) });
-    },
-    (error) => {
-      if (error) console.error("Failed to register protocol");
-    }
-  );
   createWindow();
 });
 

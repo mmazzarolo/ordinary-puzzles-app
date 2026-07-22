@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { View, Animated, Platform, ViewStyle } from "react-native";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 import { useCoreStores, PuzzleMode } from "op-core";
 import { useBoardStores } from "op-board";
 import { metrics, animations } from "op-design";

@@ -15,6 +15,8 @@ interface ButtonProps extends TouchableOpacityProps {
 }
 
 export const Button: FC<ButtonProps> = function ({
+  accessibilityLabel,
+  accessibilityRole,
   children,
   highlighted = true,
   label,
@@ -23,6 +25,7 @@ export const Button: FC<ButtonProps> = function ({
   textColor,
   textSize,
   textWeight = "semibold",
+  testID,
   ...otherProps
 }) {
   const scale = useScale();
@@ -31,9 +34,13 @@ export const Button: FC<ButtonProps> = function ({
     hapticFeedback.generate("impactMedium");
     playSound("buttonPress");
   };
+  const normalizedLabel = label.toLowerCase();
   return (
     <TouchableOpacity
+      accessibilityLabel={accessibilityLabel ?? normalizedLabel}
+      accessibilityRole={accessibilityRole ?? "button"}
       style={[styles.touchable, style]}
+      testID={testID ?? `button-${normalizedLabel.replaceAll(" ", "-")}`}
       onPressIn={handlePressIn}
       {...otherProps}
     >
@@ -48,7 +55,7 @@ export const Button: FC<ButtonProps> = function ({
           { fontSize: textSize || scale(defaultButtonTextSize) },
         ]}
       >
-        {label.toLowerCase()}
+        {normalizedLabel}
       </Text>
       {children}
     </TouchableOpacity>

@@ -7,7 +7,13 @@ import {
   runInAction,
   makeObservable,
 } from "mobx";
-import { rehydrateObject, persistObject, pickRandomPuzzle } from "op-utils";
+import {
+  createEmptyPuzzleHistory,
+  normalizePuzzleHistory,
+  rehydrateObject,
+  persistObject,
+  pickRandomPuzzle,
+} from "op-utils";
 import uniq from "lodash/uniq";
 import puzzles from "./puzzles.json";
 
@@ -200,11 +206,11 @@ class PuzzleStore {
   }
 }
 
-const emptyPuzzleHistory: Record<PuzzleMode, number[]> = {
-  tutorial: [],
-  small: [],
-  medium: [],
-  large: [],
+const puzzleCounts: Record<PuzzleMode, number> = {
+  tutorial: puzzles.tutorial.length,
+  small: puzzles.small.length,
+  medium: puzzles.medium.length,
+  large: puzzles.large.length,
 };
 
 class StatsStore {
@@ -217,8 +223,8 @@ class StatsStore {
   constructor(rootStore: RootStore) {
     this.root = rootStore;
     this.initialized = false;
-    this.playedPuzzles = emptyPuzzleHistory;
-    this.completedPuzzles = emptyPuzzleHistory;
+    this.playedPuzzles = createEmptyPuzzleHistory();
+    this.completedPuzzles = createEmptyPuzzleHistory();
 
     makeObservable(this, {
       initialized: observable,
@@ -233,15 +239,16 @@ class StatsStore {
   }
 
   async initializeStore() {
-    const playedPuzzles = await rehydrateObject("playedPuzzles");
+    const [playedPuzzles, completedPuzzles] = await Promise.all([
+      rehydrateObject("playedPuzzles").catch(() => undefined),
+      rehydrateObject("completedPuzzles").catch(() => undefined),
+    ]);
     runInAction(() => {
-      this.playedPuzzles = playedPuzzles || emptyPuzzleHistory;
-    });
-    const completedPuzzles = await rehydrateObject("completedPuzzles");
-    runInAction(() => {
-      this.completedPuzzles = completedPuzzles || emptyPuzzleHistory;
-    });
-    runInAction(() => {
+      this.playedPuzzles = normalizePuzzleHistory(playedPuzzles, puzzleCounts);
+      this.completedPuzzles = normalizePuzzleHistory(
+        completedPuzzles,
+        puzzleCounts,
+      );
       this.initialized = true;
     });
   }
@@ -268,7 +275,7 @@ class StatsStore {
   updateCompletedPuzzles(mode?: PuzzleMode, index?: number) {
     if (mode && index !== undefined) {
       this.completedPuzzles[mode] = uniq(
-        this.completedPuzzles[mode] || []
+        this.completedPuzzles[mode] || [],
       ).filter((x) => x !== index);
       this.completedPuzzles[mode].push(index);
       persistObject("completedPuzzles", toJS(this.completedPuzzles));
@@ -278,7 +285,7 @@ class StatsStore {
   updatePlayedPuzzles(mode?: PuzzleMode, index?: number) {
     if (mode && index !== undefined) {
       this.playedPuzzles[mode] = uniq(this.playedPuzzles[mode] || []).filter(
-        (x) => x !== index
+        (x) => x !== index,
       );
       this.playedPuzzles[mode].push(index);
       persistObject("playedPuzzles", toJS(this.playedPuzzles));

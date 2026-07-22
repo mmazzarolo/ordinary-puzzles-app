@@ -34,6 +34,7 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
+.local-rust/
 
 # BUCK
 buck-out/
@@ -54,14 +55,23 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+.expo/
+/android/
+/ios/
+test-results/
+playwright-report/
+.playwright-browsers/
+e2e/**/*-darwin.png
+experiments/native-generator/rust-core/target/
 
 # CocoaPods
 /ios/Pods/
 
-# Fonts
+# Proprietary fonts (provisioned privately before bundling)
 Averta-Bold.*
 Averta-Regular.*
 Averta-Semibold.*
 
 # Electron outputs
 dist/
+dist-*/

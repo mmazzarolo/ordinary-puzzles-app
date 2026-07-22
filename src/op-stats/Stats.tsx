@@ -1,6 +1,6 @@
 import React, { FC, useRef } from "react";
 import { Animated } from "react-native";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 import { useCoreStores } from "op-core";
 import { BottomNav, Button, Text, getBottomNavHeight } from "op-common";
 import { metrics, animations } from "op-design";
