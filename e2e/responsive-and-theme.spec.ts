@@ -1,5 +1,7 @@
 import { expect, openHome, test } from "./fixtures";
 
+const usesReleaseFonts = process.env.ALLOW_FONT_FALLBACK !== "1";
+
 const viewports = [
   { name: "small phone", width: 320, height: 568 },
   { name: "common phone", width: 390, height: 844 },
@@ -22,16 +24,23 @@ for (const viewport of viewports) {
       expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height);
     }
     await expect(page.getByText("about", { exact: true })).toBeInViewport();
-    await page.waitForTimeout(1_100);
-    await expect(page).toHaveScreenshot(
-      `home-${viewport.name.replaceAll(" ", "-")}.png`,
-      {
-        animations: "disabled",
-        caret: "hide",
-        fullPage: true,
-        maxDiffPixelRatio: 0.02,
-      },
-    );
+
+    // The checked-in baselines use the release Averta fonts. CI deliberately
+    // substitutes Inter when those private build-time assets are unavailable,
+    // so pixel comparisons there would measure font metrics rather than UI
+    // regressions. The responsive assertions above still run in both modes.
+    if (usesReleaseFonts) {
+      await page.waitForTimeout(1_100);
+      await expect(page).toHaveScreenshot(
+        `home-${viewport.name.replaceAll(" ", "-")}.png`,
+        {
+          animations: "disabled",
+          caret: "hide",
+          fullPage: true,
+          maxDiffPixelRatio: 0.02,
+        },
+      );
+    }
   });
 }
 

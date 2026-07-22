@@ -49,7 +49,7 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: .playwright-browsers
 
-      - name: Run production browser matrix
+      - name: Run browser behavioral matrix
         run: pnpm run e2e
         env:
           ALLOW_FONT_FALLBACK: "1"
