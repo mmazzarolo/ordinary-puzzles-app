@@ -18,7 +18,7 @@
     },
     "android": {
       "package": "com.mmazzarolo.ordinarypuzzles",
-      "versionCode": 3145737,
+      "versionCode": 3145738,
       "allowBackup": true,
       "blockedPermissions": [
         "android.permission.MODIFY_AUDIO_SETTINGS",
