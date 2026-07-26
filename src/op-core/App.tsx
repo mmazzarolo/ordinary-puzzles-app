@@ -2,6 +2,7 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { StatusBar, Platform, UIManager } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { configure } from "mobx";
 import { clearStorage, initializeAudio } from "op-utils";
 import { simulateFirstLoad } from "op-config";
@@ -62,9 +63,9 @@ export const App: FC = function () {
   if (!fontsLoaded || !appReady) return null;
 
   return (
-    <>
+    <SafeAreaProvider>
       <StatusBar hidden />
       <Main />
-    </>
+    </SafeAreaProvider>
   );
 };
