@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
-import { StyleSheet, SafeAreaView } from "react-native";
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useColors } from "op-design";
 import { Splash } from "op-splash";
 import { skipSplashScreen } from "op-config";
