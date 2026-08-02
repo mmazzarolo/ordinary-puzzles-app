@@ -702,7 +702,7 @@ class InteractionsStore {
   }
 }
 
-class RootStore {
+export class RootStore {
   board: BoardStore;
   interactions: InteractionsStore;
 
