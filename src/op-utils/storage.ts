@@ -1,7 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { parseStoredJson } from "./puzzleHistory";
 
-const storageItemKeys = ["completedPuzzles", "playedPuzzles"] as const;
+// "puzzleProgress" is the current schema. "completedPuzzles" and
+// "playedPuzzles" are the legacy index-based keys, kept readable for migration.
+const storageItemKeys = [
+  "puzzleProgress",
+  "completedPuzzles",
+  "playedPuzzles",
+] as const;
 
 type ElementType<T extends readonly unknown[]> =
   T extends readonly (infer ElementType)[] ? ElementType : never;

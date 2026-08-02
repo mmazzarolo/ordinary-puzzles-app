@@ -51,7 +51,7 @@ export const Message: FC = function () {
   // Callback handlers
   const handleButtonPress = () => {
     fadeOut().start(() => {
-      stats.updateCompletedPuzzles("tutorial", 0);
+      stats.markTutorialCompleted();
       navigateToHome();
     });
   };

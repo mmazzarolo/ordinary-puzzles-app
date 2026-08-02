@@ -62,10 +62,12 @@ test("selects the next unplayed legacy puzzle without losing history", async ({
   });
   await expect(page.getByText("bumfuzzle", { exact: true })).toBeVisible();
 
-  const completed = await page.evaluate(() =>
-    JSON.parse(window.localStorage.getItem("completedPuzzles") ?? "null"),
+  const progress = await page.evaluate(() =>
+    JSON.parse(window.localStorage.getItem("puzzleProgress") ?? "null"),
   );
-  expect(completed.small).toEqual([0, 2]);
+  expect(progress.version).toBe(2);
+  expect(progress.played.small).toEqual(["quire", "placket", "bumfuzzle"]);
+  expect(progress.completed.small).toEqual(["quire", "bumfuzzle"]);
 });
 
 test("recovers from malformed and partial legacy history", async ({ page }) => {
@@ -81,8 +83,8 @@ test("recovers from malformed and partial legacy history", async ({ page }) => {
     timeout: 10_000,
   });
 
-  const completed = await page.evaluate(() =>
-    JSON.parse(window.localStorage.getItem("completedPuzzles") ?? "null"),
+  const progress = await page.evaluate(() =>
+    JSON.parse(window.localStorage.getItem("puzzleProgress") ?? "null"),
   );
-  expect(completed.small).toEqual([1]);
+  expect(progress.completed.small).toEqual(["placket"]);
 });

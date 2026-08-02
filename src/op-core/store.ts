@@ -9,10 +9,12 @@ import {
 } from "mobx";
 import {
   createEmptyPuzzleHistory,
-  normalizePuzzleHistory,
+  resolvePuzzleProgress,
+  serializePuzzleProgress,
   rehydrateObject,
   persistObject,
   pickRandomPuzzle,
+  PuzzleNames,
 } from "op-utils";
 import uniq from "lodash/uniq";
 import puzzles from "./puzzles.json";
@@ -27,6 +29,22 @@ export type Route =
 export type PuzzleMode = "tutorial" | "small" | "medium" | "large";
 
 const sum = (a: number, b: number) => a + b;
+
+// The puzzle name is the stable puzzle id: progress keyed by name survives
+// catalog reordering, which progress keyed by array index would not.
+const puzzleNames: PuzzleNames = {
+  tutorial: puzzles.tutorial.map((puzzle) => puzzle.name),
+  small: puzzles.small.map((puzzle) => puzzle.name),
+  medium: puzzles.medium.map((puzzle) => puzzle.name),
+  large: puzzles.large.map((puzzle) => puzzle.name),
+};
+
+const puzzleScoresByName: Record<PuzzleMode, Map<string, number>> = {
+  tutorial: new Map(puzzles.tutorial.map((p) => [p.name, p.score || 0])),
+  small: new Map(puzzles.small.map((p) => [p.name, p.score || 0])),
+  medium: new Map(puzzles.medium.map((p) => [p.name, p.score || 0])),
+  large: new Map(puzzles.large.map((p) => [p.name, p.score || 0])),
+};
 
 class RouterStore {
   root: RootStore;
@@ -178,16 +196,23 @@ class PuzzleStore {
   setPuzzle(mode: PuzzleMode = this.mode || "small", index: number) {
     this.mode = mode;
     this.index = index;
-    this.root.stats.updatePlayedPuzzles(mode, index);
+    const name = puzzleNames[mode][index];
+    this.root.stats.updatePlayedPuzzles(mode, name);
     this.increasesScore =
-      this.root.stats.completedPuzzles[this.mode]?.indexOf(this.index) === -1;
+      this.root.stats.completedPuzzles[mode]?.indexOf(name) === -1;
   }
 
   setRandomPuzzle(mode: PuzzleMode = this.mode || "small") {
+    // pickRandomPuzzle still reasons in catalog indexes, so map the name-keyed
+    // histories to indexes (dropping names no longer in the catalog).
+    const toIndexes = (names: string[]) =>
+      names
+        .map((name) => puzzleNames[mode].indexOf(name))
+        .filter((index) => index !== -1);
     const randomPuzzleIndex = pickRandomPuzzle({
       allPuzzlesLength: puzzles[mode].length,
-      playedHistory: this.root.stats.playedPuzzles[mode],
-      completedHistory: this.root.stats.completedPuzzles[mode],
+      playedHistory: toIndexes(this.root.stats.playedPuzzles[mode]),
+      completedHistory: toIndexes(this.root.stats.completedPuzzles[mode]),
     });
     this.setPuzzle(mode, randomPuzzleIndex);
   }
@@ -197,7 +222,7 @@ class PuzzleStore {
   }
 
   onPuzzleCompleted() {
-    this.root.stats.updateCompletedPuzzles(this.mode, this.index);
+    this.root.stats.updateCompletedPuzzles(this.mode, this.name);
   }
 
   reset() {
@@ -206,19 +231,12 @@ class PuzzleStore {
   }
 }
 
-const puzzleCounts: Record<PuzzleMode, number> = {
-  tutorial: puzzles.tutorial.length,
-  small: puzzles.small.length,
-  medium: puzzles.medium.length,
-  large: puzzles.large.length,
-};
-
 class StatsStore {
   root: RootStore;
 
   initialized: boolean;
-  playedPuzzles: Record<PuzzleMode, number[]>;
-  completedPuzzles: Record<PuzzleMode, number[]>;
+  playedPuzzles: Record<PuzzleMode, string[]>;
+  completedPuzzles: Record<PuzzleMode, string[]>;
 
   constructor(rootStore: RootStore) {
     this.root = rootStore;
@@ -233,22 +251,27 @@ class StatsStore {
       initializeStore: action,
       score: computed,
       tutorialCompleted: computed,
+      markTutorialCompleted: action,
       updateCompletedPuzzles: action,
       updatePlayedPuzzles: action,
     });
   }
 
   async initializeStore() {
-    const [playedPuzzles, completedPuzzles] = await Promise.all([
+    const [stored, legacyPlayed, legacyCompleted] = await Promise.all([
+      rehydrateObject("puzzleProgress").catch(() => undefined),
       rehydrateObject("playedPuzzles").catch(() => undefined),
       rehydrateObject("completedPuzzles").catch(() => undefined),
     ]);
+    const progress = resolvePuzzleProgress({
+      stored,
+      legacyPlayed,
+      legacyCompleted,
+      puzzleNames,
+    });
     runInAction(() => {
-      this.playedPuzzles = normalizePuzzleHistory(playedPuzzles, puzzleCounts);
-      this.completedPuzzles = normalizePuzzleHistory(
-        completedPuzzles,
-        puzzleCounts,
-      );
+      this.playedPuzzles = progress.played;
+      this.completedPuzzles = progress.completed;
       this.initialized = true;
     });
   }
@@ -257,10 +280,7 @@ class StatsStore {
     const _score = (Object.keys(this.completedPuzzles) as PuzzleMode[])
       .map((mode) => {
         return this.completedPuzzles[mode]
-          .map((index) => {
-            const puzzleScore = puzzles[mode]?.[index]?.score || 0;
-            return puzzleScore;
-          })
+          .map((name) => puzzleScoresByName[mode].get(name) || 0)
           .reduce(sum, 0);
       })
       .reduce(sum, 0);
@@ -272,24 +292,40 @@ class StatsStore {
     return this.completedPuzzles["tutorial"].length > 0;
   }
 
-  updateCompletedPuzzles(mode?: PuzzleMode, index?: number) {
-    if (mode && index !== undefined) {
+  markTutorialCompleted() {
+    this.updateCompletedPuzzles("tutorial", puzzleNames.tutorial[0]);
+  }
+
+  updateCompletedPuzzles(mode?: PuzzleMode, name?: string) {
+    if (mode && name) {
       this.completedPuzzles[mode] = uniq(
         this.completedPuzzles[mode] || [],
-      ).filter((x) => x !== index);
-      this.completedPuzzles[mode].push(index);
-      persistObject("completedPuzzles", toJS(this.completedPuzzles));
+      ).filter((x) => x !== name);
+      this.completedPuzzles[mode].push(name);
+      this.persistProgress();
     }
   }
 
-  updatePlayedPuzzles(mode?: PuzzleMode, index?: number) {
-    if (mode && index !== undefined) {
+  updatePlayedPuzzles(mode?: PuzzleMode, name?: string) {
+    if (mode && name) {
       this.playedPuzzles[mode] = uniq(this.playedPuzzles[mode] || []).filter(
-        (x) => x !== index,
+        (x) => x !== name,
       );
-      this.playedPuzzles[mode].push(index);
-      persistObject("playedPuzzles", toJS(this.playedPuzzles));
+      this.playedPuzzles[mode].push(name);
+      this.persistProgress();
     }
+  }
+
+  // The current schema is written only here, on real progress updates: a pure
+  // load never rewrites storage, so downgrading the app keeps legacy data.
+  persistProgress() {
+    persistObject(
+      "puzzleProgress",
+      serializePuzzleProgress(
+        toJS(this.playedPuzzles),
+        toJS(this.completedPuzzles),
+      ),
+    );
   }
 }
 
