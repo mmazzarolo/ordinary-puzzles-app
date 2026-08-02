@@ -9,10 +9,10 @@ module.exports = override(
   addWebpackPlugin(
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(
-        process.env.NODE_ENV || "development"
+        process.env.NODE_ENV || "development",
       ),
       __DEV__: process.env.NODE_ENV !== "production",
       __ELECTRON__: !!process.env.ELECTRON,
-    })
-  )
+    }),
+  ),
 );

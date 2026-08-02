@@ -29,7 +29,10 @@ try {
     await window.reload({ waitUntil: "domcontentloaded" });
     await window.getByText("small", { exact: true }).waitFor();
   } catch (error) {
-    const body = await window.locator("body").innerText().catch(() => "");
+    const body = await window
+      .locator("body")
+      .innerText()
+      .catch(() => "");
     throw new Error(
       `Electron home did not load. URL: ${window.url()}\nBody: ${body}\nPage errors: ${pageErrors.join(" | ")}\nConsole errors: ${consoleErrors.join(" | ")}\nFailed requests: ${failedRequests.join(" | ")}`,
       { cause: error },

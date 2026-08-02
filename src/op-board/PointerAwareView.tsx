@@ -2,7 +2,7 @@ import React, { FC, PropsWithChildren } from "react";
 import { View, Platform, ViewProps, GestureResponderEvent } from "react-native";
 
 const getEventCoordinates = (
-  event: GestureResponderEvent
+  event: GestureResponderEvent,
 ): [number, number] => {
   // On Android and iOS, let's use the native location which are relative
   // to the target view.
@@ -30,8 +30,10 @@ const getEventCoordinates = (
   return [event?.nativeEvent?.layerX, event?.nativeEvent?.layerY];
 };
 
-interface PointerAwareViewProps
-  extends Omit<ViewProps, "onPointerDown" | "onPointerMove" | "onPointerUp"> {
+interface PointerAwareViewProps extends Omit<
+  ViewProps,
+  "onPointerDown" | "onPointerMove" | "onPointerUp"
+> {
   onPointerDown: (coords: [number, number]) => void;
   onPointerMove: (coords: [number, number]) => void;
   onPointerUp: (coords: [number, number]) => void;

@@ -6,7 +6,7 @@ PRs are welcome. When submitting a PR, please consider the following:
 
 - We are using [TypeScript](https://www.typescriptlang.org/index.html) and all development should be done in TypeScript.
 
-- This project uses [ESLint](https://eslint.org) for linting and [Prettier](https://prettier.io/) for formatting. See more below.
+- This project uses [ESLint](https://eslint.org) for linting and [Oxfmt](https://oxc.rs) for formatting. See more below.
 
 ## Running Ordinary Puzzles
 
@@ -57,8 +57,20 @@ tag.
 
 ## Linting
 
-This project uses [ESLint](https://eslint.org) with a [simple preset of rules used by Create-React-App](https://github.com/mmazzarolo/eslint-plugin-react-app).  
-This ESLint setup also includes a standard [Prettier](https://prettier.io/) configuration that handles the code formatting.  
-The code is automatically formatted before each commit (see the `lint-staged` section in the `package.json` for more details).  
-We suggest to enable the formatting on save feature of your editor of choice. If you use VSCode it will be already enabled by default while working on this project (see the [`.vscode`](../.vscode) directory included in the project).  
-To manually invoke the linter you can run `pnpm run lint`.
+This project uses [ESLint](https://eslint.org) with `eslint-config-expo` for
+linting, and [Oxfmt](https://oxc.rs) for formatting. Linting and formatting are
+separate: the linter reports defects, and the formatter owns the layout.
+
+```
+pnpm run lint            # report problems
+pnpm run lint:fix        # repair what can be repaired
+pnpm run format          # format the repository
+pnpm run format:check    # report files that need formatting
+```
+
+CI runs `format:check`, so unformatted code fails the build. Enable format on
+save in your editor to avoid that.
+
+Oxfmt uses the settings in `.oxfmtrc.json`. It skips `src/op-core/puzzles.json`,
+because `scripts/inject-puzzle-ids.mjs` generates that file: a formatter and a
+generator that disagree about the same file would fight on every run.

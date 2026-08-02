@@ -36,16 +36,16 @@ export const Splash: FC<SplashProps> = function ({ onHide }) {
   const showAnim = Animated.stagger(
     fadeCreditsStaggerDuration,
     fadeCreditsAnims.map((anim) =>
-      anim.setup({ duration: fadeCreditsAnimDuration })
-    )
+      anim.setup({ duration: fadeCreditsAnimDuration }),
+    ),
   );
 
   const hideAnim = Animated.sequence([
     Animated.stagger(
       fadeCreditsStaggerDuration,
       fadeCreditsAnims.map((anim) =>
-        anim.setup({ duration: fadeCreditsAnimDuration, toValue: 0 })
-      )
+        anim.setup({ duration: fadeCreditsAnimDuration, toValue: 0 }),
+      ),
     ),
     backgroundColorAnim.setup({
       duration: backgroundColorAnimDuration,

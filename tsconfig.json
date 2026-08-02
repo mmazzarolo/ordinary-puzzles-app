@@ -7,19 +7,14 @@
     "forceConsistentCasingInFileNames": true,
     "ignoreDeprecations": "6.0",
     "jsx": "react-jsx",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "moduleResolution": "bundler",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "types": [
-      "jest"
-    ]
+    "types": ["jest"]
   },
   "exclude": [
     "node_modules",
@@ -28,8 +23,5 @@
     "src/service-worker.ts",
     "src/serviceWorkerRegistration.ts"
   ],
-  "include": [
-    "src",
-    "index.js"
-  ]
+  "include": ["src", "index.js"]
 }

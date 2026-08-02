@@ -61,10 +61,8 @@ export const Tutorial: FC = observer(function () {
 
   // Wait for every HUD pieces to be mounted so that we can measure their height
   // and make sure we can fit the board
-  const [
-    descriptionLayout,
-    setDescriptionLayout,
-  ] = useState<LayoutRectangle | null>(null);
+  const [descriptionLayout, setDescriptionLayout] =
+    useState<LayoutRectangle | null>(null);
   const handleDescriptionLayout = (event: LayoutChangeEvent) => {
     if (descriptionLayout?.height !== event.nativeEvent.layout.height) {
       setDescriptionLayout(event.nativeEvent.layout);

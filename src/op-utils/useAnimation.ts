@@ -13,7 +13,7 @@ export const useAnimation = function (initialValue: number = 0) {
         easing: Easing.inOut(Easing.quad),
         ...config,
       }),
-    [endValue, value]
+    [endValue, value],
   );
 
   return {

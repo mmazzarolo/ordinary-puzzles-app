@@ -22,7 +22,10 @@ export const derivePuzzleId = (record) => {
   const content = Array.isArray(record.data)
     ? `op-puzzle-v1\n${record.data.join("\n")}`
     : `op-message-v1\n${record.title ?? ""}\n${record.message ?? ""}`;
-  return createHash("sha256").update(content, "utf8").digest("hex").slice(0, 12);
+  return createHash("sha256")
+    .update(content, "utf8")
+    .digest("hex")
+    .slice(0, 12);
 };
 
 const puzzles = JSON.parse(readFileSync(puzzlesPath, "utf8"));

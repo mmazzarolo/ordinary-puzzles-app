@@ -7,7 +7,15 @@ module.exports = function (api) {
         "module-resolver",
         {
           root: ["./src"],
-          extensions: [".ios.js", ".android.js", ".web.js", ".js", ".ts", ".tsx", ".json"],
+          extensions: [
+            ".ios.js",
+            ".android.js",
+            ".web.js",
+            ".js",
+            ".ts",
+            ".tsx",
+            ".json",
+          ],
         },
       ],
     ],

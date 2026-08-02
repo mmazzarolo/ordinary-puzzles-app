@@ -7,7 +7,7 @@ const splashColor = "#84818D";
 const palette = new Array(10).fill(primaryColor).map((color, index) =>
   tinycolor(color)
     .brighten(index * 10)
-    .toString()
+    .toString(),
 );
 const lightColors = palette;
 const darkColors = palette.slice().reverse();
