@@ -4,18 +4,18 @@ name: Native end-to-end
 # covers what only a device can show: the app starts, the fonts load, taps and
 # drags reach the board, and the storage survives a cold start.
 #
-# Android runs on every pull request. iOS runs on master and on demand.
+# Both jobs are on demand for now, because a full device run is slow: the
+# Android job takes about 20 minutes, most of it the emulator boot and the
+# Gradle build, and the iOS job takes longer still.
 #
-# This is a choice about feedback time, not about money: this repository is
-# public, so standard GitHub-hosted runners are free on every platform. The iOS
-# job builds the app with Xcode and takes about twice as long as the Android
-# job, and free macOS runners queue when several pull requests are open. Delete
-# the "if:" on the iOS job to run both platforms on every pull request.
+# This is a choice about feedback time, not about money. This repository is
+# public, so standard GitHub-hosted runners are free on every platform.
+#
+# Run them from the Actions tab, or locally with "pnpm run e2e:native:android"
+# and "pnpm run e2e:native:ios". To put a platform back into automatic CI, add
+# the trigger back here, and gate the job you do not want with an "if:".
 
 on:
-  pull_request:
-  push:
-    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -120,7 +120,6 @@ jobs:
   ios:
     name: iOS simulator
     runs-on: macos-15
-    if: ${{ github.event_name != 'pull_request' }}
     timeout-minutes: 90
 
     steps:
