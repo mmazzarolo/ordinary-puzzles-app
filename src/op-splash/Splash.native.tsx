@@ -29,7 +29,6 @@ export const Splash: FC<SplashProps> = function ({ onHide }) {
   const fadeCreditsStaggerDuration = 100;
   const backgroundColorAnimDuration = 200;
   // We can use hooks in loops in this case because "credits" is a constant
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const fadeCreditsAnims = credits.map(() => useAnimation());
   const backgroundColorAnim = useAnimation();
   const splashDuration = 2000;
@@ -64,7 +63,7 @@ export const Splash: FC<SplashProps> = function ({ onHide }) {
   };
 
   useOnMount(() => {
-    animate();
+    void animate();
   });
 
   const rootAnimStyle = {

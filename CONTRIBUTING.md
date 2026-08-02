@@ -6,7 +6,7 @@ PRs are welcome. When submitting a PR, please consider the following:
 
 - We are using [TypeScript](https://www.typescriptlang.org/index.html) and all development should be done in TypeScript.
 
-- This project uses [ESLint](https://eslint.org) for linting and [Oxfmt](https://oxc.rs) for formatting. See more below.
+- This project uses [Oxlint](https://oxc.rs) for linting and [Oxfmt](https://oxc.rs) for formatting. See more below.
 
 ## Running Ordinary Puzzles
 
@@ -57,9 +57,14 @@ tag.
 
 ## Linting
 
-This project uses [ESLint](https://eslint.org) with `eslint-config-expo` for
-linting, and [Oxfmt](https://oxc.rs) for formatting. Linting and formatting are
-separate: the linter reports defects, and the formatter owns the layout.
+This project uses [Oxlint](https://oxc.rs) for linting and
+[Oxfmt](https://oxc.rs) for formatting. Linting and formatting are separate: the
+linter reports defects, and the formatter owns the layout.
+
+Linting is type-aware, which is how it catches unhandled promises and misused
+types. That needs the `oxlint-tsgolint` package, which `pnpm install` provides.
+Suppress a rule with `// oxlint-disable-next-line <rule>`, and keep the reason
+next to it.
 
 ```
 pnpm run lint            # report problems

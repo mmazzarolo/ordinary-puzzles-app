@@ -27,7 +27,7 @@ export const useScale = (): ScalingFunc => {
     return (size: number) =>
       (windowDimensions.width / guidelineBaseWidth) * size;
   } else {
-    /* eslint-disable react-hooks/rules-of-hooks */
+    /* oxlint-disable react-hooks/rules-of-hooks */
     // Yeah, not the cleanest approach here calling a hook conditionally, but
     // we can ensure the order will always be respected because the platform
     // cannot change at runtime.

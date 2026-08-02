@@ -93,7 +93,10 @@ class RouterStore {
         break;
       }
       default: {
-        throw new Error(`"RouterStore.changeRoute » Invalid route ${route}`);
+        // The cases above are exhaustive, so the route narrows to "never" here.
+        throw new Error(
+          `"RouterStore.changeRoute » Invalid route ${String(route)}`,
+        );
       }
     }
     this.currentRoute = route;
@@ -321,7 +324,9 @@ class StatsStore {
   // The current schema is written only here, on real progress updates: a pure
   // load never rewrites storage, so downgrading the app keeps legacy data.
   persistProgress() {
-    persistObject(
+    // Fire and forget, which is what both callers have always expected. A
+    // failed write therefore loses that one update without a report.
+    void persistObject(
       "puzzleProgress",
       serializePuzzleProgress(
         toJS(this.playedPuzzles),
@@ -342,9 +347,11 @@ class RootStore {
     this.stats = new StatsStore(this);
   }
 
-  async initializeStore() {
-    await rootStore.stats.initializeStore();
-  }
+  // An arrow property, because "storesContext" below passes this method as a
+  // value. A plain class method would arrive unbound and lose its receiver.
+  initializeStore = async () => {
+    await this.stats.initializeStore();
+  };
 }
 
 const rootStore = new RootStore();

@@ -1,16 +1,11 @@
 {
-  "eslint.autoFixOnSave": true,
   "editor.formatOnSave": true,
-  "eslint.enable": true,
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "oxc.enable": true,
+  "oxc.fmt.experimental": true,
   "typescript.preferences.importModuleSpecifier": "auto",
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.oxc": "explicit"
   }
 }

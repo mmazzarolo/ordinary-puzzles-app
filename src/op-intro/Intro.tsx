@@ -40,7 +40,7 @@ export const Intro: FC = function () {
     }
   };
   useOnMount(() => {
-    animate();
+    void animate();
   });
 
   // If the user touches the screen, end the animation early

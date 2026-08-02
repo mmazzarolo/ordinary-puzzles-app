@@ -28,6 +28,9 @@ export const Router: FC = observer(function () {
       return <Tutorial key={puzzle.id} />;
     }
   } else {
-    throw new Error(`Invalid route: ${router.currentRoute}`);
+    // The checks above are exhaustive, so TypeScript narrows the route to
+    // "never" here. String() keeps the guard readable for a value that only a
+    // bad runtime state can produce.
+    throw new Error(`Invalid route: ${String(router.currentRoute)}`);
   }
 });

@@ -89,7 +89,7 @@ export const Board: FC<BoardProps> = observer(function ({
       disposeHapticReaction();
       disposeClearedReaction();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [puzzle.id]);
 
   // Don't show the board unless initializes, otherwise the cells might not

@@ -31,8 +31,10 @@ export const Button: FC<ButtonProps> = function ({
   const scale = useScale();
   const styles = createStyles({ scale });
   const handlePressIn = () => {
-    hapticFeedback.generate("impactMedium");
-    playSound("buttonPress");
+    // Both are best effort: a press must not wait for them, and a failure must
+    // not reach the user.
+    void hapticFeedback.generate("impactMedium");
+    void playSound("buttonPress");
   };
   const normalizedLabel = label.toLowerCase();
   return (
