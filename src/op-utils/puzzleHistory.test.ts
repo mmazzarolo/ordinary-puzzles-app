@@ -8,7 +8,7 @@ import {
   serializePuzzleProgress,
 } from "./puzzleHistory";
 
-const puzzleNames = {
+const puzzleIds = {
   tutorial: ["tu-0", "tu-1"],
   small: ["alpha", "beta", "gamma"],
   medium: ["delta", "epsilon"],
@@ -28,7 +28,7 @@ describe("puzzle history recovery", () => {
           small: ["alpha", 0, "not-a-puzzle"],
           medium: "invalid",
         },
-        puzzleNames,
+        puzzleIds,
       ),
     ).toEqual({
       tutorial: ["tu-0"],
@@ -40,7 +40,7 @@ describe("puzzle history recovery", () => {
 
   it("keeps the chronological order of entries", () => {
     expect(
-      normalizePuzzleHistory({ small: ["gamma", "alpha", "gamma"] }, puzzleNames)
+      normalizePuzzleHistory({ small: ["gamma", "alpha", "gamma"] }, puzzleIds)
         .small,
     ).toEqual(["gamma", "alpha"]);
   });
@@ -54,7 +54,7 @@ describe("puzzle history recovery", () => {
 });
 
 describe("legacy index migration", () => {
-  it("maps legacy indexes to puzzle names in order", () => {
+  it("maps legacy indexes to puzzle ids in order", () => {
     expect(
       migrateLegacyPuzzleHistory(
         {
@@ -62,7 +62,7 @@ describe("legacy index migration", () => {
           small: [2, -1, 1.5, "2", 0],
           medium: "invalid",
         },
-        puzzleNames,
+        puzzleIds,
       ),
     ).toEqual({
       tutorial: ["tu-0"],
@@ -83,7 +83,7 @@ describe("puzzle progress resolution", () => {
       stored,
       legacyPlayed: { small: [0] },
       legacyCompleted: { small: [0] },
-      puzzleNames,
+      puzzleIds,
     });
     expect(result.played.small).toEqual(["beta"]);
     expect(result.completed.small).toEqual(["beta"]);
@@ -94,7 +94,7 @@ describe("puzzle progress resolution", () => {
       stored: undefined,
       legacyPlayed: { small: [0, 1] },
       legacyCompleted: { small: [0] },
-      puzzleNames,
+      puzzleIds,
     });
     expect(result.played.small).toEqual(["alpha", "beta"]);
     expect(result.completed.small).toEqual(["alpha"]);
@@ -105,7 +105,7 @@ describe("puzzle progress resolution", () => {
       stored: { version: puzzleProgressVersion + 1, played: {}, completed: {} },
       legacyPlayed: { small: [2] },
       legacyCompleted: undefined,
-      puzzleNames,
+      puzzleIds,
     });
     expect(result.played.small).toEqual(["gamma"]);
     expect(result.completed.small).toEqual([]);
@@ -116,7 +116,7 @@ describe("puzzle progress resolution", () => {
       stored: undefined,
       legacyPlayed: undefined,
       legacyCompleted: undefined,
-      puzzleNames,
+      puzzleIds,
     });
     expect(result.played).toEqual(createEmptyPuzzleHistory());
     expect(result.completed).toEqual(createEmptyPuzzleHistory());

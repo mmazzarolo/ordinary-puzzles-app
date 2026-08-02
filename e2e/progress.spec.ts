@@ -66,8 +66,13 @@ test("selects the next unplayed legacy puzzle without losing history", async ({
     JSON.parse(window.localStorage.getItem("puzzleProgress") ?? "null"),
   );
   expect(progress.version).toBe(2);
-  expect(progress.played.small).toEqual(["quire", "placket", "bumfuzzle"]);
-  expect(progress.completed.small).toEqual(["quire", "bumfuzzle"]);
+  // Content ids of quire, placket, bumfuzzle (see scripts/inject-puzzle-ids.mjs)
+  expect(progress.played.small).toEqual([
+    "e9c2882a25e2",
+    "93467cd1f2c0",
+    "d9640afc09f9",
+  ]);
+  expect(progress.completed.small).toEqual(["e9c2882a25e2", "d9640afc09f9"]);
 });
 
 test("recovers from malformed and partial legacy history", async ({ page }) => {
@@ -86,5 +91,6 @@ test("recovers from malformed and partial legacy history", async ({ page }) => {
   const progress = await page.evaluate(() =>
     JSON.parse(window.localStorage.getItem("puzzleProgress") ?? "null"),
   );
-  expect(progress.completed.small).toEqual(["placket"]);
+  // Content id of placket
+  expect(progress.completed.small).toEqual(["93467cd1f2c0"]);
 });

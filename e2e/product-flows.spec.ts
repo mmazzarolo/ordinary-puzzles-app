@@ -84,7 +84,8 @@ test("completes the full tutorial and persists its completion", async ({
   const progress = await page.evaluate(() =>
     JSON.parse(window.localStorage.getItem("puzzleProgress") ?? "null"),
   );
-  expect(progress.completed.tutorial).toEqual(["tu-puzzle-0"]);
+  // Content id of the first tutorial puzzle
+  expect(progress.completed.tutorial).toEqual(["c59272a8a41f"]);
 });
 
 test("solves the first tutorial board with a real pointer drag", async ({

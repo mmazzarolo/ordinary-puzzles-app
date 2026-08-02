@@ -14,7 +14,7 @@ import {
   rehydrateObject,
   persistObject,
   pickRandomPuzzle,
-  PuzzleNames,
+  PuzzleIds,
 } from "op-utils";
 import uniq from "lodash/uniq";
 import puzzles from "./puzzles.json";
@@ -30,20 +30,22 @@ export type PuzzleMode = "tutorial" | "small" | "medium" | "large";
 
 const sum = (a: number, b: number) => a + b;
 
-// The puzzle name is the stable puzzle id: progress keyed by name survives
-// catalog reordering, which progress keyed by array index would not.
-const puzzleNames: PuzzleNames = {
-  tutorial: puzzles.tutorial.map((puzzle) => puzzle.name),
-  small: puzzles.small.map((puzzle) => puzzle.name),
-  medium: puzzles.medium.map((puzzle) => puzzle.name),
-  large: puzzles.large.map((puzzle) => puzzle.name),
+// The content-derived id (see scripts/inject-puzzle-ids.mjs) is the stable
+// puzzle identity: progress keyed by it survives catalog reordering AND
+// renames, which index- or name-keyed progress would not. Names are display
+// data only.
+const puzzleIds: PuzzleIds = {
+  tutorial: puzzles.tutorial.map((puzzle) => puzzle.id),
+  small: puzzles.small.map((puzzle) => puzzle.id),
+  medium: puzzles.medium.map((puzzle) => puzzle.id),
+  large: puzzles.large.map((puzzle) => puzzle.id),
 };
 
-const puzzleScoresByName: Record<PuzzleMode, Map<string, number>> = {
-  tutorial: new Map(puzzles.tutorial.map((p) => [p.name, p.score || 0])),
-  small: new Map(puzzles.small.map((p) => [p.name, p.score || 0])),
-  medium: new Map(puzzles.medium.map((p) => [p.name, p.score || 0])),
-  large: new Map(puzzles.large.map((p) => [p.name, p.score || 0])),
+const puzzleScoresById: Record<PuzzleMode, Map<string, number>> = {
+  tutorial: new Map(puzzles.tutorial.map((p) => [p.id, p.score || 0])),
+  small: new Map(puzzles.small.map((p) => [p.id, p.score || 0])),
+  medium: new Map(puzzles.medium.map((p) => [p.id, p.score || 0])),
+  large: new Map(puzzles.large.map((p) => [p.id, p.score || 0])),
 };
 
 class RouterStore {
@@ -155,7 +157,7 @@ class PuzzleStore {
   }
 
   get id() {
-    return this.name;
+    return this.current?.id || "";
   }
 
   get data() {
@@ -196,18 +198,18 @@ class PuzzleStore {
   setPuzzle(mode: PuzzleMode = this.mode || "small", index: number) {
     this.mode = mode;
     this.index = index;
-    const name = puzzleNames[mode][index];
-    this.root.stats.updatePlayedPuzzles(mode, name);
+    const id = puzzleIds[mode][index];
+    this.root.stats.updatePlayedPuzzles(mode, id);
     this.increasesScore =
-      this.root.stats.completedPuzzles[mode]?.indexOf(name) === -1;
+      this.root.stats.completedPuzzles[mode]?.indexOf(id) === -1;
   }
 
   setRandomPuzzle(mode: PuzzleMode = this.mode || "small") {
-    // pickRandomPuzzle still reasons in catalog indexes, so map the name-keyed
-    // histories to indexes (dropping names no longer in the catalog).
-    const toIndexes = (names: string[]) =>
-      names
-        .map((name) => puzzleNames[mode].indexOf(name))
+    // pickRandomPuzzle still reasons in catalog indexes, so map the id-keyed
+    // histories to indexes (dropping ids no longer in the catalog).
+    const toIndexes = (ids: string[]) =>
+      ids
+        .map((id) => puzzleIds[mode].indexOf(id))
         .filter((index) => index !== -1);
     const randomPuzzleIndex = pickRandomPuzzle({
       allPuzzlesLength: puzzles[mode].length,
@@ -222,7 +224,7 @@ class PuzzleStore {
   }
 
   onPuzzleCompleted() {
-    this.root.stats.updateCompletedPuzzles(this.mode, this.name);
+    this.root.stats.updateCompletedPuzzles(this.mode, this.id);
   }
 
   reset() {
@@ -267,7 +269,7 @@ class StatsStore {
       stored,
       legacyPlayed,
       legacyCompleted,
-      puzzleNames,
+      puzzleIds,
     });
     runInAction(() => {
       this.playedPuzzles = progress.played;
@@ -280,7 +282,7 @@ class StatsStore {
     const _score = (Object.keys(this.completedPuzzles) as PuzzleMode[])
       .map((mode) => {
         return this.completedPuzzles[mode]
-          .map((name) => puzzleScoresByName[mode].get(name) || 0)
+          .map((id) => puzzleScoresById[mode].get(id) || 0)
           .reduce(sum, 0);
       })
       .reduce(sum, 0);
@@ -293,7 +295,7 @@ class StatsStore {
   }
 
   markTutorialCompleted() {
-    this.updateCompletedPuzzles("tutorial", puzzleNames.tutorial[0]);
+    this.updateCompletedPuzzles("tutorial", puzzleIds.tutorial[0]);
   }
 
   updateCompletedPuzzles(mode?: PuzzleMode, name?: string) {

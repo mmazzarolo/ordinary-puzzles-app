@@ -2,10 +2,11 @@ const puzzleModes = ["tutorial", "small", "medium", "large"] as const;
 
 export type PuzzleHistoryMode = (typeof puzzleModes)[number];
 
-// Progress is keyed by stable puzzle name so that reordering or extending the
-// puzzle catalog never remaps a user's history to different puzzles.
+// Progress is keyed by the stable content-derived puzzle id (see
+// scripts/inject-puzzle-ids.mjs), so reordering, extending, or RENAMING
+// catalog puzzles never remaps a user's history to different puzzles.
 export type PuzzleHistory = Record<PuzzleHistoryMode, string[]>;
-export type PuzzleNames = Record<PuzzleHistoryMode, string[]>;
+export type PuzzleIds = Record<PuzzleHistoryMode, string[]>;
 
 export const puzzleProgressVersion = 2;
 
@@ -40,27 +41,27 @@ const asHistorySource = (
 
 export const normalizePuzzleHistory = (
   value: unknown,
-  puzzleNames: PuzzleNames,
+  puzzleIds: PuzzleIds,
 ): PuzzleHistory => {
   const source = asHistorySource(value);
   return Object.fromEntries(
     puzzleModes.map((mode) => {
       const entries = Array.isArray(source[mode]) ? source[mode] : [];
-      const knownNames = new Set(puzzleNames[mode]);
+      const knownIds = new Set(puzzleIds[mode]);
       const validEntries = entries.filter(
         (entry): entry is string =>
-          typeof entry === "string" && knownNames.has(entry),
+          typeof entry === "string" && knownIds.has(entry),
       );
       return [mode, [...new Set(validEntries)]];
     }),
   ) as PuzzleHistory;
 };
 
-// Schema v1 stored puzzle indexes. Map each valid index to the name it pointed
-// to so existing progress carries over.
+// Schema v1 stored puzzle indexes. Map each valid index to the id of the
+// puzzle it pointed to so existing progress carries over.
 export const migrateLegacyPuzzleHistory = (
   value: unknown,
-  puzzleNames: PuzzleNames,
+  puzzleIds: PuzzleIds,
 ): PuzzleHistory => {
   const source = asHistorySource(value);
   return Object.fromEntries(
@@ -72,9 +73,9 @@ export const migrateLegacyPuzzleHistory = (
             typeof entry === "number" &&
             Number.isInteger(entry) &&
             entry >= 0 &&
-            entry < puzzleNames[mode].length,
+            entry < puzzleIds[mode].length,
         )
-        .map((entry) => puzzleNames[mode][entry]);
+        .map((entry) => puzzleIds[mode][entry]);
       return [mode, [...new Set(migratedEntries)]];
     }),
   ) as PuzzleHistory;
@@ -97,12 +98,12 @@ export const resolvePuzzleProgress = ({
   stored,
   legacyPlayed,
   legacyCompleted,
-  puzzleNames,
+  puzzleIds,
 }: {
   stored: unknown;
   legacyPlayed: unknown;
   legacyCompleted: unknown;
-  puzzleNames: PuzzleNames;
+  puzzleIds: PuzzleIds;
 }): { played: PuzzleHistory; completed: PuzzleHistory } => {
   if (
     stored &&
@@ -111,12 +112,12 @@ export const resolvePuzzleProgress = ({
   ) {
     const progress = stored as Partial<PuzzleProgress>;
     return {
-      played: normalizePuzzleHistory(progress.played, puzzleNames),
-      completed: normalizePuzzleHistory(progress.completed, puzzleNames),
+      played: normalizePuzzleHistory(progress.played, puzzleIds),
+      completed: normalizePuzzleHistory(progress.completed, puzzleIds),
     };
   }
   return {
-    played: migrateLegacyPuzzleHistory(legacyPlayed, puzzleNames),
-    completed: migrateLegacyPuzzleHistory(legacyCompleted, puzzleNames),
+    played: migrateLegacyPuzzleHistory(legacyPlayed, puzzleIds),
+    completed: migrateLegacyPuzzleHistory(legacyCompleted, puzzleIds),
   };
 };
