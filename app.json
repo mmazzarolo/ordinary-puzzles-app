@@ -56,7 +56,11 @@
         }
       ],
       "./plugins/withGradleJvmMemory",
-      "./plugins/withPortraitOnly"
+      "./plugins/withPortraitOnly",
+      "expo-asset",
+      "expo-audio",
+      "expo-font",
+      "expo-status-bar"
     ],
     "extra": {
       "eas": {
