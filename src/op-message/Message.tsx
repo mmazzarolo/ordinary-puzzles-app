@@ -51,13 +51,13 @@ export const Message: FC = function () {
   // Callback handlers
   const handleButtonPress = () => {
     fadeOut().start(() => {
-      stats.updateCompletedPuzzles("tutorial", 0);
+      stats.markTutorialCompleted();
       navigateToHome();
     });
   };
 
   return (
-    <View style={styles.root}>
+    <View style={styles.root} testID="screen-message">
       <View style={styles.top}>
         <Text
           weight="bold"

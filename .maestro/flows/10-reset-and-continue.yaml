@@ -1,0 +1,33 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Reset and continue keep a board usable
+tags:
+  - interaction
+  - regression
+---
+# Auto-solve is off here, so the board stays unsolved and both controls stay
+# reachable.
+- runFlow: ../subflows/launch-without-auto-solve.yaml
+- runFlow:
+    file: ../subflows/open-mode.yaml
+    env:
+      MODE: medium
+- runFlow: ../subflows/assert-game.yaml
+- tapOn:
+    id: "button-reset"
+- assertVisible:
+    id: "puzzle-board"
+- tapOn:
+    id: "button-menu"
+- runFlow: ../subflows/assert-home.yaml
+
+# The board stays in memory for the session, so home offers to continue it.
+- assertVisible:
+    id: "button-continue"
+- tapOn:
+    id: "button-continue"
+- extendedWaitUntil:
+    visible:
+      id: "screen-game"
+    timeout: 20000
+- assertVisible:
+    id: "puzzle-board"

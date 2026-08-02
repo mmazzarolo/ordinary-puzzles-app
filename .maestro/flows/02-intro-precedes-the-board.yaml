@@ -1,0 +1,16 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: The intro screen precedes the board
+tags:
+  - regression
+---
+- runFlow: ../subflows/launch-fresh.yaml
+- tapOn:
+    id: "button-small"
+- assertVisible:
+    id: "screen-intro"
+- extendedWaitUntil:
+    visible:
+      id: "screen-game"
+    timeout: 20000
+- assertNotVisible:
+    id: "screen-intro"

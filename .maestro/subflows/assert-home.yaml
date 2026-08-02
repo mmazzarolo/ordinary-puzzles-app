@@ -1,0 +1,20 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Assert the home screen is ready
+---
+# The home screen fades its root in and then animates the menu in sequence, so
+# the root becomes visible before the buttons do. Wait for a button, because a
+# visible root alone does not mean the menu accepts taps yet.
+- extendedWaitUntil:
+    visible:
+      id: "screen-home"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "button-small"
+    timeout: 20000
+- assertVisible:
+    id: "button-tutorial"
+- assertVisible:
+    id: "button-medium"
+- assertVisible:
+    id: "button-large"

@@ -45,23 +45,23 @@ export const Stats: FC = observer(function () {
   };
 
   return (
-    <Animated.View style={styles.root}>
+    <Animated.View style={styles.root} testID="screen-stats">
       <Animated.View
         style={[styles.middle, animations.fade(fadeRootAnim.value)]}
       >
         <Text weight="bold" style={styles.title}>
           Statistics
         </Text>
-        <Text weight="semibold" style={styles.progress}>
+        <Text weight="semibold" style={styles.progress} testID="stats-small">
           small: {stats.completedPuzzles["small"].length}/99
         </Text>
-        <Text weight="semibold" style={styles.progress}>
+        <Text weight="semibold" style={styles.progress} testID="stats-medium">
           medium: {stats.completedPuzzles["medium"].length}/99
         </Text>
-        <Text weight="semibold" style={styles.progress}>
+        <Text weight="semibold" style={styles.progress} testID="stats-large">
           large: {stats.completedPuzzles["large"].length}/99
         </Text>
-        <Text weight="bold" style={styles.score}>
+        <Text weight="bold" style={styles.score} testID="stats-score">
           score: {stats.score}
         </Text>
       </Animated.View>

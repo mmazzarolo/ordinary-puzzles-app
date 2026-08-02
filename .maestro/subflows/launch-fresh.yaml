@@ -1,0 +1,18 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Launch with empty storage
+---
+# The stop belongs inside the retry, so that every attempt starts from the same
+# state. A stop outside it only cleans up before the first attempt, and the
+# later attempts then run against whatever the failed launch left behind.
+#
+# The retry covers device behavior, not a defect in the app. A busy simulator
+# sometimes kills the process during the launch that follows a state reset, and
+# Maestro reports it as "app crashed or stopped". The app writes no crash report
+# when this happens.
+- retry:
+    maxRetries: 3
+    commands:
+      - stopApp
+      - launchApp:
+          clearState: true
+      - runFlow: assert-home.yaml

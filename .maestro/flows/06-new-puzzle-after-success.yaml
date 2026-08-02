@@ -1,0 +1,22 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Start another puzzle from the success screen
+tags:
+  - regression
+---
+- runFlow: ../subflows/launch-fresh.yaml
+- runFlow:
+    file: ../subflows/open-mode.yaml
+    env:
+      MODE: small
+- runFlow: ../subflows/assert-success.yaml
+- tapOn:
+    id: "button-new-puzzle"
+# "New Puzzle" must give a second board, and auto-solve must complete it too.
+- extendedWaitUntil:
+    visible:
+      id: "screen-game"
+    timeout: 20000
+- runFlow: ../subflows/assert-success.yaml
+- tapOn:
+    id: "button-menu"
+- runFlow: ../subflows/assert-home.yaml

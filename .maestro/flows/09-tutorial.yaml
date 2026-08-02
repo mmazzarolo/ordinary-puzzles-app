@@ -1,0 +1,22 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: The tutorial runs to its last message
+tags:
+  - regression
+---
+- runFlow: ../subflows/launch-fresh.yaml
+- tapOn:
+    id: "button-tutorial"
+
+# Wait only for the end state. Auto-solve clears each of the seven tutorial
+# boards 500 ms after it mounts, so every lesson in between is transient and any
+# assertion on one is a race. The eighth entry is a message screen, and that
+# message is the end of the tutorial. Flow 12 covers the first lesson properly,
+# with auto-solve off.
+- extendedWaitUntil:
+    visible: "That's it!"
+    timeout: 120000
+- assertVisible:
+    id: "screen-message"
+- tapOn:
+    id: "button-menu"
+- runFlow: ../subflows/assert-home.yaml

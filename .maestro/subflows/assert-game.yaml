@@ -1,0 +1,17 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Assert the game screen
+---
+# Only use this when auto-solve is off. With auto-solve on the board clears
+# before the assertions land.
+- extendedWaitUntil:
+    visible:
+      id: "screen-game"
+    timeout: 30000
+- assertVisible:
+    id: "puzzle-board"
+- assertVisible:
+    id: "puzzle-name"
+- assertVisible:
+    id: "button-menu"
+- assertVisible:
+    id: "button-reset"

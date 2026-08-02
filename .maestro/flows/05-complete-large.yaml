@@ -1,0 +1,14 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Complete a large puzzle
+tags:
+  - regression
+---
+- runFlow: ../subflows/launch-fresh.yaml
+- runFlow:
+    file: ../subflows/open-mode.yaml
+    env:
+      MODE: large
+- runFlow: ../subflows/assert-success.yaml
+- tapOn:
+    id: "button-menu"
+- runFlow: ../subflows/assert-home.yaml

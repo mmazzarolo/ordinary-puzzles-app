@@ -1,0 +1,13 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: First launch shows the home menu
+tags:
+  - smoke
+  - regression
+---
+- runFlow: ../subflows/launch-fresh.yaml
+# A first install has no board in memory and no score, so neither the continue
+# entry nor the score button exists yet.
+- assertNotVisible:
+    id: "button-continue"
+- assertNotVisible:
+    id: "button-score"

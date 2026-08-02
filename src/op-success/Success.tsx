@@ -69,13 +69,17 @@ export const Success: FC = observer(function () {
   };
 
   return (
-    <Animated.View style={[styles.root, animations.fade(fadeRootAnim.value)]}>
+    <Animated.View
+      style={[styles.root, animations.fade(fadeRootAnim.value)]}
+      testID="screen-success"
+    >
       <KeepAwake />
       {puzzle.increasesScore && (
         <Score
           score={`+${puzzle.score}`}
           animValue={fadeScoreAnim.value}
           style={scoreStyle}
+          testID="score-earned"
         />
       )}
       <View style={styles.middle}>
@@ -84,6 +88,7 @@ export const Success: FC = observer(function () {
           name={puzzle.name}
           fadeAnimValue={fadeTitleAnim.value}
           fontSize={fitFontSize}
+          testID="puzzle-name"
         />
         <Text
           weight="semibold"

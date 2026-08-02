@@ -19,12 +19,16 @@ export const Text: FC<TextProps> = function ({
   weight = "regular",
   secondary = false,
   style,
+  testID,
 }) {
   const colors = useColors();
   const font = fonts[family][weight];
   const color = secondary ? colors.primary[5] : colors.primary[0];
   return (
-    <Animated.Text style={[{ ...font, color }, styles.text, style]}>
+    <Animated.Text
+      style={[{ ...font, color }, styles.text, style]}
+      testID={testID}
+    >
       {children}
     </Animated.Text>
   );

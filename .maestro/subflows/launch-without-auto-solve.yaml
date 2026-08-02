@@ -1,0 +1,18 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Launch with empty storage and no auto-solve
+---
+- runFlow: launch-fresh.yaml
+
+# Test builds carry a control on the home screen that turns auto-solve off. Tap
+# it, then confirm the new state through its test id. A tap is deterministic,
+# unlike a deep link: Maestro falls back to a plain app launch when a link is
+# slow to foreground the app, and that fallback drops the URL.
+- runFlow:
+    when:
+      visible:
+        id: "e2e-autosolve-on"
+    commands:
+      - tapOn:
+          id: "e2e-autosolve-on"
+- assertVisible:
+    id: "e2e-autosolve-off"

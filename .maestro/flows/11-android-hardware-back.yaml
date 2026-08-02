@@ -1,0 +1,24 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: The Android back key returns to the home menu
+tags:
+  - android
+  - regression
+---
+# Game, statistics, tutorial and message screens all return to home when the
+# user presses the hardware back key. Only Android has that key, so this flow
+# carries the "android" tag and iOS runs exclude it.
+- runFlow: ../subflows/launch-without-auto-solve.yaml
+- runFlow:
+    file: ../subflows/open-mode.yaml
+    env:
+      MODE: small
+- runFlow: ../subflows/assert-game.yaml
+- pressKey: Back
+- runFlow: ../subflows/assert-home.yaml
+
+- tapOn:
+    id: "button-tutorial"
+- assertVisible:
+    id: "screen-tutorial"
+- pressKey: Back
+- runFlow: ../subflows/assert-home.yaml

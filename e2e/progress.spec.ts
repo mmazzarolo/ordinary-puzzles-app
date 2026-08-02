@@ -62,10 +62,17 @@ test("selects the next unplayed legacy puzzle without losing history", async ({
   });
   await expect(page.getByText("bumfuzzle", { exact: true })).toBeVisible();
 
-  const completed = await page.evaluate(() =>
-    JSON.parse(window.localStorage.getItem("completedPuzzles") ?? "null"),
+  const progress = await page.evaluate(() =>
+    JSON.parse(window.localStorage.getItem("puzzleProgress") ?? "null"),
   );
-  expect(completed.small).toEqual([0, 2]);
+  expect(progress.version).toBe(2);
+  // Content ids of quire, placket, bumfuzzle (see scripts/inject-puzzle-ids.mjs)
+  expect(progress.played.small).toEqual([
+    "e9c2882a25e2",
+    "93467cd1f2c0",
+    "d9640afc09f9",
+  ]);
+  expect(progress.completed.small).toEqual(["e9c2882a25e2", "d9640afc09f9"]);
 });
 
 test("recovers from malformed and partial legacy history", async ({ page }) => {
@@ -81,8 +88,9 @@ test("recovers from malformed and partial legacy history", async ({ page }) => {
     timeout: 10_000,
   });
 
-  const completed = await page.evaluate(() =>
-    JSON.parse(window.localStorage.getItem("completedPuzzles") ?? "null"),
+  const progress = await page.evaluate(() =>
+    JSON.parse(window.localStorage.getItem("puzzleProgress") ?? "null"),
   );
-  expect(completed.small).toEqual([1]);
+  // Content id of placket
+  expect(progress.completed.small).toEqual(["93467cd1f2c0"]);
 });

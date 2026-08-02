@@ -1,5 +1,3 @@
-import { Platform } from "react-native";
-
 // Turn "simulateProduction" on to simulate a production environment
 const simulateProduction = false;
 
@@ -15,11 +13,11 @@ const _simulateFirstLoad = false;
 // Auto-solve the puzzle after 2000 ms
 const _autoSolve = false;
 
-// Production exports used by the browser suite can opt into deterministic
-// completion. Expo replaces EXPO_PUBLIC_* values at bundle time, so release
-// builds keep this disabled unless the test export explicitly enables it.
-const e2eAutoSolve =
-  Platform.OS === "web" && process.env.EXPO_PUBLIC_E2E_AUTO_SOLVE === "1";
+// Test builds opt into deterministic completion on every platform: the browser
+// suite uses it through "export:web:e2e", the Maestro suite through the "e2e"
+// EAS profile. Expo replaces EXPO_PUBLIC_* values at bundle time, so store
+// builds keep this disabled because no release profile sets the variable.
+const e2eAutoSolve = process.env.EXPO_PUBLIC_E2E_AUTO_SOLVE === "1";
 
 export const e2eAutoSolveDisableStorageKey =
   "__ordinaryPuzzlesE2EDisableAutoSolve";

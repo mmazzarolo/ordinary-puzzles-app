@@ -1,0 +1,184 @@
+name: Native end-to-end
+
+# The browser matrix in "validation.yml" covers the product logic. This workflow
+# covers what only a device can show: the app starts, the fonts load, taps and
+# drags reach the board, and the storage survives a cold start.
+#
+# Both jobs are on demand for now, because a full device run is slow: the
+# Android job takes about 20 minutes, most of it the emulator boot and the
+# Gradle build, and the iOS job takes longer still.
+#
+# This is a choice about feedback time, not about money. This repository is
+# public, so standard GitHub-hosted runners are free on every platform.
+#
+# Run them from the Actions tab, or locally with "pnpm run e2e:native:android"
+# and "pnpm run e2e:native:ios". To put a platform back into automatic CI, add
+# the trigger back here, and gate the job you do not want with an "if:".
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-e2e-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  MAESTRO_VERSION: 2.7.0
+  # The e2e bundle completes each board on its own, which keeps the flows short
+  # and removes the hard-coded gestures the old adb script needed.
+  EXPO_PUBLIC_E2E_AUTO_SOLVE: "1"
+  # CI has no access to the licensed Averta files.
+  ALLOW_FONT_FALLBACK: "1"
+
+jobs:
+  android:
+    name: Android emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare fonts
+        run: pnpm run prepare:fonts
+
+      - name: Generate the native project
+        run: pnpm exec expo prebuild --platform android --no-install
+
+      - name: Build the release APK
+        # The Expo template signs release builds with the checked-in debug
+        # keystore, so this needs no secrets.
+        run: ./gradlew assembleRelease --no-daemon
+        working-directory: android
+
+      - name: Install Maestro
+        run: |
+          curl -fsSL https://get.maestro.mobile.dev | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run the Maestro suite
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          # A long suite exhausts the default emulator graphics stack: the run
+          # fills with "Failed to find ColorBuffer" errors and the app stops
+          # starting. The software renderer is slower but it survives the suite.
+          emulator-options: -no-window -no-snapshot-save -no-boot-anim -noaudio -gpu swiftshader_indirect -camera-back none -camera-front none
+          # Keep each command on one line. This action passes the lines to
+          # "sh -c" one at a time, so a backslash continuation breaks the
+          # command instead of joining it.
+          script: |
+            adb install -r android/app/build/outputs/apk/release/app-release.apk
+            adb logcat -c
+            maestro test --format JUNIT --output maestro-report.xml --test-output-dir maestro-artifacts .maestro || (adb logcat -d > logcat.txt; exit 1)
+
+      - name: Upload the Maestro report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: maestro-android-${{ github.run_attempt }}
+          path: |
+            maestro-report.xml
+            maestro-artifacts/
+            logcat.txt
+            ~/.maestro/tests/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  ios:
+    name: iOS simulator
+    runs-on: macos-15
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare fonts
+        run: pnpm run prepare:fonts
+
+      - name: Start a simulator
+        id: simulator
+        run: |
+          udid=$(xcrun simctl list devices available --json \
+            | python3 -c "import json,sys;d=json.load(sys.stdin)['devices'];print([x['udid'] for k,v in d.items() if 'iOS' in k for x in v if x['name'].startswith('iPhone')][0])")
+          xcrun simctl boot "$udid"
+          xcrun simctl bootstatus "$udid" -b
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+
+      - name: Build and install the app
+        # CocoaPods needs a UTF-8 locale, otherwise "pod install" fails while it
+        # normalises the installation path.
+        run: pnpm exec expo run:ios --configuration Release --device "${{ steps.simulator.outputs.udid }}"
+        env:
+          LANG: en_US.UTF-8
+          LC_ALL: en_US.UTF-8
+
+      - name: Run the Maestro suite
+        run: |
+          curl -fsSL https://get.maestro.mobile.dev | bash
+          export PATH="$HOME/.maestro/bin:$PATH"
+          maestro test \
+            --platform ios \
+            --udid "${{ steps.simulator.outputs.udid }}" \
+            --exclude-tags android \
+            --format JUNIT \
+            --output maestro-report.xml \
+            --test-output-dir maestro-artifacts \
+            .maestro
+
+      - name: Upload the Maestro report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: maestro-ios-${{ github.run_attempt }}
+          path: |
+            maestro-report.xml
+            maestro-artifacts/
+            ~/.maestro/tests/
+          if-no-files-found: ignore
+          retention-days: 14

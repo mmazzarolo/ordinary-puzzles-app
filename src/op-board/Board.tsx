@@ -5,11 +5,7 @@ import { observer } from "mobx-react-lite";
 import { animations, useColors } from "op-design";
 import { useAnimation, useOnMount, hapticFeedback } from "op-utils";
 import { useCoreStores } from "op-core";
-import {
-  autoSolve,
-  autoSolveDelay,
-  e2eAutoSolveDisableStorageKey,
-} from "op-config";
+import { autoSolve, autoSolveDelay, isAutoSolveDisabled } from "op-config";
 import { useBoardStores } from "./store";
 import { Tile } from "./Tile";
 import { PointerAwareView } from "./PointerAwareView";
@@ -62,10 +58,7 @@ export const Board: FC<BoardProps> = observer(function ({
   // Auto-solve the puzzle in development or in the dedicated E2E export.
   // A per-context storage switch lets pointer-interaction tests opt out while
   // sharing the same production bundle as the rest of the browser matrix.
-  const autoSolveDisabled =
-    autoSolve &&
-    Platform.OS === "web" &&
-    window.localStorage.getItem(e2eAutoSolveDisableStorageKey) === "1";
+  const autoSolveDisabled = autoSolve && isAutoSolveDisabled();
   useOnMount(() => {
     if (!autoSolve || autoSolveDisabled) return;
     const timeout = setTimeout(animateSuccess, autoSolveDelay);

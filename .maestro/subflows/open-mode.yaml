@@ -1,0 +1,10 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Open a mode from the home menu
+---
+# This only taps. It asserts nothing about the screens that follow, because the
+# intro lasts about 1.4 s and, when auto-solve is on, the board clears 500 ms
+# after it appears. Each caller waits for the state that it needs:
+# "assert-game.yaml" for a board that stays, "assert-success.yaml" for a board
+# that solves itself.
+- tapOn:
+    id: "button-${MODE}"

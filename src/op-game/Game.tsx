@@ -102,12 +102,16 @@ export const Game: FC = observer(function () {
     metrics.screenMargin * 4; // Additional vertical padding
 
   return (
-    <Animated.View style={[styles.root, animations.fade(fadeRootAnim.value)]}>
+    <Animated.View
+      style={[styles.root, animations.fade(fadeRootAnim.value)]}
+      testID="screen-game"
+    >
       <KeepAwake />
       <Header
         prefix={puzzle.prefix}
         name={puzzle.name}
         fadeAnimValue={fadeInterfaceAnim.value}
+        testID="puzzle-name"
       />
       <View style={styles.boardWrapper}>
         {puzzle.data && (

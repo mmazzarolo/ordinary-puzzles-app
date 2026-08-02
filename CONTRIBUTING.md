@@ -26,6 +26,35 @@ That's it! 🎉
 Ordinary Puzzles is being tested with [Jest](https://jestjs.io/docs/en/tutorial-react).  
 For running the tests, run `pnpm run test:watch` to test as you develop, or `pnpm run test` for a single run.
 
+The browser suite uses [Playwright](https://playwright.dev): run `pnpm run e2e`.
+
+### Native tests
+
+The device suite uses [Maestro](https://maestro.dev). Flows are in `.maestro/flows`,
+and the shared steps are in `.maestro/subflows`.
+
+Install the Maestro CLI, then build a test binary and run the flows:
+
+```
+pnpm run e2e:native:build:ios        # or e2e:native:build:android
+pnpm run e2e:native:ios              # or e2e:native:android
+```
+
+The build scripts set `EXPO_PUBLIC_E2E_AUTO_SOLVE=1`. That flag makes each board
+solve itself 500 ms after it appears, which keeps the flows short and removes
+the need for hard-coded gestures. Release builds never set the flag.
+
+Two flows carry the `interaction` tag. They drive the board with real gestures,
+so they must not auto-solve. Test builds put a small control in the top left
+corner of the home screen, and those flows tap it to turn auto-solve off for the
+session. Its test id reports the state (`e2e-autosolve-on` or
+`e2e-autosolve-off`), so a flow can both set the mode and confirm it. The same
+binary therefore serves both kinds of flow.
+
+Useful tags: `smoke` for the short set, `regression` for all of it, and `android`
+for flows that need the hardware back key. iOS runs must exclude the `android`
+tag.
+
 ## Linting
 
 This project uses [ESLint](https://eslint.org) with a [simple preset of rules used by Create-React-App](https://github.com/mmazzarolo/eslint-plugin-react-app).  
