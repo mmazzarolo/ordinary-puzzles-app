@@ -1,0 +1,11 @@
+{
+  "printWidth": 80,
+  "ignorePatterns": [
+    "src/op-core/puzzles.json",
+    "dist-web/**",
+    "dist-web-e2e/**",
+    "playwright-report/**",
+    "test-results/**",
+    "e2e/**/*-snapshots/**"
+  ]
+}

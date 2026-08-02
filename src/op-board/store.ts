@@ -66,7 +66,7 @@ export class Cell {
       return this.line.origin.equals(this) ? "single" : "none";
     } else if (this.line.orientation === "horizontal") {
       const edgeCols = [this.line.edges[0].col, this.line.edges[1].col].sort(
-        sortInt
+        sortInt,
       );
       const [leftEdgeCol, rightEdgeCol] = edgeCols;
       if (leftEdgeCol === this.col) {
@@ -78,7 +78,7 @@ export class Cell {
       }
     } else if (this.line.orientation === "vertical") {
       const edgeRows = [this.line.edges[0].row, this.line.edges[1].row].sort(
-        sortInt
+        sortInt,
       );
       const [topEdgeRow, bottomEdgeRow] = edgeRows;
       if (topEdgeRow === this.row) {
@@ -273,7 +273,7 @@ class Line {
     }
     const isOpp = isOppositeDirectionOf(
       this.draggedDirection,
-      this.pendingCellsDirection
+      this.pendingCellsDirection,
     );
     if (isOpp) {
       if (this.draggedDirection === "left") {
@@ -328,7 +328,7 @@ class Line {
       this.stale = true;
     }
     this.pendingCells.replace(
-      cells.filter((cell) => !cell.equals(this.origin))
+      cells.filter((cell) => !cell.equals(this.origin)),
     );
     this.linkReference();
   }

@@ -7,7 +7,7 @@ interface Config {
 const createInterpolationRanges = (
   from: number,
   to: number,
-  config?: Config
+  config?: Config,
 ) => {
   if (config && config.interpolateStart) {
     return {
@@ -29,7 +29,7 @@ const slide = (
   animValue: Animated.Value,
   from: "top" | "bottom",
   config: Config = {},
-  scale: (n: number) => number
+  scale: (n: number) => number,
 ) => ({
   transform: [
     {
@@ -37,8 +37,8 @@ const slide = (
         createInterpolationRanges(
           from === "top" ? -scale(20) : +scale(20),
           1,
-          config
-        )
+          config,
+        ),
       ),
     },
   ],
@@ -47,7 +47,7 @@ const slide = (
 const fadeSlideTop = (
   animValue: Animated.Value,
   scale: (n: number) => number,
-  config: Config = {}
+  config: Config = {},
 ) => ({
   ...fade(animValue, config),
   ...slide(animValue, "top", config, scale),
@@ -56,7 +56,7 @@ const fadeSlideTop = (
 const fadeSlideBottom = (
   animValue: Animated.Value,
   scale: (n: number) => number,
-  config: Config = {}
+  config: Config = {},
 ) => ({
   ...fade(animValue, config),
   ...slide(animValue, "bottom", config, scale),
