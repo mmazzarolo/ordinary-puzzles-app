@@ -87,13 +87,12 @@ jobs:
           target: google_apis
           arch: x86_64
           disable-animations: true
+          # Keep each command on one line. This action passes the lines to
+          # "sh -c" one at a time, so a backslash continuation breaks the
+          # command instead of joining it.
           script: |
             adb install -r android/app/build/outputs/apk/release/app-release.apk
-            maestro test \
-              --format JUNIT \
-              --output maestro-report.xml \
-              --test-output-dir maestro-artifacts \
-              .maestro
+            maestro test --format JUNIT --output maestro-report.xml --test-output-dir maestro-artifacts .maestro
 
       - name: Upload the Maestro report
         if: ${{ !cancelled() }}
