@@ -92,12 +92,17 @@ jobs:
           target: google_apis
           arch: x86_64
           disable-animations: true
+          # A long suite exhausts the default emulator graphics stack: the run
+          # fills with "Failed to find ColorBuffer" errors and the app stops
+          # starting. The software renderer is slower but it survives the suite.
+          emulator-options: -no-window -no-snapshot-save -no-boot-anim -noaudio -gpu swiftshader_indirect -camera-back none -camera-front none
           # Keep each command on one line. This action passes the lines to
           # "sh -c" one at a time, so a backslash continuation breaks the
           # command instead of joining it.
           script: |
             adb install -r android/app/build/outputs/apk/release/app-release.apk
-            maestro test --format JUNIT --output maestro-report.xml --test-output-dir maestro-artifacts .maestro
+            adb logcat -c
+            maestro test --format JUNIT --output maestro-report.xml --test-output-dir maestro-artifacts .maestro || (adb logcat -d > logcat.txt; exit 1)
 
       - name: Upload the Maestro report
         if: ${{ !cancelled() }}
@@ -107,6 +112,7 @@ jobs:
           path: |
             maestro-report.xml
             maestro-artifacts/
+            logcat.txt
             ~/.maestro/tests/
           if-no-files-found: ignore
           retention-days: 14
