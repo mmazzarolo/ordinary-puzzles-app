@@ -1,0 +1,18 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Assert the success screen
+---
+# Auto-solve clears the board 500 ms after it mounts. The success animation adds
+# about one more second.
+- extendedWaitUntil:
+    visible:
+      id: "screen-success"
+    timeout: 30000
+- assertVisible: "Completed"
+- assertVisible:
+    id: "puzzle-name"
+- assertVisible:
+    id: "score-earned"
+- assertVisible:
+    id: "button-menu"
+- assertVisible:
+    id: "button-new-puzzle"

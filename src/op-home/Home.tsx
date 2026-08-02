@@ -1,7 +1,14 @@
 import React, { FC, useState } from "react";
-import { View, Animated, Platform, ViewStyle } from "react-native";
+import {
+  View,
+  Animated,
+  Platform,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 import { observer } from "mobx-react-lite";
 import { useCoreStores, PuzzleMode } from "op-core";
+import { autoSolve, disableAutoSolve, isAutoSolveDisabled } from "op-config";
 import { useBoardStores } from "op-board";
 import { metrics, animations } from "op-design";
 import { useScale, useAnimation, useOnMount, ScalingFunc } from "op-utils";
@@ -28,6 +35,7 @@ export const Home: FC = observer(function () {
   const rootFadeInAnimDuration = 200;
   const rootFadeOutAnimDuration = 200;
   const [isMenuDisabled, setIsMenuDisabled] = useState(true);
+  const [, setE2ESwitchRevision] = useState(0);
   const titleAnim = useAnimation(animateInSequence ? 0 : 1);
   const menuAnim = useAnimation(animateInSequence ? 0 : 1);
   const dotAnim = useAnimation(animateInSequence ? 0 : 1);
@@ -115,7 +123,10 @@ export const Home: FC = observer(function () {
   };
 
   return (
-    <Animated.View style={[styles.root, animations.fade(rootFadeAnim.value)]}>
+    <Animated.View
+      style={[styles.root, animations.fade(rootFadeAnim.value)]}
+      testID="screen-home"
+    >
       <View style={styles.top}>
         <Logo titleAnimValue={titleAnim.value} dotAnimValue={dotAnim.value} />
       </View>
@@ -131,9 +142,26 @@ export const Home: FC = observer(function () {
         onPress={isMenuDisabled ? undefined : handleScorePress}
         score={stats.score}
         style={scoreStyle}
+        testID="button-score"
       />
       {Platform.OS === "web" && (
         <About animValue={menuAnim.value} style={styles.about} />
+      )}
+      {/* Test builds carry a control that turns auto-solve off, so the native
+          pointer flows can drive the board themselves. Its test id reports the
+          current state, which lets a flow both set and verify the mode.
+          Release builds have "autoSolve" off and render nothing here. */}
+      {autoSolve && (
+        <TouchableOpacity
+          testID={
+            isAutoSolveDisabled() ? "e2e-autosolve-off" : "e2e-autosolve-on"
+          }
+          style={styles.e2eSwitch}
+          onPress={() => {
+            disableAutoSolve();
+            setE2ESwitchRevision((revision) => revision + 1);
+          }}
+        />
       )}
     </Animated.View>
   );
@@ -159,5 +187,14 @@ const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
     alignItems: "flex-end",
     bottom: metrics.screenMargin * 2 + scale(5),
     right: metrics.screenMargin,
+  },
+  // Test builds only. It needs a real size, because a zero-size element gets no
+  // tap target, but it stays in a corner and away from the menu.
+  e2eSwitch: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: scale(24),
+    height: scale(24),
   },
 });

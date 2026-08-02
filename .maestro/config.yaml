@@ -1,0 +1,14 @@
+# Workspace configuration for the native behavioral suite.
+#
+# Flows live in "flows/". Everything in "subflows/" is a building block and is
+# deliberately outside the glob, so Maestro never runs it as a test on its own.
+#
+# Tags:
+#   smoke       - the short set that every build must pass
+#   regression  - the full set
+#   android     - flows that depend on Android-only behavior (hardware back)
+#   interaction - flows that drive the board with real gestures. These launch
+#                 through "ordinarypuzzles://home?autoSolve=0", which turns the
+#                 deterministic auto-solve off for that launch only.
+flows:
+  - "flows/*.yaml"

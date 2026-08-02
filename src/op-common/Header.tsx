@@ -10,6 +10,7 @@ interface HeaderProps {
   name: string;
   prefix: string;
   fontSize?: number;
+  testID?: string;
 }
 
 export const Header: FC<HeaderProps> = observer(function ({
@@ -17,6 +18,7 @@ export const Header: FC<HeaderProps> = observer(function ({
   name,
   prefix,
   fontSize,
+  testID,
 }) {
   const scale = useScale();
   const styles = createStyles({ scale });
@@ -31,7 +33,7 @@ export const Header: FC<HeaderProps> = observer(function ({
         <Text weight="bold" secondary style={[styles.text, textStyle]}>
           {prefix}{" "}
         </Text>
-        <Text weight="bold" style={[styles.text, textStyle]}>
+        <Text weight="bold" style={[styles.text, textStyle]} testID={testID}>
           {name}
         </Text>
       </Animated.View>

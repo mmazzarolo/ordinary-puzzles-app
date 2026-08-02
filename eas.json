@@ -6,6 +6,19 @@
   "build": {
     "production": {
       "distribution": "store"
+    },
+    "e2e": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_E2E_AUTO_SOLVE": "1",
+        "ALLOW_FONT_FALLBACK": "1"
+      }
     }
   },
   "submit": {

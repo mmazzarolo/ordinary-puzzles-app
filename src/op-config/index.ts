@@ -1,2 +1,3 @@
 export * from "./constants";
+export * from "./e2e";
 export * from "./strings";

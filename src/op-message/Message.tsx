@@ -57,7 +57,7 @@ export const Message: FC = function () {
   };
 
   return (
-    <View style={styles.root}>
+    <View style={styles.root} testID="screen-message">
       <View style={styles.top}>
         <Text
           weight="bold"

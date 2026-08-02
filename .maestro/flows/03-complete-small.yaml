@@ -1,0 +1,18 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Complete a small puzzle
+tags:
+  - smoke
+  - regression
+---
+- runFlow: ../subflows/launch-fresh.yaml
+- runFlow:
+    file: ../subflows/open-mode.yaml
+    env:
+      MODE: small
+- runFlow: ../subflows/assert-success.yaml
+- tapOn:
+    id: "button-menu"
+- runFlow: ../subflows/assert-home.yaml
+# The score button appears only after the first completion.
+- assertVisible:
+    id: "button-score"

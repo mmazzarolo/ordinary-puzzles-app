@@ -1,0 +1,35 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Statistics report the completed puzzle
+tags:
+  - smoke
+  - regression
+---
+- runFlow: ../subflows/launch-fresh.yaml
+- runFlow:
+    file: ../subflows/open-mode.yaml
+    env:
+      MODE: small
+- runFlow: ../subflows/assert-success.yaml
+- tapOn:
+    id: "button-menu"
+- runFlow: ../subflows/assert-home.yaml
+- tapOn:
+    id: "button-score"
+- assertVisible:
+    id: "screen-stats"
+- assertVisible: "Statistics"
+- assertVisible:
+    id: "stats-small"
+    text: "small: 1/99"
+- assertVisible:
+    id: "stats-medium"
+    text: "medium: 0/99"
+- assertVisible:
+    id: "stats-large"
+    text: "large: 0/99"
+- assertVisible:
+    id: "stats-score"
+    text: "score: [0-9]+"
+- tapOn:
+    id: "button-menu"
+- runFlow: ../subflows/assert-home.yaml

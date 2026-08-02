@@ -63,6 +63,7 @@ export const Intro: FC = function () {
     <TouchableWithoutFeedback onPress={handlePress}>
       <Animated.View
         style={[styles.root, animations.fadeSlideTop(hideAnim.value, scale)]}
+        testID="screen-intro"
       >
         {chars.map((char, index) => {
           const delay = (1 / chars.length) * index;

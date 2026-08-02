@@ -95,7 +95,7 @@ export const Tutorial: FC = observer(function () {
   };
 
   return (
-    <View style={styles.root}>
+    <View style={styles.root} testID="screen-tutorial">
       <KeepAwake />
       <Description
         title={puzzle.tutorialTitle}

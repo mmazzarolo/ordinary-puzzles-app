@@ -1,0 +1,36 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: Progress survives a cold start
+tags:
+  - smoke
+  - regression
+---
+- runFlow: ../subflows/launch-fresh.yaml
+- runFlow:
+    file: ../subflows/open-mode.yaml
+    env:
+      MODE: small
+- runFlow: ../subflows/assert-success.yaml
+- tapOn:
+    id: "button-menu"
+- runFlow: ../subflows/assert-home.yaml
+
+# Kill the app and start it again without a state reset. The score must come
+# back from storage, and the statistics must still count the completed puzzle.
+# The retry covers the same simulator behavior as "launch-fresh": a busy
+# simulator sometimes kills the process during a launch, with no crash report.
+- retry:
+    maxRetries: 2
+    commands:
+      - stopApp
+      - launchApp
+      - runFlow: ../subflows/assert-home.yaml
+      - assertVisible:
+          id: "button-score"
+- tapOn:
+    id: "button-score"
+- assertVisible:
+    id: "stats-small"
+    text: "small: 1/99"
+- assertVisible:
+    id: "stats-score"
+    text: "score: [0-9]+"

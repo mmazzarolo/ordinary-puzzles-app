@@ -1,0 +1,34 @@
+appId: com.mmazzarolo.ordinarypuzzles
+name: A real drag solves the first tutorial board
+tags:
+  - interaction
+  - regression
+---
+# This is the one flow that proves touch input reaches the board on a device.
+# The first tutorial board is 4 columns by 3 rows, and its "4" sits on the
+# middle row at the last column. The drag pulls that number to the left edge,
+# which is the move the tutorial asks the user to make.
+- runFlow: ../subflows/launch-without-auto-solve.yaml
+- tapOn:
+    id: "button-tutorial"
+- assertVisible:
+    id: "screen-tutorial"
+- assertVisible:
+    id: "puzzle-board"
+- assertVisible: 'Create a line by dragging the "4" to the left.'
+
+# The board occupies roughly the middle half of the screen height, so the
+# middle row sits near 56% and not at 50%. A drag at 50% lands on the top row
+# and creates no line.
+- swipe:
+    start: "85%, 56%"
+    end: "15%, 56%"
+    duration: 600
+
+# A solved first board advances the tutorial to its second lesson.
+- extendedWaitUntil:
+    visible: "To be valid, lines must have the length indicated on their numbers."
+    timeout: 20000
+- tapOn:
+    id: "button-menu"
+- runFlow: ../subflows/assert-home.yaml

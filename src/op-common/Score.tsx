@@ -10,6 +10,7 @@ interface ScoreProps {
   onPress?: () => void;
   score?: string | number;
   style?: ViewStyle;
+  testID?: string;
 }
 
 export const Score: FC<ScoreProps> = function ({
@@ -17,6 +18,7 @@ export const Score: FC<ScoreProps> = function ({
   onPress,
   score,
   style,
+  testID,
 }) {
   const scale = useScale();
   const styles = createStyles({ scale });
@@ -34,6 +36,7 @@ export const Score: FC<ScoreProps> = function ({
         onPress={onPress}
         hitSlop={buttonHitSlop}
         label={String(score)}
+        testID={testID}
         textFamily="secondary"
         textSize={scale(20)}
         style={styles.content}
