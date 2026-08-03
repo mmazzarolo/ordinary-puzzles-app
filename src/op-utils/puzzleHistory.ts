@@ -16,11 +16,33 @@ export interface PuzzleProgress {
   completed: PuzzleHistory;
 }
 
+// The fully resolved on-device progress. "Unknown" holds ids that are stored
+// on the device but absent from this build's catalog (catalog rollback, app
+// downgrade, or a document written by a newer build). They are invisible to
+// the picker, the score, and the stats, but they are always written back
+// verbatim, so no load→save cycle can destroy them. `readOnly` blocks every
+// write when the stored data cannot be safely rewritten by this build.
+export interface PuzzleProgressState {
+  played: PuzzleHistory;
+  completed: PuzzleHistory;
+  unknownPlayed: PuzzleHistory;
+  unknownCompleted: PuzzleHistory;
+  readOnly: boolean;
+}
+
 export const createEmptyPuzzleHistory = (): PuzzleHistory => ({
   tutorial: [],
   small: [],
   medium: [],
   large: [],
+});
+
+const createEmptyProgressState = (readOnly: boolean): PuzzleProgressState => ({
+  played: createEmptyPuzzleHistory(),
+  completed: createEmptyPuzzleHistory(),
+  unknownPlayed: createEmptyPuzzleHistory(),
+  unknownCompleted: createEmptyPuzzleHistory(),
+  readOnly,
 });
 
 export const parseStoredJson = (serializedValue: string | null): unknown => {
@@ -39,22 +61,27 @@ const asHistorySource = (
     ? (value as Partial<Record<PuzzleHistoryMode, unknown>>)
     : {};
 
-export const normalizePuzzleHistory = (
+// Splits a stored history into the ids this build's catalog knows and the ids
+// it does not. Order is preserved within each half; duplicates and
+// non-strings are dropped.
+export const splitPuzzleHistory = (
   value: unknown,
   puzzleIds: PuzzleIds,
-): PuzzleHistory => {
+): { known: PuzzleHistory; unknown: PuzzleHistory } => {
   const source = asHistorySource(value);
-  return Object.fromEntries(
-    puzzleModes.map((mode) => {
-      const entries = Array.isArray(source[mode]) ? source[mode] : [];
-      const knownIds = new Set(puzzleIds[mode]);
-      const validEntries = entries.filter(
-        (entry): entry is string =>
-          typeof entry === "string" && knownIds.has(entry),
-      );
-      return [mode, [...new Set(validEntries)]];
-    }),
-  ) as PuzzleHistory;
+  const known = createEmptyPuzzleHistory();
+  const unknown = createEmptyPuzzleHistory();
+  puzzleModes.forEach((mode) => {
+    const entries = Array.isArray(source[mode]) ? source[mode] : [];
+    const knownIds = new Set(puzzleIds[mode]);
+    const seen = new Set<string>();
+    entries.forEach((entry) => {
+      if (typeof entry !== "string" || seen.has(entry)) return;
+      seen.add(entry);
+      (knownIds.has(entry) ? known : unknown)[mode].push(entry);
+    });
+  });
+  return { known, unknown };
 };
 
 // Schema v1 stored puzzle indexes. Map each valid index to the id of the
@@ -81,17 +108,30 @@ export const migrateLegacyPuzzleHistory = (
   ) as PuzzleHistory;
 };
 
+const mergeHistories = (
+  known: PuzzleHistory,
+  unknown: PuzzleHistory,
+): PuzzleHistory =>
+  Object.fromEntries(
+    puzzleModes.map((mode) => [mode, [...known[mode], ...unknown[mode]]]),
+  ) as PuzzleHistory;
+
+// The serialized document re-joins known and passthrough ids: storage never
+// learns the difference, so a later build with a bigger catalog reclaims the
+// ids transparently.
 export const serializePuzzleProgress = (
-  played: PuzzleHistory,
-  completed: PuzzleHistory,
+  state: Pick<
+    PuzzleProgressState,
+    "played" | "completed" | "unknownPlayed" | "unknownCompleted"
+  >,
 ): PuzzleProgress => ({
   version: puzzleProgressVersion,
-  played,
-  completed,
+  played: mergeHistories(state.played, state.unknownPlayed),
+  completed: mergeHistories(state.completed, state.unknownCompleted),
 });
 
-// Prefer the current schema when present, otherwise fall back to migrating the
-// legacy index-based keys. The caller must not write the migrated result back
+// Resolution order: current schema → newer schema (best-effort, read-only) →
+// legacy index keys. The caller must not write the resolved result back
 // eagerly: persisting only on the next real progress update keeps a downgrade
 // to an older app version lossless.
 export const resolvePuzzleProgress = ({
@@ -99,24 +139,42 @@ export const resolvePuzzleProgress = ({
   legacyPlayed,
   legacyCompleted,
   puzzleIds,
+  readFailed = false,
 }: {
   stored: unknown;
   legacyPlayed: unknown;
   legacyCompleted: unknown;
   puzzleIds: PuzzleIds;
-}): { played: PuzzleHistory; completed: PuzzleHistory } => {
-  if (
-    stored &&
-    typeof stored === "object" &&
-    (stored as Partial<PuzzleProgress>).version === puzzleProgressVersion
-  ) {
-    const progress = stored as Partial<PuzzleProgress>;
-    return {
-      played: normalizePuzzleHistory(progress.played, puzzleIds),
-      completed: normalizePuzzleHistory(progress.completed, puzzleIds),
-    };
+  readFailed?: boolean;
+}): PuzzleProgressState => {
+  // A failed storage read is not the same as an absent document: writing after
+  // it could overwrite intact data with an empty history.
+  if (readFailed) return createEmptyProgressState(true);
+
+  if (stored && typeof stored === "object") {
+    const version = (stored as Partial<PuzzleProgress>).version;
+    const isCurrent = version === puzzleProgressVersion;
+    const isNewer =
+      typeof version === "number" && version > puzzleProgressVersion;
+    if (isCurrent || isNewer) {
+      const progress = stored as Partial<PuzzleProgress>;
+      const played = splitPuzzleHistory(progress.played, puzzleIds);
+      const completed = splitPuzzleHistory(progress.completed, puzzleIds);
+      return {
+        played: played.known,
+        completed: completed.known,
+        unknownPlayed: played.unknown,
+        unknownCompleted: completed.unknown,
+        // A newer build wrote this document. Read it best-effort so the
+        // player still sees their progress, but never write: this build
+        // would destroy fields it does not understand.
+        readOnly: isNewer,
+      };
+    }
   }
+
   return {
+    ...createEmptyProgressState(false),
     played: migrateLegacyPuzzleHistory(legacyPlayed, puzzleIds),
     completed: migrateLegacyPuzzleHistory(legacyCompleted, puzzleIds),
   };

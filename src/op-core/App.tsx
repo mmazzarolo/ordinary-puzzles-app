@@ -45,6 +45,10 @@ export const App: FC = function () {
       void initializeAudio();
       if (Platform.OS === "web" && process.env.NODE_ENV === "production") {
         registerServiceWorker();
+        // Ask the browser not to evict our storage: Safari drops localStorage
+        // for sites not visited for ~7 days, and progress is the one asset a
+        // player owns.
+        void navigator.storage?.persist?.();
       }
     } finally {
       setAppReady(true);

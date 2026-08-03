@@ -48,6 +48,13 @@ const puzzleScoresById: Record<PuzzleMode, Map<string, number>> = {
   large: new Map(puzzles.large.map((p) => [p.id, p.score || 0])),
 };
 
+const puzzleIndexById: Record<PuzzleMode, Map<string, number>> = {
+  tutorial: new Map(puzzles.tutorial.map((p, index) => [p.id, index])),
+  small: new Map(puzzles.small.map((p, index) => [p.id, index])),
+  medium: new Map(puzzles.medium.map((p, index) => [p.id, index])),
+  large: new Map(puzzles.large.map((p, index) => [p.id, index])),
+};
+
 class RouterStore {
   root: RootStore;
 
@@ -212,7 +219,7 @@ class PuzzleStore {
     // histories to indexes (dropping ids no longer in the catalog).
     const toIndexes = (ids: string[]) =>
       ids
-        .map((id) => puzzleIds[mode].indexOf(id))
+        .map((id) => puzzleIndexById[mode].get(id) ?? -1)
         .filter((index) => index !== -1);
     const randomPuzzleIndex = pickRandomPuzzle({
       allPuzzlesLength: puzzles[mode].length,
@@ -242,12 +249,22 @@ class StatsStore {
   initialized: boolean;
   playedPuzzles: Record<PuzzleMode, string[]>;
   completedPuzzles: Record<PuzzleMode, string[]>;
+  // Passthrough ids this build's catalog does not know (see puzzleHistory.ts).
+  // Plain fields: never rendered, only re-serialized on write.
+  unknownPlayedPuzzles: Record<PuzzleMode, string[]>;
+  unknownCompletedPuzzles: Record<PuzzleMode, string[]>;
+  // True when the stored document cannot be safely rewritten by this build
+  // (written by a newer version, or the storage read itself failed).
+  progressReadOnly: boolean;
 
   constructor(rootStore: RootStore) {
     this.root = rootStore;
     this.initialized = false;
     this.playedPuzzles = createEmptyPuzzleHistory();
     this.completedPuzzles = createEmptyPuzzleHistory();
+    this.unknownPlayedPuzzles = createEmptyPuzzleHistory();
+    this.unknownCompletedPuzzles = createEmptyPuzzleHistory();
+    this.progressReadOnly = false;
 
     makeObservable(this, {
       initialized: observable,
@@ -263,17 +280,29 @@ class StatsStore {
   }
 
   async initializeStore() {
+    // A failed read is not an absent document: it must never lead to
+    // overwriting possibly-intact storage with an empty history.
+    let readFailed = false;
+    const guard = (promise: Promise<unknown>) =>
+      promise.catch(() => {
+        readFailed = true;
+        return undefined;
+      });
     const [stored, legacyPlayed, legacyCompleted] = await Promise.all([
-      rehydrateObject("puzzleProgress").catch(() => undefined),
-      rehydrateObject("playedPuzzles").catch(() => undefined),
-      rehydrateObject("completedPuzzles").catch(() => undefined),
+      guard(rehydrateObject("puzzleProgress")),
+      guard(rehydrateObject("playedPuzzles")),
+      guard(rehydrateObject("completedPuzzles")),
     ]);
     const progress = resolvePuzzleProgress({
       stored,
       legacyPlayed,
       legacyCompleted,
       puzzleIds,
+      readFailed,
     });
+    this.unknownPlayedPuzzles = progress.unknownPlayed;
+    this.unknownCompletedPuzzles = progress.unknownCompleted;
+    this.progressReadOnly = progress.readOnly;
     runInAction(() => {
       this.playedPuzzles = progress.played;
       this.completedPuzzles = progress.completed;
@@ -324,14 +353,19 @@ class StatsStore {
   // The current schema is written only here, on real progress updates: a pure
   // load never rewrites storage, so downgrading the app keeps legacy data.
   persistProgress() {
+    // Writes stop entirely when the stored document is not safely rewritable
+    // by this build (newer schema version, or a failed read).
+    if (this.progressReadOnly) return;
     // Fire and forget, which is what both callers have always expected. A
     // failed write therefore loses that one update without a report.
     void persistObject(
       "puzzleProgress",
-      serializePuzzleProgress(
-        toJS(this.playedPuzzles),
-        toJS(this.completedPuzzles),
-      ),
+      serializePuzzleProgress({
+        played: toJS(this.playedPuzzles),
+        completed: toJS(this.completedPuzzles),
+        unknownPlayed: this.unknownPlayedPuzzles,
+        unknownCompleted: this.unknownCompletedPuzzles,
+      }),
     );
   }
 }
