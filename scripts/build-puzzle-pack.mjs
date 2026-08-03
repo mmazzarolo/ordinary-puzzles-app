@@ -50,7 +50,7 @@ const defaultCounts = {
   small: 300,
   medium: 300,
   large: 300,
-  extraordinary: 150,
+  extraordinary: 300,
 };
 
 const parseCounts = (value) => {
@@ -193,8 +193,13 @@ const pack = {
   ...packContents,
 };
 
-// Indented output so append-only growth reviews as a clean additive diff.
+// Indented output so append-only growth reviews as a clean additive diff,
+// then normalized through the repo formatter so CI's format check stays green.
 writeFileSync(outputPath, `${JSON.stringify(pack, null, 1)}\n`);
+spawnSync("pnpm", ["exec", "oxfmt", outputPath], {
+  cwd: rootDir,
+  stdio: "inherit",
+});
 
 console.log(
   JSON.stringify(
