@@ -35,6 +35,20 @@ The C++ file also keeps small JSON/C ABI helpers. They are not used by the app
 runtime; they are there so a future pack-generation tool can call the native
 generator directly instead of parsing benchmark output.
 
+Build the committed pack (curated catalog head + generated fill; append-only
+once committed) and verify it:
+
+```sh
+CI=1 pnpm run build:puzzle-pack -- --counts=small:300,medium:300,large:300,extraordinary:150
+CI=1 pnpm run verify:puzzle-pack
+```
+
+The `extraordinary` tier is large's 11x8 board with the advanced `dep`/`one_of`
+deductions required. Each record carries a `rating` — a single-weight-set
+ordering number across every tier (see `ratingWeights` in
+`scripts/pack-lib.mjs`) that the app uses for difficulty-banded serving; it is
+never shown to players.
+
 Generate and measure a sample pack:
 
 ```sh

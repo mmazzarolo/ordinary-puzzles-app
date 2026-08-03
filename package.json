@@ -24,6 +24,8 @@
     "test": "jest --runInBand --no-watchman",
     "bench:generator": "node scripts/benchmark-generator.mjs",
     "bench:native-generator": "node scripts/benchmark-native-generator.mjs",
+    "build:puzzle-pack": "node scripts/build-puzzle-pack.mjs",
+    "verify:puzzle-pack": "node scripts/verify-puzzle-pack.mjs",
     "generate:puzzle-pack-sample": "node scripts/generate-puzzle-pack-sample.mjs",
     "measure:generator-matrix": "node scripts/measure-generator-matrix.mjs",
     "e2e:native": "maestro test --exclude-tags android .maestro",
