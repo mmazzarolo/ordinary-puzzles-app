@@ -47,6 +47,9 @@ jobs:
       - name: Run unit tests
         run: pnpm run test
 
+      - name: Verify puzzle pack
+        run: pnpm run verify:puzzle-pack
+
       - name: Install Playwright browsers and system dependencies
         run: pnpm exec playwright install --with-deps chromium firefox webkit
         env:

@@ -122,6 +122,7 @@ enum class Mode {
   Medium,
   Large,
   Expert,
+  Extraordinary,
 };
 
 struct DifficultySpec {
@@ -1103,6 +1104,9 @@ int collectionScore(
     case Mode::Expert:
       bonus = 1.0;
       break;
+    case Mode::Extraordinary:
+      bonus = 1.0;
+      break;
     case Mode::Large:
       bonus = 0.0;
       break;
@@ -1142,6 +1146,10 @@ bool accepts(const DifficultySpec &spec, const Classification &classification) {
           classification.dep.depth == 0 && classification.oneOf.depth == 0;
     case Mode::Expert:
       return classification.solved;
+    case Mode::Extraordinary:
+      // Large's board, but the difficulty must come from the advanced chain
+      // deductions, not merely be permitted to.
+      return classification.dep.depth > 0 || classification.oneOf.depth > 0;
   }
   return false;
 }
@@ -1190,6 +1198,17 @@ DifficultySpec createSpec(const std::string &mode) {
     for (int pieces : range(23, 26)) {
       spec.variants.push_back(baseVariant(DifficultyVariant{
           13, 9, pieces, 1, 3, 50, 100, 60, -2, -50, -1, 50}));
+    }
+    return spec;
+  }
+  if (mode == "extraordinary") {
+    // The 11x8 board of "large", with the dep/one-of scoring of "expert":
+    // harder logic on the same screen footprint.
+    DifficultySpec spec{Mode::Extraordinary, mode};
+    spec.requireAdvancedCandidate = true;
+    for (int pieces : range(19, 22)) {
+      spec.variants.push_back(baseVariant(DifficultyVariant{
+          11, 8, pieces, 1, 3, 50, 100, 60, -2, -50, -1, 50}));
     }
     return spec;
   }
@@ -1534,12 +1553,17 @@ int main(int argc, char **argv) {
   if (emitPuzzles) {
     int maxSeedSalts =
         args.count("max-seed-salts") ? std::stoi(args["max-seed-salts"]) : 100;
+    // Lets a pack build continue a previous run without re-deriving the same
+    // seeds (index feeds the seed hash).
+    int indexOffset =
+        args.count("index-offset") ? std::stoi(args["index-offset"]) : 0;
 
     for (const std::string &mode : modes) {
       int sampleCount = mode == "large" ? largeSamples : defaultSamples;
       if (mode == "expert") sampleCount = defaultSamples;
 
-      for (int index = 0; index < sampleCount; index++) {
+      for (int index = indexOffset; index < indexOffset + sampleCount;
+           index++) {
         bool emitted = false;
         for (int salt = 0; salt < maxSeedSalts; salt++) {
           uint32_t seed = hashSeed(

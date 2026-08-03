@@ -128,4 +128,29 @@ export const difficulties: Record<string, DifficultySpec> = {
     collectionScoreBonus: () => 1,
     requireAdvancedCandidate: true,
   },
+  // The 11x8 board of "large", with the dep/one-of scoring of "expert":
+  // harder logic on the same screen footprint. Acceptance requires the
+  // advanced chain deductions to actually appear, not merely be permitted.
+  extraordinary: {
+    mode: "extraordinary",
+    variants: range(19, 22).map((pieces) =>
+      baseVariant({
+        height: 11,
+        optimizeIterations: 50,
+        width: 8,
+        pieces,
+        scoreCover: 1,
+        scoreCantFit: 3,
+        scoreSquare: 50,
+        scoreDep: 100,
+        scoreOneOf: 60,
+        scoreMaxWidth: -2,
+      }),
+    ),
+    accepts: (classification) =>
+      classification.solved &&
+      (classification.dep.depth > 0 || classification.oneOf.depth > 0),
+    collectionScoreBonus: () => 1,
+    requireAdvancedCandidate: true,
+  },
 };
