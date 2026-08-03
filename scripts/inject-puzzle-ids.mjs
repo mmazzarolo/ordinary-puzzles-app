@@ -8,25 +8,15 @@
 //
 // Idempotent: recomputes ids from content on every run. A unit test
 // re-derives the ids and fails if a record's id and content disagree.
-import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { derivePuzzleId } from "./puzzle-id.mjs";
 
 const puzzlesPath = join(
   dirname(fileURLToPath(import.meta.url)),
   "../src/op-core/puzzles.json",
 );
-
-export const derivePuzzleId = (record) => {
-  const content = Array.isArray(record.data)
-    ? `op-puzzle-v1\n${record.data.join("\n")}`
-    : `op-message-v1\n${record.title ?? ""}\n${record.message ?? ""}`;
-  return createHash("sha256")
-    .update(content, "utf8")
-    .digest("hex")
-    .slice(0, 12);
-};
 
 const puzzles = JSON.parse(readFileSync(puzzlesPath, "utf8"));
 
