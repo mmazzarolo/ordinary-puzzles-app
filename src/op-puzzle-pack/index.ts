@@ -39,8 +39,10 @@ export const getPackRecords = (mode: PackMode): PackRecord[] =>
 export const isPackMode = (mode: string): mode is PackMode =>
   (packModes as readonly string[]).indexOf(mode) > -1;
 
-// The score shown by the current UI. Curated puzzles keep their original
-// values; generated puzzles fall back to the same formula family the catalog
-// scores came from, floored at 1 so a score is always positive.
+// The score shown by the current UI. Curated puzzles keep their exact
+// original values (8–50). Generated puzzles derive their award from the
+// rating, clamped into the same 8–50 range the catalog always used, so a
+// fresh player's first puzzles never award absurd values (the raw generator
+// score is an optimization metric and is negative for most records).
 export const getPackRecordScore = (record: PackRecord): number =>
-  record.legacyScore ?? Math.max(1, record.generatorScore ?? 1);
+  record.legacyScore ?? Math.min(50, Math.max(8, Math.round(record.rating)));

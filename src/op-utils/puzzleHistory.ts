@@ -14,7 +14,12 @@ export type PuzzleHistoryMode = (typeof puzzleModes)[number];
 export type PuzzleHistory = Record<PuzzleHistoryMode, string[]>;
 export type PuzzleIds = Record<PuzzleHistoryMode, string[]>;
 
-export const puzzleProgressVersion = 2;
+// Version 3 has the identical shape to version 2; the bump exists because
+// version 3 documents can carry an "extraordinary" history that version-2
+// builds do not know. Those builds treat a higher version as read-only, so a
+// downgrade can no longer truncate the new tier's progress on its next write.
+export const puzzleProgressVersion = 3;
+const readableVersions = new Set([2, puzzleProgressVersion]);
 
 export interface PuzzleProgress {
   version: typeof puzzleProgressVersion;
@@ -160,10 +165,11 @@ export const resolvePuzzleProgress = ({
 
   if (stored && typeof stored === "object") {
     const version = (stored as Partial<PuzzleProgress>).version;
-    const isCurrent = version === puzzleProgressVersion;
+    const isReadable =
+      typeof version === "number" && readableVersions.has(version);
     const isNewer =
       typeof version === "number" && version > puzzleProgressVersion;
-    if (isCurrent || isNewer) {
+    if (isReadable || isNewer) {
       const progress = stored as Partial<PuzzleProgress>;
       const played = splitPuzzleHistory(progress.played, puzzleIds);
       const completed = splitPuzzleHistory(progress.completed, puzzleIds);

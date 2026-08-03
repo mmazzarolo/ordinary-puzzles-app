@@ -20,13 +20,13 @@ tags:
 - assertVisible: "Statistics"
 - assertVisible:
     id: "stats-small"
-    text: "small: 1/99"
+    text: "small: 1"
 - assertVisible:
     id: "stats-medium"
-    text: "medium: 0/99"
+    text: "medium: 0"
 - assertVisible:
     id: "stats-large"
-    text: "large: 0/99"
+    text: "large: 0"
 - assertVisible:
     id: "stats-score"
     text: "score: [0-9]+"

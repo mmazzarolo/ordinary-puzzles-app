@@ -67,7 +67,7 @@ test("deals a fresh puzzle on top of migrated legacy history", async ({
   const progress = await page.evaluate(() =>
     JSON.parse(window.localStorage.getItem("puzzleProgress") ?? "null"),
   );
-  expect(progress.version).toBe(2);
+  expect(progress.version).toBe(3);
   // The migrated history (content ids of quire and placket) stays intact, and
   // the dealt puzzle is a new third entry chosen by the difficulty bands.
   expect(progress.played.small.slice(0, 2)).toEqual([

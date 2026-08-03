@@ -274,7 +274,14 @@ class PuzzleStore {
       puzzles: playableRecords[mode],
       playedIds: this.root.stats.playedPuzzles[mode],
     });
-    const index = puzzleIndexById[mode].get(id ?? "") ?? 0;
+    // The fallback honors the retired flag too: an undefined pick must never
+    // resolve to a record the picker itself would refuse to serve.
+    const firstServable = playableRecords[mode].findIndex(
+      (record) => !record.retired,
+    );
+    const index =
+      puzzleIndexById[mode].get(id ?? "") ??
+      (firstServable === -1 ? 0 : firstServable);
     this.setPuzzle(mode, index);
   }
 

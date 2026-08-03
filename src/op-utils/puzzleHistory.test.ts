@@ -112,6 +112,22 @@ describe("puzzle progress resolution", () => {
     expect(result.readOnly).toBe(false);
   });
 
+  it("reads a version-2 document and stays writable", () => {
+    // Version 2 has the same shape as 3; the bump only protects downgrades.
+    const result = resolvePuzzleProgress({
+      stored: {
+        version: 2,
+        played: { small: ["alpha"] },
+        completed: { small: ["alpha"] },
+      },
+      legacyPlayed: undefined,
+      legacyCompleted: undefined,
+      puzzleIds,
+    });
+    expect(result.played.small).toEqual(["alpha"]);
+    expect(result.readOnly).toBe(false);
+  });
+
   it("reads a newer-version document best-effort and blocks writes", () => {
     // A document written by a FUTURE build must never be destroyed: read what
     // this build understands, show it, and refuse to write anything back.
