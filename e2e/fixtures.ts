@@ -106,7 +106,7 @@ export const openHome = async (page: Page) => {
 
 export const chooseMode = async (
   page: Page,
-  mode: "small" | "medium" | "large" | "tutorial",
+  mode: "small" | "medium" | "large" | "extraordinary" | "tutorial",
 ) => {
   await expect(page.getByText(mode, { exact: true })).toBeVisible();
   // The first-launch menu intentionally animates before accepting input.

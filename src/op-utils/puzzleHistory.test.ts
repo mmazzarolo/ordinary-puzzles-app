@@ -13,6 +13,7 @@ const puzzleIds = {
   small: ["alpha", "beta", "gamma"],
   medium: ["delta", "epsilon"],
   large: ["zeta"],
+  extraordinary: ["eta"],
 };
 
 describe("puzzle history recovery", () => {
@@ -34,12 +35,14 @@ describe("puzzle history recovery", () => {
       small: ["alpha"],
       medium: [],
       large: [],
+      extraordinary: [],
     });
     expect(unknown).toEqual({
       tutorial: ["tu-9"],
       small: ["not-a-puzzle"],
       medium: [],
       large: [],
+      extraordinary: [],
     });
   });
 
@@ -74,6 +77,7 @@ describe("legacy index migration", () => {
       small: ["gamma", "alpha"],
       medium: [],
       large: [],
+      extraordinary: [],
     });
   });
 });

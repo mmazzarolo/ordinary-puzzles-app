@@ -1,4 +1,10 @@
-const puzzleModes = ["tutorial", "small", "medium", "large"] as const;
+const puzzleModes = [
+  "tutorial",
+  "small",
+  "medium",
+  "large",
+  "extraordinary",
+] as const;
 
 export type PuzzleHistoryMode = (typeof puzzleModes)[number];
 
@@ -35,6 +41,7 @@ export const createEmptyPuzzleHistory = (): PuzzleHistory => ({
   small: [],
   medium: [],
   large: [],
+  extraordinary: [],
 });
 
 const createEmptyProgressState = (readOnly: boolean): PuzzleProgressState => ({

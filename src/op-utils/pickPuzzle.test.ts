@@ -1,101 +1,80 @@
-import times from "lodash/times";
-import { pickRandomPuzzle } from "./pickPuzzle";
+import { pickNextPuzzleId, PickablePuzzle } from "./pickPuzzle";
 
-describe("pickRandomPuzzle", () => {
-  const allPuzzlesLength = 6;
-  describe("with 6 available puzzles", () => {
-    describe("with no puzzles played yet", () => {
-      it("should return the puzzle with index 0", () => {
-        expect(
-          pickRandomPuzzle({
-            allPuzzlesLength: allPuzzlesLength,
-            playedHistory: [],
-          }),
-        ).toBe(0);
-      });
+const tier = (ratings: number[], retired: number[] = []): PickablePuzzle[] =>
+  ratings.map((rating, index) => ({
+    id: `p${index}`,
+    rating,
+    retired: retired.includes(index) || undefined,
+  }));
+
+// A deterministic "random" that always picks the first pool entry.
+const first = () => 0;
+
+describe("pickNextPuzzleId", () => {
+  it("serves the lowest difficulty band first", () => {
+    const puzzles = tier([50, 10, 40, 20, 30]);
+    // 5 puzzles across 10 bands: every puzzle is its own band; easiest is p1.
+    expect(pickNextPuzzleId({ puzzles, random: first })).toBe("p1");
+  });
+
+  it("moves to the next band once the easier ones are played", () => {
+    const puzzles = tier([50, 10, 40, 20, 30]);
+    expect(
+      pickNextPuzzleId({ puzzles, playedIds: ["p1", "p3"], random: first }),
+    ).toBe("p4");
+  });
+
+  it("picks randomly inside a band", () => {
+    const puzzles = tier([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    // bandCount 2: the lower band is ratings 1..5 (p0..p4).
+    const seen = new Set(
+      [0, 0.3, 0.6, 0.99].map((value) =>
+        pickNextPuzzleId({ puzzles, bandCount: 2, random: () => value }),
+      ),
+    );
+    expect(seen.size).toBeGreaterThan(1);
+    seen.forEach((id) => {
+      expect(["p0", "p1", "p2", "p3", "p4"]).toContain(id);
     });
+  });
 
-    describe("with 1 puzzle played", () => {
-      it("should return the second puzzle", () => {
-        expect(
-          pickRandomPuzzle({
-            allPuzzlesLength: allPuzzlesLength,
-            playedHistory: [0],
-          }),
-        ).toBe(1);
-      });
-    });
+  it("never serves a retired puzzle", () => {
+    const puzzles = tier([10, 20, 30], [0]);
+    expect(pickNextPuzzleId({ puzzles, random: first })).toBe("p1");
+    expect(
+      pickNextPuzzleId({ puzzles, playedIds: ["p1", "p2"], random: first }),
+    ).not.toBe("p0");
+  });
 
-    describe("with 2 puzzle played", () => {
-      it("should return the third puzzle", () => {
-        expect(
-          pickRandomPuzzle({
-            allPuzzlesLength: allPuzzlesLength,
-            playedHistory: [0, 1],
-          }),
-        ).toBe(2);
-      });
-    });
+  it("ignores history ids the pack does not contain", () => {
+    const puzzles = tier([10, 20]);
+    expect(
+      pickNextPuzzleId({ puzzles, playedIds: ["ghost", "p0"], random: first }),
+    ).toBe("p1");
+  });
 
-    describe("with 3 puzzle played", () => {
-      it("should return the fourth puzzle", () => {
-        expect(
-          pickRandomPuzzle({
-            allPuzzlesLength: allPuzzlesLength,
-            playedHistory: [0, 1, 2],
-          }),
-        ).toBe(3);
-      });
-    });
+  it("rotates an exhausted tier by least recently played", () => {
+    const puzzles = tier([10, 20, 30]);
+    expect(pickNextPuzzleId({ puzzles, playedIds: ["p2", "p0", "p1"] })).toBe(
+      "p2",
+    );
+  });
 
-    describe("with 4 puzzle played", () => {
-      it("should return the fifth puzzle", () => {
-        expect(
-          pickRandomPuzzle({
-            allPuzzlesLength: allPuzzlesLength,
-            playedHistory: [0, 1, 2, 3],
-          }),
-        ).toBe(4);
-      });
-    });
+  it("never repeats the most recent puzzle back-to-back", () => {
+    // One-puzzle tier is the degenerate case: repeating is unavoidable.
+    expect(pickNextPuzzleId({ puzzles: tier([10]), playedIds: ["p0"] })).toBe(
+      "p0",
+    );
+    const two = tier([10, 20]);
+    expect(pickNextPuzzleId({ puzzles: two, playedIds: ["p0", "p1"] })).toBe(
+      "p0",
+    );
+  });
 
-    describe("with 5 puzzle played", () => {
-      it("should return the sixth puzzle", () => {
-        expect(
-          pickRandomPuzzle({
-            allPuzzlesLength: allPuzzlesLength,
-            playedHistory: [0, 1, 2, 3, 4],
-          }),
-        ).toBe(5);
-      });
-    });
-
-    describe("with all puzzles played", () => {
-      describe("with all puzzles completed", () => {
-        const randomTestSuite = times(10);
-        it.each(randomTestSuite)(
-          "should return a random non-recently played puzzle",
-          () => {
-            const randomPuzzle = pickRandomPuzzle({
-              allPuzzlesLength: allPuzzlesLength,
-              playedHistory: [0, 1, 2, 3, 4, 5],
-              completedHistory: [0, 1, 2, 3, 4, 5],
-            });
-            expect([0, 1, 2]).toContain(randomPuzzle);
-          },
-        );
-      });
-
-      describe("with at least a non-completed puzzle", () => {
-        it("should return a non-completed puzzle", () => {
-          const pickedPuzzle = pickRandomPuzzle({
-            allPuzzlesLength: allPuzzlesLength,
-            playedHistory: [0, 1, 2, 3, 4, 5],
-            completedHistory: [0, 1, 4, 5],
-          });
-          expect(pickedPuzzle).toBe(2);
-        });
-      });
-    });
+  it("returns undefined for an empty or fully retired tier", () => {
+    expect(pickNextPuzzleId({ puzzles: [] })).toBeUndefined();
+    expect(
+      pickNextPuzzleId({ puzzles: tier([10, 20], [0, 1]) }),
+    ).toBeUndefined();
   });
 });

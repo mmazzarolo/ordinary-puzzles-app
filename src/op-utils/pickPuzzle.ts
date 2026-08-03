@@ -1,47 +1,64 @@
-import last from "lodash/last";
-import difference from "lodash/difference";
-import takeRight from "lodash/takeRight";
-
-interface Params {
-  allPuzzlesLength: number;
-  playedHistory?: number[];
-  recentlyPlayedFactor?: number;
-  completedHistory?: number[];
+export interface PickablePuzzle {
+  id: string;
+  rating: number;
+  retired?: boolean;
 }
 
-const contains = <T>(arr: T[], el: T) => arr.indexOf(el) > -1;
+interface Params {
+  puzzles: PickablePuzzle[];
+  // Chronological play order, oldest first (a replay moves an id to the end).
+  playedIds?: string[];
+  bandCount?: number;
+  random?: () => number;
+}
 
-export const pickRandomPuzzle = ({
-  allPuzzlesLength,
-  playedHistory = [],
-  completedHistory = [],
-  recentlyPlayedFactor = Math.floor(allPuzzlesLength / 2),
-}: Params) => {
-  const hasPlayedAllPuzzles = playedHistory.length >= allPuzzlesLength;
-  // If there's at least a puzzle that has not been played yet, pick one from
-  // the next one from the not-played puzzle list
-  if (!hasPlayedAllPuzzles) {
-    const lastPlayedPuzzle = last(playedHistory);
-    const nextPuzzle =
-      lastPlayedPuzzle === undefined ? 0 : lastPlayedPuzzle + 1;
-    // Should always be true... but it's better to be safe than sorry
-    if (!contains(playedHistory, nextPuzzle)) return nextPuzzle;
+// Picks the next puzzle for a tier.
+//
+// Unplayed puzzles are served in ascending difficulty bands: the tier's
+// records are ranked by rating and cut into `bandCount` bands; the pick is
+// random WITHIN the lowest band that still has unplayed puzzles. The player
+// climbs the tier's real difficulty curve without ever seeing the same
+// ordering as another player.
+//
+// When every puzzle has been played, the tier rotates: the least recently
+// played puzzle is served, and the most recent one is never repeated
+// back-to-back.
+//
+// Retired puzzles are never served. Ids in the history that the pack does not
+// contain are ignored. Returns undefined only for an empty (or fully retired)
+// tier.
+export const pickNextPuzzleId = ({
+  puzzles,
+  playedIds = [],
+  bandCount = 10,
+  random = Math.random,
+}: Params): string | undefined => {
+  const active = puzzles.filter((puzzle) => !puzzle.retired);
+  if (active.length === 0) return undefined;
+
+  const played = new Set(playedIds);
+  const unplayed = active.filter((puzzle) => !played.has(puzzle.id));
+
+  if (unplayed.length > 0) {
+    const ranked = [...active].sort((a, b) => a.rating - b.rating);
+    const bandByPuzzleId = new Map(
+      ranked.map((puzzle, rank) => [
+        puzzle.id,
+        Math.floor((rank * bandCount) / ranked.length),
+      ]),
+    );
+    const lowestBand = Math.min(
+      ...unplayed.map((puzzle) => bandByPuzzleId.get(puzzle.id) ?? 0),
+    );
+    const pool = unplayed.filter(
+      (puzzle) => bandByPuzzleId.get(puzzle.id) === lowestBand,
+    );
+    return pool[Math.floor(random() * pool.length)].id;
   }
-  const hasCompletedAllPuzzles =
-    completedHistory.length >= allPuzzlesLength &&
-    completedHistory.length >= playedHistory.length;
-  // If all the puzzles for this mode have already been completed, pick a random
-  // one, making sure it wasn't played recently
-  if (hasCompletedAllPuzzles) {
-    const recentPuzzles = takeRight(playedHistory, recentlyPlayedFactor);
-    const pickRandomPuzzle = (): number => {
-      const randomPuzzle = Math.floor(Math.random() * allPuzzlesLength);
-      const isRecent = contains(recentPuzzles, randomPuzzle);
-      return !isRecent ? randomPuzzle : pickRandomPuzzle();
-    };
-    return pickRandomPuzzle();
-  }
-  // If there's at least a puzzle that has not been completed yet, pick it from
-  // the list
-  return difference(playedHistory, completedHistory)[0];
+
+  const activeIds = new Set(active.map((puzzle) => puzzle.id));
+  const orderedHistory = playedIds.filter((id) => activeIds.has(id));
+  const mostRecent = orderedHistory[orderedHistory.length - 1];
+  const leastRecent = orderedHistory.find((id) => id !== mostRecent);
+  return leastRecent ?? mostRecent ?? active[0].id;
 };

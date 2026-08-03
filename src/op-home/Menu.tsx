@@ -36,7 +36,7 @@ export const Menu: FC<MenuProps> = function ({ animValue, disabled, items }) {
           style={styles.button}
           textSize={styles.text.fontSize}
           onPress={() => item.onPress(item.value)}
-          label={item.value}
+          label={item.label}
         >
           {item.starred && (
             <Text weight="bold" style={[styles.text, starStyle]}>
