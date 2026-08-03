@@ -119,7 +119,11 @@ jobs:
 
   ios:
     name: iOS simulator
-    runs-on: macos-15
+    # SDK 57 needs Xcode 26: the ExpoModulesJSI pod builds a Swift package
+    # whose manifest declares swift-tools-version 6.2, which the Xcode 16.4
+    # default on the macos-15 image cannot parse ("Could not resolve package
+    # dependencies").
+    runs-on: macos-26
     timeout-minutes: 90
 
     steps:
