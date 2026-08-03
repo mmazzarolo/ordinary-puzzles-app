@@ -97,6 +97,12 @@ export const Home: FC = observer(function () {
       onPress: handleItemPress,
       highlighted: !canContinue,
     },
+    {
+      label: "extraordinary",
+      value: "extraordinary",
+      onPress: handleItemPress,
+      highlighted: !canContinue,
+    },
   ];
   if (canContinue) {
     menuItems.unshift({

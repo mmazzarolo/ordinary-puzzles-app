@@ -18,3 +18,5 @@ name: Assert the home screen is ready
     id: "button-medium"
 - assertVisible:
     id: "button-large"
+- assertVisible:
+    id: "button-extraordinary"

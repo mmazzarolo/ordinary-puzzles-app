@@ -8,17 +8,10 @@ import {
   waitForHome,
 } from "./fixtures";
 
-const catalogModes = {
-  small: "quire",
-  medium: "lutescent",
-  large: "chiliad",
-} as const;
+const packModes = ["small", "medium", "large", "extraordinary"] as const;
 
-for (const [mode, firstPuzzleName] of Object.entries(catalogModes) as [
-  keyof typeof catalogModes,
-  string,
-][]) {
-  test(`${mode} opens a catalog puzzle and completes it`, async ({
+for (const mode of packModes) {
+  test(`${mode} opens a pack puzzle and completes it`, async ({
     diagnostics,
     page,
   }) => {
@@ -34,9 +27,6 @@ for (const [mode, firstPuzzleName] of Object.entries(catalogModes) as [
     await expect(page.getByText("Completed", { exact: true })).toBeVisible({
       timeout: 10_000,
     });
-    await expect(
-      page.getByText(firstPuzzleName, { exact: true }),
-    ).toBeVisible();
     expect(diagnostics.generatorRequests).toEqual([]);
   });
 }
@@ -137,15 +127,21 @@ test("completion updates statistics and survives a reload", async ({
 
   await page.getByText("menu", { exact: true }).click();
   await waitForHome(page);
-  await expect(page.getByText("8", { exact: true })).toBeVisible();
+  // The dealt puzzle is band-random, so read the earned score off the screen
+  // instead of asserting a fixed value.
+  const scoreText = await page.getByTestId("button-score").textContent();
+  const score = Number((scoreText ?? "").replace(/[^0-9]/g, ""));
+  expect(score).toBeGreaterThan(0);
 
-  await openStatistics(page, 8);
-  await expect(page.getByText("small: 1/99", { exact: true })).toBeVisible();
-  await expect(page.getByText("score: 8", { exact: true })).toBeVisible();
+  await openStatistics(page, score);
+  await expect(page.getByText("small: 1", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(`score: ${score}`, { exact: true }),
+  ).toBeVisible();
 
   await page.reload();
   await waitForHome(page);
-  await expect(page.getByText("8", { exact: true })).toBeVisible();
+  await expect(page.getByText(String(score), { exact: true })).toBeVisible();
 });
 
 test("menu and reset remain usable during a puzzle", async ({ page }) => {

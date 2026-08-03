@@ -13,6 +13,7 @@ const puzzleIds = {
   small: ["alpha", "beta", "gamma"],
   medium: ["delta", "epsilon"],
   large: ["zeta"],
+  extraordinary: ["eta"],
 };
 
 describe("puzzle history recovery", () => {
@@ -34,12 +35,14 @@ describe("puzzle history recovery", () => {
       small: ["alpha"],
       medium: [],
       large: [],
+      extraordinary: [],
     });
     expect(unknown).toEqual({
       tutorial: ["tu-9"],
       small: ["not-a-puzzle"],
       medium: [],
       large: [],
+      extraordinary: [],
     });
   });
 
@@ -74,6 +77,7 @@ describe("legacy index migration", () => {
       small: ["gamma", "alpha"],
       medium: [],
       large: [],
+      extraordinary: [],
     });
   });
 });
@@ -105,6 +109,22 @@ describe("puzzle progress resolution", () => {
     });
     expect(result.played.small).toEqual(["alpha", "beta"]);
     expect(result.completed.small).toEqual(["alpha"]);
+    expect(result.readOnly).toBe(false);
+  });
+
+  it("reads a version-2 document and stays writable", () => {
+    // Version 2 has the same shape as 3; the bump only protects downgrades.
+    const result = resolvePuzzleProgress({
+      stored: {
+        version: 2,
+        played: { small: ["alpha"] },
+        completed: { small: ["alpha"] },
+      },
+      legacyPlayed: undefined,
+      legacyCompleted: undefined,
+      puzzleIds,
+    });
+    expect(result.played.small).toEqual(["alpha"]);
     expect(result.readOnly).toBe(false);
   });
 

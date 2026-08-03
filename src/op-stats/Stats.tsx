@@ -53,13 +53,20 @@ export const Stats: FC = observer(function () {
           Statistics
         </Text>
         <Text weight="semibold" style={styles.progress} testID="stats-small">
-          small: {stats.completedPuzzles["small"].length}/99
+          small: {stats.completedPuzzles["small"].length}
         </Text>
         <Text weight="semibold" style={styles.progress} testID="stats-medium">
-          medium: {stats.completedPuzzles["medium"].length}/99
+          medium: {stats.completedPuzzles["medium"].length}
         </Text>
         <Text weight="semibold" style={styles.progress} testID="stats-large">
-          large: {stats.completedPuzzles["large"].length}/99
+          large: {stats.completedPuzzles["large"].length}
+        </Text>
+        <Text
+          weight="semibold"
+          style={styles.progress}
+          testID="stats-extraordinary"
+        >
+          extraordinary: {stats.completedPuzzles["extraordinary"].length}
         </Text>
         <Text weight="bold" style={styles.score} testID="stats-score">
           score: {stats.score}
@@ -79,7 +86,7 @@ const createStyles = ({ scale }: { scale: ScalingFunc }): any => ({
   },
   middle: {
     flex: 1,
-    marginTop: getBottomNavHeight,
+    marginTop: getBottomNavHeight(scale),
     justifyContent: "center",
   },
   title: {

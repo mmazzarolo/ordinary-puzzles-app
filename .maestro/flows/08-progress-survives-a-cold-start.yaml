@@ -30,7 +30,7 @@ tags:
     id: "button-score"
 - assertVisible:
     id: "stats-small"
-    text: "small: 1/99"
+    text: "small: 1"
 - assertVisible:
     id: "stats-score"
     text: "score: [0-9]+"

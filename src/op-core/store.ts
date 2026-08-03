@@ -13,10 +13,18 @@ import {
   serializePuzzleProgress,
   rehydrateObject,
   persistObject,
-  pickRandomPuzzle,
+  pickNextPuzzleId,
   PuzzleIds,
 } from "op-utils";
 import uniq from "lodash/uniq";
+import {
+  getPackRecords,
+  getPackRecordScore,
+  isPackMode,
+  packModes,
+  PackMode,
+  PackRecord,
+} from "op-puzzle-pack";
 import puzzles from "./puzzles.json";
 
 export type Route =
@@ -26,34 +34,83 @@ export type Route =
   | "tutorial"
   | "success"
   | "stats";
-export type PuzzleMode = "tutorial" | "small" | "medium" | "large";
+export type PuzzleMode = "tutorial" | PackMode;
 
 const sum = (a: number, b: number) => a + b;
 
-// The content-derived id (see scripts/inject-puzzle-ids.mjs) is the stable
-// puzzle identity: progress keyed by it survives catalog reordering AND
-// renames, which index- or name-keyed progress would not. Names are display
-// data only.
-const puzzleIds: PuzzleIds = {
-  tutorial: puzzles.tutorial.map((puzzle) => puzzle.id),
-  small: puzzles.small.map((puzzle) => puzzle.id),
-  medium: puzzles.medium.map((puzzle) => puzzle.id),
-  large: puzzles.large.map((puzzle) => puzzle.id),
+// The playable record, normalized across the two sources: the tutorial stays
+// in puzzles.json; every real tier comes from the committed puzzle pack.
+interface PlayableRecord {
+  id: string;
+  name: string;
+  rows: string[] | null;
+  score: number;
+  rating: number;
+  retired?: boolean;
+  type: "puzzle" | "message";
+  title?: string;
+  message?: string;
+}
+
+const fromTutorial = (
+  record: (typeof puzzles.tutorial)[number],
+): PlayableRecord => ({
+  id: record.id,
+  name: record.name,
+  rows: record.data,
+  score: record.score || 0,
+  rating: 0,
+  type:
+    (record as { type?: "puzzle" | "message" }).type === "message"
+      ? "message"
+      : "puzzle",
+  title: (record as { title?: string }).title,
+  message: (record as { message?: string }).message,
+});
+
+const fromPack = (record: PackRecord): PlayableRecord => ({
+  id: record.id,
+  name: record.name,
+  rows: record.rows,
+  score: getPackRecordScore(record),
+  rating: record.rating,
+  retired: record.retired,
+  type: "puzzle",
+});
+
+const playableRecords: Record<PuzzleMode, PlayableRecord[]> = {
+  tutorial: puzzles.tutorial.map(fromTutorial),
+  small: getPackRecords("small").map(fromPack),
+  medium: getPackRecords("medium").map(fromPack),
+  large: getPackRecords("large").map(fromPack),
+  extraordinary: getPackRecords("extraordinary").map(fromPack),
 };
 
-const puzzleScoresById: Record<PuzzleMode, Map<string, number>> = {
-  tutorial: new Map(puzzles.tutorial.map((p) => [p.id, p.score || 0])),
-  small: new Map(puzzles.small.map((p) => [p.id, p.score || 0])),
-  medium: new Map(puzzles.medium.map((p) => [p.id, p.score || 0])),
-  large: new Map(puzzles.large.map((p) => [p.id, p.score || 0])),
-};
+const buildLookup = <Value>(
+  select: (record: PlayableRecord, index: number) => Value,
+): Record<PuzzleMode, Map<string, Value>> =>
+  Object.fromEntries(
+    Object.entries(playableRecords).map(([mode, records]) => [
+      mode,
+      new Map(
+        records.map((record, index) => [record.id, select(record, index)]),
+      ),
+    ]),
+  ) as Record<PuzzleMode, Map<string, Value>>;
 
-const puzzleIndexById: Record<PuzzleMode, Map<string, number>> = {
-  tutorial: new Map(puzzles.tutorial.map((p, index) => [p.id, index])),
-  small: new Map(puzzles.small.map((p, index) => [p.id, index])),
-  medium: new Map(puzzles.medium.map((p, index) => [p.id, index])),
-  large: new Map(puzzles.large.map((p, index) => [p.id, index])),
-};
+// The content-derived id is the stable puzzle identity: progress keyed by it
+// survives catalog reordering AND renames. Names are display data only.
+const puzzleIds: PuzzleIds = Object.fromEntries(
+  Object.entries(playableRecords).map(([mode, records]) => [
+    mode,
+    records.map((record) => record.id),
+  ]),
+) as PuzzleIds;
+
+const puzzleScoresById = buildLookup((record) => record.score);
+const puzzleIndexById = buildLookup((_record, index) => index);
+
+export { packModes, isPackMode };
 
 class RouterStore {
   root: RootStore;
@@ -146,7 +203,7 @@ class PuzzleStore {
 
   get current() {
     if (this.mode && this.index !== undefined) {
-      return puzzles[this.mode][this.index];
+      return playableRecords[this.mode][this.index];
     } else {
       return undefined;
     }
@@ -162,6 +219,7 @@ class PuzzleStore {
       small: "sm",
       medium: "md",
       large: "lg",
+      extraordinary: "xo",
     };
     return this.mode ? modePrefix[this.mode] : "ko";
   }
@@ -171,11 +229,10 @@ class PuzzleStore {
   }
 
   get data() {
-    return this.current?.data;
+    return this.current?.rows;
   }
 
   get type() {
-    // @ts-ignore
     return this.current?.type || "puzzle";
   }
 
@@ -193,12 +250,10 @@ class PuzzleStore {
   }
 
   get tutorialTitle() {
-    // @ts-ignore
     return this.current?.title || "";
   }
 
   get tutorialMessage() {
-    // @ts-ignore
     return this.current?.message || "";
   }
 
@@ -215,18 +270,19 @@ class PuzzleStore {
   }
 
   setRandomPuzzle(mode: PuzzleMode = this.mode || "small") {
-    // pickRandomPuzzle still reasons in catalog indexes, so map the id-keyed
-    // histories to indexes (dropping ids no longer in the catalog).
-    const toIndexes = (ids: string[]) =>
-      ids
-        .map((id) => puzzleIndexById[mode].get(id) ?? -1)
-        .filter((index) => index !== -1);
-    const randomPuzzleIndex = pickRandomPuzzle({
-      allPuzzlesLength: puzzles[mode].length,
-      playedHistory: toIndexes(this.root.stats.playedPuzzles[mode]),
-      completedHistory: toIndexes(this.root.stats.completedPuzzles[mode]),
+    const id = pickNextPuzzleId({
+      puzzles: playableRecords[mode],
+      playedIds: this.root.stats.playedPuzzles[mode],
     });
-    this.setPuzzle(mode, randomPuzzleIndex);
+    // The fallback honors the retired flag too: an undefined pick must never
+    // resolve to a record the picker itself would refuse to serve.
+    const firstServable = playableRecords[mode].findIndex(
+      (record) => !record.retired,
+    );
+    const index =
+      puzzleIndexById[mode].get(id ?? "") ??
+      (firstServable === -1 ? 0 : firstServable);
+    this.setPuzzle(mode, index);
   }
 
   nextPuzzle() {
