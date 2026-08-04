@@ -144,14 +144,15 @@ test("completion updates statistics and survives a reload", async ({
   await expect(page.getByText(String(score), { exact: true })).toBeVisible();
 });
 
-test("menu and reset remain usable during a puzzle", async ({ page }) => {
+test("menu and undo remain usable during a puzzle", async ({ page }) => {
   await seedStorage(page, {
     __ordinaryPuzzlesE2EDisableAutoSolve: "1",
   });
   await openHome(page);
   await chooseMode(page, "medium");
-  await expect(page.getByText("reset", { exact: true })).toBeVisible();
-  await page.getByText("reset", { exact: true }).click();
+  await expect(page.getByText("undo", { exact: true })).toBeVisible();
+  // With nothing committed yet, undo is a quiet no-op.
+  await page.getByText("undo", { exact: true }).click();
   await page.getByText("menu", { exact: true }).click();
   await waitForHome(page);
   await expect(page.getByText("continue", { exact: true })).toBeVisible();

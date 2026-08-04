@@ -259,3 +259,103 @@ describe("pointer coordinate mapping", () => {
     expect(line.cells.length).toBe(2);
   });
 });
+
+describe("commit history and undo", () => {
+  // These boards keep an uncoverable dot, so completing a line never clears
+  // the whole board: a clearing drag never commits (the cleared autorun
+  // disables interactions before the commit), which is fine in play but
+  // would make these tests vacuous.
+  it("records committed changes with before and after states", () => {
+    const store = createStore(["3.. ", " .  "]);
+    drag(store, [0, 0], [0, 2]);
+    expect(store.board.history.length).toBe(1);
+    expect(store.board.history[0].before).toEqual(["0:0"]);
+    expect(store.board.history[0].after).toEqual(["0:0", "0:1", "0:2"]);
+    expect(store.board.commitCount).toBe(1);
+  });
+
+  it("undo reverts the last committed change", () => {
+    const store = createStore(["3.. ", " .  "]);
+    drag(store, [0, 0], [0, 2]);
+    store.board.undoLast();
+    const [line] = store.board.lines;
+    expect(line.cells.length).toBe(1);
+    expect(store.board.at(0, 1).filled).toBe(false);
+    expect(store.board.canUndo).toBe(false);
+  });
+
+  it("repeated undo rewinds to the board start", () => {
+    const store = createStore(["2.", ". ", "2 ", ".."]);
+    drag(store, [0, 0], [0, 1]);
+    drag(store, [2, 0], [1, 0]);
+    expect(store.board.history.length).toBe(2);
+    while (store.board.canUndo) store.board.undoLast();
+    store.board.lines.forEach((line) => expect(line.cells.length).toBe(1));
+  });
+
+  it("a tap-origin clear is recorded and undoable", () => {
+    const store = createStore(["3.. ", " .  "]);
+    drag(store, [0, 0], [0, 2]);
+    tap(store, [0, 0]);
+    expect(store.board.history.length).toBe(2);
+    store.board.undoLast();
+    const [line] = store.board.lines;
+    expect(line.cells.length).toBe(3);
+  });
+
+  it("counts removals for shrinking commits and undone growths", () => {
+    const store = createStore(["3.. ", " .  "]);
+    drag(store, [0, 0], [0, 2]);
+    expect(store.board.removalCount).toBe(0);
+    store.board.undoLast();
+    expect(store.board.removalCount).toBe(1);
+  });
+
+  it("undo is strictly last-in-first-out across lines", () => {
+    const store = createStore(["2.2.", " .  "]);
+    drag(store, [0, 0], [0, 1]);
+    tap(store, [0, 0]);
+    drag(store, [0, 2], [0, 1]);
+    const lineA = store.board.lines[0];
+    const lineB = store.board.lines[1];
+    // Undo B's growth first (it released 0:1), then A's clear: A gets its
+    // original two cells back.
+    store.board.undoLast();
+    expect(lineB.cells.length).toBe(1);
+    store.board.undoLast();
+    expect(lineA.cells.map((cell) => cell.id)).toEqual(["0:0", "0:1"]);
+  });
+});
+
+describe("board persistence", () => {
+  it("serializes committed lines and restores them into a fresh board", () => {
+    const store = createStore(["3.. ", "2. ."]);
+    drag(store, [0, 0], [0, 2]);
+    drag(store, [1, 0], [1, 1]);
+    const saved = store.board.serializeCommittedLines();
+    expect(saved).toEqual([
+      { origin: "0:0", cells: ["0:0", "0:1", "0:2"] },
+      { origin: "1:0", cells: ["1:0", "1:1"] },
+    ]);
+
+    const fresh = createStore(["3.. ", "2. ."]);
+    fresh.board.restoreCommittedLines(saved, 120_000);
+    expect(fresh.board.at(0, 2).filled).toBe(true);
+    expect(fresh.board.at(1, 1).filled).toBe(true);
+    expect(fresh.board.lines[0].completed).toBe(true);
+    expect(fresh.board.restoredFromStorage).toBe(true);
+    expect(fresh.board.elapsedMs).toBeGreaterThanOrEqual(120_000);
+  });
+
+  it("drops invalid saved lines instead of failing the restore", () => {
+    const fresh = createStore(["3.. ", " .  "]);
+    fresh.board.restoreCommittedLines(
+      [
+        { origin: "9:9", cells: ["9:9"] },
+        { origin: "0:0", cells: ["0:0", "0:1"] },
+      ],
+      0,
+    );
+    expect(fresh.board.at(0, 1).filled).toBe(true);
+  });
+});
