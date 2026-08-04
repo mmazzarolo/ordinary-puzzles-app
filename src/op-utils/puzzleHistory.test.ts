@@ -199,6 +199,7 @@ describe("puzzle progress resolution", () => {
         completed: createEmptyPuzzleHistory(),
         unknownPlayed: createEmptyPuzzleHistory(),
         unknownCompleted: createEmptyPuzzleHistory(),
+        solves: [],
       }).version,
     ).toBe(puzzleProgressVersion);
   });

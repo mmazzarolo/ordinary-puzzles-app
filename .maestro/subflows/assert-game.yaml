@@ -14,4 +14,4 @@ name: Assert the game screen
 - assertVisible:
     id: "button-menu"
 - assertVisible:
-    id: "button-reset"
+    id: "button-undo"

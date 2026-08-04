@@ -334,16 +334,24 @@ class Line {
   }
 
   commit() {
+    const before = this.committedCells.map((cell) => cell.id);
     this.committedCells.replace(this.cells.slice());
     this.pendingCells.clear();
     this.stale = false;
+    this.origin.root.board.recordChange(
+      this.id,
+      before,
+      this.committedCells.map((cell) => cell.id),
+    );
   }
 
   reset() {
+    const before = this.committedCells.map((cell) => cell.id);
     this.unlinkReference();
     this.committedCells.replace([this.origin]);
     this.pendingCells.clear();
     this.linkReference();
+    this.origin.root.board.recordChange(this.id, before, [this.origin.id]);
   }
 
   isEdge(cell: Cell) {
@@ -355,12 +363,38 @@ class Line {
   }
 }
 
+// One semantic board change: a line's committed cells went from `before` to
+// `after`. The history of these changes powers undo, the persisted board
+// snapshot, and the per-solve counters.
+export interface CommittedChange {
+  lineId: string;
+  before: string[];
+  after: string[];
+}
+
+// The shape persisted to storage so an in-progress board survives the process.
+export interface SavedBoardLine {
+  origin: string;
+  cells: string[];
+}
+
 class BoardStore {
   root: RootStore;
 
   puzzleId?: string = undefined;
   grid = observable<Cell[]>([]);
   lines = observable<Line>([]);
+  history = observable<CommittedChange>([]);
+
+  // Per-session solve metadata (plain fields: read once at completion).
+  commitCount = 0;
+  removalCount = 0;
+  sessionStartedAt = Date.now();
+  // Milliseconds carried over from a restored session, plus time spent
+  // backgrounded (subtracted from the wall clock by the elapsed getter).
+  elapsedBaseMs = 0;
+  backgroundMs = 0;
+  restoredFromStorage = false;
 
   constructor(rootStore: RootStore) {
     this.root = rootStore;
@@ -369,13 +403,18 @@ class BoardStore {
       puzzleId: observable,
       grid: observable,
       lines: observable,
+      history: observable,
       initialize: action,
       reset: action,
       destroy: action,
+      recordChange: action,
+      undoLast: action,
+      restoreCommittedLines: action,
       isInitialized: computed,
       rowsCount: computed,
       colsCount: computed,
       cleared: computed,
+      canUndo: computed,
       fillLine: action,
     });
   }
@@ -398,6 +437,97 @@ class BoardStore {
     this.grid.replace(grid);
     this.lines.replace(lines);
     this.puzzleId = puzzleId;
+    this.history.replace([]);
+    this.commitCount = 0;
+    this.removalCount = 0;
+    this.sessionStartedAt = Date.now();
+    this.elapsedBaseMs = 0;
+    this.backgroundMs = 0;
+    this.restoredFromStorage = false;
+  }
+
+  get canUndo() {
+    return this.history.length > 0;
+  }
+
+  // The foreground-active time spent on this board, across restores.
+  get elapsedMs() {
+    return Math.max(
+      0,
+      this.elapsedBaseMs +
+        (Date.now() - this.sessionStartedAt) -
+        this.backgroundMs,
+    );
+  }
+
+  recordChange(lineId: string, before: string[], after: string[]) {
+    if (
+      before.length === after.length &&
+      before.every((id, index) => id === after[index])
+    ) {
+      return;
+    }
+    this.history.push({ lineId, before, after });
+    this.commitCount++;
+    if (after.length < before.length) this.removalCount++;
+  }
+
+  // Reverts the most recent committed change. Cells that another line claimed
+  // after the original change stay with that line; the origin always returns.
+  undoLast() {
+    const change = this.history.pop();
+    if (!change) return;
+    const line = this.lines.find((candidate) => candidate.id === change.lineId);
+    if (!line) return;
+    // Undoing a growth takes committed cells off the board; undoing a
+    // clear/shrink puts them back and is not a removal.
+    if (change.after.length > change.before.length) this.removalCount++;
+    line.unlinkReference();
+    const restored = change.before
+      .map((id) => this.atId(id))
+      .filter((cell) => !cell.line || cell.line.equals(line));
+    line.committedCells.replace(restored.length > 0 ? restored : [line.origin]);
+    line.pendingCells.clear();
+    line.stale = false;
+    line.linkReference();
+  }
+
+  // The committed lines beyond their origins, for persistence.
+  serializeCommittedLines(): SavedBoardLine[] {
+    return this.lines
+      .filter((line) => line.committedCells.length > 1)
+      .map((line) => ({
+        origin: line.origin.id,
+        cells: line.committedCells.map((cell) => cell.id),
+      }));
+  }
+
+  // Applies a persisted snapshot onto a freshly initialized board. Invalid or
+  // conflicting entries are dropped silently: a partially restored board is
+  // strictly better than none.
+  restoreCommittedLines(savedLines: SavedBoardLine[], elapsedMs: number) {
+    savedLines.forEach((saved) => {
+      const line = this.lines.find(
+        (candidate) => candidate.id === saved.origin,
+      );
+      if (!line) return;
+      const cells = saved.cells
+        .map((id) => {
+          const [row, col] = id.split(":").map(Number);
+          return this.grid[row]?.[col];
+        })
+        .filter(
+          (cell): cell is Cell =>
+            !!cell && (!cell.line || cell.line.equals(line) === true),
+        );
+      if (cells.length < 2) return;
+      line.unlinkReference();
+      line.committedCells.replace(cells);
+      line.linkReference();
+    });
+    this.elapsedBaseMs = elapsedMs;
+    this.sessionStartedAt = Date.now();
+    this.restoredFromStorage = true;
   }
 
   reset() {

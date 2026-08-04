@@ -4,18 +4,26 @@ import {
   action,
   computed,
   toJS,
+  reaction,
   runInAction,
   makeObservable,
 } from "mobx";
+import { AppState } from "react-native";
 import {
+  appendSolveRecord,
   createEmptyPuzzleHistory,
   resolvePuzzleProgress,
   serializePuzzleProgress,
   rehydrateObject,
   persistObject,
+  removeObject,
   pickNextPuzzleId,
   PuzzleIds,
+  SolveRecord,
 } from "op-utils";
+// Imported from the store file directly (not the op-board barrel, which pulls
+// in components that import op-core and would close an import cycle).
+import { rootStore as boardRootStore, SavedBoardLine } from "op-board/store";
 import uniq from "lodash/uniq";
 import {
   getPackRecords,
@@ -174,6 +182,8 @@ class PuzzleStore {
   mode?: PuzzleMode = undefined;
   index?: number = undefined;
   increasesScore: boolean = false;
+  // Plain flag: whether the current deal was recorded as played.
+  startedRecorded = false;
 
   constructor(rootStore: RootStore) {
     this.root = rootStore;
@@ -196,7 +206,9 @@ class PuzzleStore {
       setPuzzle: action,
       setRandomPuzzle: action,
       nextPuzzle: action,
+      onPuzzleStarted: action,
       onPuzzleCompleted: action,
+      restoreSavedBoard: action,
       reset: action,
     });
   }
@@ -264,9 +276,18 @@ class PuzzleStore {
     this.mode = mode;
     this.index = index;
     const id = puzzleIds[mode][index];
-    this.root.stats.updatePlayedPuzzles(mode, id);
+    // "Played" is recorded on the first committed line (onPuzzleStarted), not
+    // at deal time: opening a puzzle and backing out costs nothing.
+    this.startedRecorded = false;
     this.increasesScore =
       this.root.stats.completedPuzzles[mode]?.indexOf(id) === -1;
+  }
+
+  // The first committed line marks the puzzle as played.
+  onPuzzleStarted() {
+    if (this.startedRecorded) return;
+    this.startedRecorded = true;
+    this.root.stats.updatePlayedPuzzles(this.mode, this.id);
   }
 
   setRandomPuzzle(mode: PuzzleMode = this.mode || "small") {
@@ -290,12 +311,60 @@ class PuzzleStore {
   }
 
   onPuzzleCompleted() {
+    const board = boardRootStore.board;
+    // Completing implies playing, whichever path got the board solved.
+    this.root.stats.updatePlayedPuzzles(this.mode, this.id);
     this.root.stats.updateCompletedPuzzles(this.mode, this.id);
+    if (this.mode && this.id) {
+      this.root.stats.recordSolve({
+        id: this.id,
+        mode: this.mode,
+        at: Date.now(),
+        ms: Math.round(board.elapsedMs),
+        moves: board.commitCount,
+        removals: board.removalCount,
+        resumed: board.restoredFromStorage,
+      });
+    }
+    // The solved board's snapshot is obsolete.
+    void removeObject("boardState");
   }
 
   reset() {
     this.mode = undefined;
     this.index = undefined;
+  }
+
+  // Rebuilds the in-progress board saved by a previous session, so `continue`
+  // survives a process death. Invalid snapshots are ignored silently.
+  restoreSavedBoard(saved: unknown) {
+    if (!saved || typeof saved !== "object") return;
+    const snapshot = saved as {
+      puzzleId?: unknown;
+      mode?: unknown;
+      lines?: unknown;
+      elapsedMs?: unknown;
+    };
+    const mode = snapshot.mode;
+    if (typeof snapshot.puzzleId !== "string" || typeof mode !== "string") {
+      return;
+    }
+    // The tutorial has its own guided flow and is never snapshotted.
+    if (mode === "tutorial" || !(mode in playableRecords)) return;
+    const typedMode = mode as PuzzleMode;
+    const index = puzzleIndexById[typedMode].get(snapshot.puzzleId);
+    if (index === undefined) return;
+    const record = playableRecords[typedMode][index];
+    if (!record.rows || record.retired || !Array.isArray(snapshot.lines)) {
+      return;
+    }
+    this.setPuzzle(typedMode, index);
+    const board = boardRootStore.board;
+    board.initialize(record.id, record.rows);
+    board.restoreCommittedLines(
+      snapshot.lines as SavedBoardLine[],
+      typeof snapshot.elapsedMs === "number" ? snapshot.elapsedMs : 0,
+    );
   }
 }
 
@@ -309,6 +378,9 @@ class StatsStore {
   // Plain fields: never rendered, only re-serialized on write.
   unknownPlayedPuzzles: Record<PuzzleMode, string[]>;
   unknownCompletedPuzzles: Record<PuzzleMode, string[]>;
+  // Raw per-solve history (plain field: appended and persisted, never
+  // rendered by the current screens).
+  solves: SolveRecord[];
   // True when the stored document cannot be safely rewritten by this build
   // (written by a newer version, or the storage read itself failed).
   progressReadOnly: boolean;
@@ -320,6 +392,7 @@ class StatsStore {
     this.completedPuzzles = createEmptyPuzzleHistory();
     this.unknownPlayedPuzzles = createEmptyPuzzleHistory();
     this.unknownCompletedPuzzles = createEmptyPuzzleHistory();
+    this.solves = [];
     this.progressReadOnly = false;
 
     makeObservable(this, {
@@ -330,6 +403,7 @@ class StatsStore {
       score: computed,
       tutorialCompleted: computed,
       markTutorialCompleted: action,
+      recordSolve: action,
       updateCompletedPuzzles: action,
       updatePlayedPuzzles: action,
     });
@@ -344,11 +418,13 @@ class StatsStore {
         readFailed = true;
         return undefined;
       });
-    const [stored, legacyPlayed, legacyCompleted] = await Promise.all([
-      guard(rehydrateObject("puzzleProgress")),
-      guard(rehydrateObject("playedPuzzles")),
-      guard(rehydrateObject("completedPuzzles")),
-    ]);
+    const [stored, legacyPlayed, legacyCompleted, savedBoard] =
+      await Promise.all([
+        guard(rehydrateObject("puzzleProgress")),
+        guard(rehydrateObject("playedPuzzles")),
+        guard(rehydrateObject("completedPuzzles")),
+        guard(rehydrateObject("boardState")),
+      ]);
     const progress = resolvePuzzleProgress({
       stored,
       legacyPlayed,
@@ -358,12 +434,14 @@ class StatsStore {
     });
     this.unknownPlayedPuzzles = progress.unknownPlayed;
     this.unknownCompletedPuzzles = progress.unknownCompleted;
+    this.solves = progress.solves;
     this.progressReadOnly = progress.readOnly;
     runInAction(() => {
       this.playedPuzzles = progress.played;
       this.completedPuzzles = progress.completed;
       this.initialized = true;
     });
+    this.root.puzzle.restoreSavedBoard(savedBoard);
   }
 
   get score() {
@@ -380,6 +458,11 @@ class StatsStore {
 
   get tutorialCompleted() {
     return this.completedPuzzles["tutorial"].length > 0;
+  }
+
+  recordSolve(record: SolveRecord) {
+    this.solves = appendSolveRecord(this.solves, record);
+    this.persistProgress();
   }
 
   markTutorialCompleted() {
@@ -421,6 +504,7 @@ class StatsStore {
         completed: toJS(this.completedPuzzles),
         unknownPlayed: this.unknownPlayedPuzzles,
         unknownCompleted: this.unknownCompletedPuzzles,
+        solves: this.solves,
       }),
     );
   }
@@ -435,7 +519,49 @@ class RootStore {
     this.puzzle = new PuzzleStore(this);
     this.router = new RouterStore(this);
     this.stats = new StatsStore(this);
+    this.wireBoardPersistence();
   }
+
+  // Every committed change (or undo) flushes the board snapshot, and the
+  // first committed line of a deal marks the puzzle as played.
+  wireBoardPersistence() {
+    const board = boardRootStore.board;
+    reaction(
+      () => board.history.length,
+      () => {
+        if (board.commitCount > 0) this.puzzle.onPuzzleStarted();
+        this.persistBoardSnapshot();
+      },
+    );
+
+    let backgroundedAt: number | undefined;
+    AppState.addEventListener("change", (state) => {
+      if (state === "active") {
+        if (backgroundedAt !== undefined) {
+          board.backgroundMs += Date.now() - backgroundedAt;
+          backgroundedAt = undefined;
+        }
+      } else if (backgroundedAt === undefined) {
+        backgroundedAt = Date.now();
+        // Flush before the OS can kill the process.
+        this.persistBoardSnapshot();
+      }
+    });
+  }
+
+  persistBoardSnapshot = () => {
+    const board = boardRootStore.board;
+    const mode = this.puzzle.mode;
+    if (!board.isInitialized || !board.puzzleId || !mode) return;
+    if (mode === "tutorial") return;
+    void persistObject("boardState", {
+      puzzleId: board.puzzleId,
+      mode,
+      lines: board.serializeCommittedLines(),
+      elapsedMs: Math.round(board.elapsedMs),
+      savedAt: Date.now(),
+    });
+  };
 
   // An arrow property, because "storesContext" below passes this method as a
   // value. A plain class method would arrive unbound and lose its receiver.

@@ -1,10 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { parseStoredJson } from "./puzzleHistory";
 
-// "puzzleProgress" is the current schema. "completedPuzzles" and
-// "playedPuzzles" are the legacy index-based keys, kept readable for migration.
+// "puzzleProgress" is the current schema; "boardState" holds the in-progress
+// board snapshot. "completedPuzzles" and "playedPuzzles" are the legacy
+// index-based keys, kept readable for migration.
 const storageItemKeys = [
   "puzzleProgress",
+  "boardState",
   "completedPuzzles",
   "playedPuzzles",
 ] as const;
@@ -16,6 +18,10 @@ type StorageItemKey = ElementType<typeof storageItemKeys>;
 
 export const clearStorage = async () => {
   await Promise.all(storageItemKeys.map((key) => AsyncStorage.removeItem(key)));
+};
+
+export const removeObject = async (key: StorageItemKey) => {
+  await AsyncStorage.removeItem(key);
 };
 
 export const rehydrateObject = async (key: StorageItemKey) => {

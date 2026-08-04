@@ -21,10 +21,27 @@ export type PuzzleIds = Record<PuzzleHistoryMode, string[]>;
 export const puzzleProgressVersion = 3;
 const readableVersions = new Set([2, puzzleProgressVersion]);
 
+// One completed solve, appended at completion time. This is the raw history
+// future statistics read; events can never be backfilled, so they are recorded
+// from the first release that can.
+export interface SolveRecord {
+  id: string;
+  mode: PuzzleHistoryMode;
+  at: number;
+  ms: number;
+  moves: number;
+  removals: number;
+  resumed: boolean;
+}
+
+// Keeps the document bounded even for players who replay for years.
+const maxSolveRecords = 5000;
+
 export interface PuzzleProgress {
   version: typeof puzzleProgressVersion;
   played: PuzzleHistory;
   completed: PuzzleHistory;
+  solves?: SolveRecord[];
 }
 
 // The fully resolved on-device progress. "Unknown" holds ids that are stored
@@ -38,8 +55,27 @@ export interface PuzzleProgressState {
   completed: PuzzleHistory;
   unknownPlayed: PuzzleHistory;
   unknownCompleted: PuzzleHistory;
+  solves: SolveRecord[];
   readOnly: boolean;
 }
+
+const sanitizeSolves = (value: unknown): SolveRecord[] => {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(
+      (entry): entry is SolveRecord =>
+        !!entry &&
+        typeof entry === "object" &&
+        typeof (entry as SolveRecord).id === "string" &&
+        typeof (entry as SolveRecord).at === "number",
+    )
+    .slice(-maxSolveRecords);
+};
+
+export const appendSolveRecord = (
+  solves: SolveRecord[],
+  record: SolveRecord,
+): SolveRecord[] => [...solves, record].slice(-maxSolveRecords);
 
 export const createEmptyPuzzleHistory = (): PuzzleHistory => ({
   tutorial: [],
@@ -54,6 +90,7 @@ const createEmptyProgressState = (readOnly: boolean): PuzzleProgressState => ({
   completed: createEmptyPuzzleHistory(),
   unknownPlayed: createEmptyPuzzleHistory(),
   unknownCompleted: createEmptyPuzzleHistory(),
+  solves: [],
   readOnly,
 });
 
@@ -134,12 +171,13 @@ const mergeHistories = (
 export const serializePuzzleProgress = (
   state: Pick<
     PuzzleProgressState,
-    "played" | "completed" | "unknownPlayed" | "unknownCompleted"
+    "played" | "completed" | "unknownPlayed" | "unknownCompleted" | "solves"
   >,
 ): PuzzleProgress => ({
   version: puzzleProgressVersion,
   played: mergeHistories(state.played, state.unknownPlayed),
   completed: mergeHistories(state.completed, state.unknownCompleted),
+  solves: state.solves,
 });
 
 // Resolution order: current schema → newer schema (best-effort, read-only) →
@@ -178,6 +216,7 @@ export const resolvePuzzleProgress = ({
         completed: completed.known,
         unknownPlayed: played.unknown,
         unknownCompleted: completed.unknown,
+        solves: sanitizeSolves(progress.solves),
         // A newer build wrote this document. Read it best-effort so the
         // player still sees their progress, but never write: this build
         // would destroy fields it does not understand.

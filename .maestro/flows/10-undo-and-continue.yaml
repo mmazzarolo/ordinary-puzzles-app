@@ -1,11 +1,11 @@
 appId: com.mmazzarolo.ordinarypuzzles
-name: Reset and continue keep a board usable
+name: Undo and continue keep a board usable
 tags:
   - interaction
   - regression
 ---
 # Auto-solve is off here, so the board stays unsolved and both controls stay
-# reachable.
+# reachable. Undo with nothing committed is a quiet no-op.
 - runFlow: ../subflows/launch-without-auto-solve.yaml
 - runFlow:
     file: ../subflows/open-mode.yaml
@@ -13,14 +13,14 @@ tags:
       MODE: medium
 - runFlow: ../subflows/assert-game.yaml
 - tapOn:
-    id: "button-reset"
+    id: "button-undo"
 - assertVisible:
     id: "puzzle-board"
 - tapOn:
     id: "button-menu"
 - runFlow: ../subflows/assert-home.yaml
 
-# The board stays in memory for the session, so home offers to continue it.
+# The board is persisted now, so home offers to continue it.
 - assertVisible:
     id: "button-continue"
 - tapOn:

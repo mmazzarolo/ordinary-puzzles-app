@@ -71,6 +71,7 @@ export const Game: FC = observer(function () {
 
   useOnMount(() => {
     fadeInterfaceIn().start();
+    return stopRewind;
   });
 
   // Callback handlers
@@ -79,9 +80,30 @@ export const Game: FC = observer(function () {
     interactionsDisabledRef.current = true;
     fadeRootOut().start(navigateToHome);
   };
-  const handleResetPress = () => {
+  // Undo: a tap reverts one committed change; holding rewinds step by step
+  // until release or the board start. The old one-tap destructive reset is
+  // gone — a full rewind is just a held undo, visible and abortable.
+  const rewindIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stopRewind = () => {
+    if (rewindIntervalRef.current !== null) {
+      clearInterval(rewindIntervalRef.current);
+      rewindIntervalRef.current = null;
+    }
+  };
+  const handleUndoPress = () => {
     if (interactionsDisabledRef.current) return;
-    board.reset();
+    board.undoLast();
+  };
+  const handleUndoLongPress = () => {
+    if (interactionsDisabledRef.current) return;
+    stopRewind();
+    rewindIntervalRef.current = setInterval(() => {
+      if (board.canUndo) {
+        board.undoLast();
+      } else {
+        stopRewind();
+      }
+    }, 120);
   };
   const handleBoardClearedAnimStart = () => {
     interactionsDisabledRef.current = true;
@@ -125,7 +147,13 @@ export const Game: FC = observer(function () {
       </View>
       <BottomNav animValue={fadeInterfaceAnim.value}>
         <Button label="Menu" onPress={handleMenuPress} />
-        <Button label="Reset" onPress={handleResetPress} />
+        <Button
+          label="Undo"
+          onPress={handleUndoPress}
+          onLongPress={handleUndoLongPress}
+          onPressOut={stopRewind}
+          delayLongPress={350}
+        />
       </BottomNav>
     </Animated.View>
   );
